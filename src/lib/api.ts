@@ -41,6 +41,24 @@ export async function apiFetch<T>(path: string, init?: RequestInit): Promise<T> 
   return body.data
 }
 
+export async function apiForm<T>(path: string, form: FormData): Promise<T> {
+  const res = await fetch(`${baseUrl()}${path}`, { method: 'POST', body: form })
+  if (res.status === 204) {
+    if (!res.ok) throw new ApiError(res.statusText || 'Request failed', res.status)
+    return undefined as T
+  }
+  let body: Envelope<T>
+  try {
+    body = (await res.json()) as Envelope<T>
+  } catch {
+    throw new ApiError(res.statusText || 'Request failed', res.status)
+  }
+  if (!res.ok || !body || body.success === false) {
+    throw new ApiError(body?.message || res.statusText || 'Request failed', res.status)
+  }
+  return body.data
+}
+
 export function unwrapPage<T>(page: SpringPage<T>): PageResult<T> {
   return { items: page.content, total: page.totalElements, page: page.number, size: page.size }
 }
