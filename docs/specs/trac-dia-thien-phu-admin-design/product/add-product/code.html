@@ -1,0 +1,372 @@
+<!DOCTYPE html><html lang="vi" style=""><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0" name="viewport"><meta content="web_dashboard" name="shell-type"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;display=swap" rel="stylesheet"><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{colors:{"surface":"#f7f9ff","secondary":"#505f79","on-primary":"#ffffff","tertiary":"#006947","sidebar-dark":"#111C2D","surface-container-high":"#d9eaff","surface-container-lowest":"#ffffff","status-warning":"#F59E0B","outline":"#717785","text-secondary":"#5C6F84","surface-bright":"#f7f9ff","border-card":"#E0E6ED","on-surface-variant":"#404754","on-secondary":"#ffffff","text-primary":"#182538","on-secondary-fixed":"#0c1c32","on-primary-fixed":"#001b3c","on-tertiary-container":"#f5fff6","tertiary-container":"#00855b","inverse-on-surface":"#e8f1ff","on-error-container":"#93000a","on-tertiary-fixed":"#002113","tertiary-fixed-dim":"#4edea3","on-surface":"#081d2f","on-error":"#ffffff","background":"#f7f9ff","sidebar-hover":"#243B5A","sidebar-active-link":"#4DA3FF","primary-light":"#E5F3FF","surface-container-low":"#edf4ff","status-danger":"#EF4444","on-tertiary":"#ffffff","sidebar-base":"#1B2A41","on-secondary-fixed-variant":"#394760","outline-variant":"#c0c6d6","canvas-bg":"#F4F6F8","on-background":"#081d2f","secondary-fixed":"#d5e3ff","status-success":"#10B981","on-primary-container":"#fefcff","primary":"#005baf","text-muted":"#8C9BA5","inverse-primary":"#a8c8ff","surface-dim":"#c8dcf4","status-info":"#0088FF","surface-tint":"#005eb3","primary-fixed-dim":"#a8c8ff","error-container":"#ffdad6","secondary-container":"#d1e0ff","surface-variant":"#d1e4fd","on-primary-fixed-variant":"#004689","surface-card":"#FFFFFF","primary-fixed":"#d5e3ff","error":"#ba1a1a","primary-hover":"#0070D2","on-tertiary-fixed-variant":"#005236","tertiary-fixed":"#6ffbbe","surface-container-highest":"#d1e4fd","on-secondary-container":"#54637d","primary-container":"#0074db","secondary-fixed-dim":"#b8c7e5","surface-container":"#e3efff","inverse-surface":"#1f3245"},borderRadius:{"DEFAULT":"0.125rem","lg":"0.25rem","xl":"0.5rem","full":"0.75rem"},spacing:{"space-xs":"4px","space-xl":"24px","space-sm":"8px","gutter":"16px","space-lg":"16px","margin-desktop":"24px","gutter-desktop":"20px","margin":"16px","space-md":"12px"},fontFamily:{"headline-xl":["Inter"],"data-mono":["Inter"],"label-md":["Inter"],"label-sm":["Inter"],"body-md":["Inter"],"body-lg":["Inter"],"headline-md":["Inter"],"body-sm":["Inter"],"headline-lg":["Inter"]},fontSize:{"headline-xl":["24px",{lineHeight:"32px",letterSpacing:"-0.015em",fontWeight:"700"}],"data-mono":["13px",{lineHeight:"18px",letterSpacing:"0.02em",fontWeight:"600"}],"label-md":["14px",{lineHeight:"20px",fontWeight:"500"}],"label-sm":["12px",{lineHeight:"16px",fontWeight:"500"}],"body-md":["14px",{lineHeight:"20px",fontWeight:"400"}],"body-lg":["15px",{lineHeight:"22px",fontWeight:"400"}],"headline-md":["16px",{lineHeight:"24px",fontWeight:"600"}],"body-sm":["13px",{lineHeight:"18px",fontWeight:"400"}],"headline-lg":["20px",{lineHeight:"28px",letterSpacing:"-0.01em",fontWeight:"600"}]}}}};</script></head><body class="bg-canvas-bg font-body-md text-text-primary"><aside class="fixed left-0 top-0 h-screen w-60 bg-sidebar-dark z-50 flex flex-col justify-between select-none shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="flex flex-col"><div class="h-14 px-space-lg flex items-center gap-space-sm bg-sidebar-dark"><img alt="Trắc địa Thiên Phú Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1UM617Phk2vLvBRQ13XhpdHD3--VfqCJ1kGEm8_HrSQ9qTuLdwEe8ytlMCJW-ZYu4ObqzJuwCZmGgNpFA_Vfrg5ptE1PFVEhGhxIDW6ENSFBYXKH4RxCgn9PFHIAgUjeGSonwrJ9YIVj9djZ8q7TgD7Yh6hnq79JfhOHm2CjVy1ntl-yzLPTwlczZ0xWq63jP1b5PHmVQn3uvGkpgGPqXAgEPC5Wq454ENG-Jg-52n3"><span class="font-headline-md text-headline-md font-bold tracking-tight text-on-primary">Trắc địa Thiên Phú Admin</span></div><nav class="flex flex-col px-space-sm py-space-sm gap-1" data-active-classes="bg-sidebar-hover text-sidebar-active-link font-medium"><div class="flex flex-col"><div class="flex items-center justify-between px-space-md py-space-sm rounded-lg bg-sidebar-hover text-on-primary font-label-md text-label-md cursor-pointer"><div class="flex items-center gap-space-md"><span class="material-symbols-outlined text-[20px]">inventory_2</span><span class="">Sản phẩm</span></div><span class="material-symbols-outlined text-[18px] text-slate-400">expand_more</span></div><div class="flex flex-col pl-9 pr-space-xs py-1 gap-1"><a class="flex items-center py-1.5 px-space-sm rounded-lg text-slate-300 hover:bg-sidebar-hover hover:text-on-primary transition-colors font-label-sm text-label-sm" data-path="danh-sach-san-pham" href="#"><span class="">Danh sách sản phẩm</span></a><a class="flex items-center py-1.5 px-space-sm rounded-lg text-slate-300 hover:bg-sidebar-hover hover:text-on-primary transition-colors font-label-sm text-label-sm" data-path="danh-muc-san-pham" href="#"><span class="">Danh mục sản phẩm</span></a></div></div><a class="flex items-center gap-space-md px-space-md py-space-sm rounded-lg text-slate-300 hover:bg-sidebar-hover hover:text-on-primary transition-colors font-label-md text-label-md" data-path="cai-dat" href="#"><span class="material-symbols-outlined text-[20px]">settings</span><span class="">Cài đặt</span></a></nav></div><div class="p-space-md bg-sidebar-dark/60"><div class="flex items-center justify-between px-space-sm py-space-xs text-slate-400 font-label-sm text-label-sm"><span class="">Phiên bản v4.2.0</span><span class="material-symbols-outlined text-[16px]">cloud_done</span></div></div></aside><div class="pl-60"><header class="fixed top-0 left-60 right-0 h-14 bg-surface-card z-40 px-margin-desktop flex items-center shadow-[0_1px_8px_rgba(0,0,0,0.04)] justify-end"><div class="flex items-center gap-space-lg"><div class="flex items-center gap-space-sm pl-1 cursor-pointer"><div class="relative"><img alt="Profile" class="w-8 h-8 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCCEu8hfTmBA_wo9fxeDjdq4v9UOOR5UZV0SG-tGOgrDYfVLQhOFOTJzFgJ38toRc3S3C68KY-kvkWEqPDZKvb_BZcQ5iptg28niqBHzxAQS4KynphfWzfJK3nHu2U9QcRNX_bxUM0slVHNGC20Gn6hRJhTffg3soLh5jlfhga5tFkd9F-_RNuNP7RU7zjHUwE8ywY96hF_6w4H5GvaGcKNZl5CPCjyEqr1aLCpLS4"><span class="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-status-success ring-2 ring-surface-card"></span></div><div class="flex flex-col text-left"><span class="font-label-sm text-label-sm text-text-primary leading-tight font-medium">Nguyễn Thu Trang</span><span class="font-body-sm text-[11px] text-text-secondary leading-tight">Quản trị viên</span></div></div></div></header><main class="w-full pt-14 px-margin-desktop py-space-xl bg-canvas-bg"><div class="flex flex-col w-full pb-24">
+<!-- Top Navigation & Action Context -->
+<div class="flex flex-col gap-space-xs mb-space-lg">
+<a class="inline-flex items-center gap-1.5 text-status-info hover:text-primary-hover font-label-sm text-label-sm w-fit transition-colors group" href="#">
+<span class="material-symbols-outlined text-[16px] group-hover:-translate-x-0.5 transition-transform">arrow_back</span>
+<span class="">Quay lại danh sách sản phẩm</span>
+</a>
+<div class="flex items-center justify-between mt-1">
+<div class="flex items-center gap-space-md">
+<h1 class="font-headline-xl text-headline-xl text-text-primary tracking-tight">Thêm sản phẩm mới</h1>
+<span class="px-2.5 py-0.5 rounded-full bg-surface-container-high text-primary font-label-sm text-label-sm">Bản nháp</span>
+</div>
+<div class="flex items-center gap-space-sm">
+<button class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface-card hover:bg-canvas-bg text-text-secondary hover:text-text-primary font-label-sm text-label-sm transition-colors shadow-sm" type="button">
+<span class="material-symbols-outlined text-[16px]">visibility</span>
+<span class="">Xem trước</span>
+</button>
+<button class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface-card hover:bg-canvas-bg text-text-secondary hover:text-text-primary font-label-sm text-label-sm transition-colors shadow-sm" type="button">
+<span class="material-symbols-outlined text-[16px]">content_copy</span>
+<span class="">Nhân bản</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Main Asymmetric Workspace Layout (70% / 30%) -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter-desktop items-start">
+<!-- LEFT PRIMARY COLUMN (approx 70% ~ 8 cols of 12) -->
+<div class="lg:col-span-8 flex flex-col gap-space-xl">
+<!-- Card 1: Thông tin chung -->
+<section class="bg-surface-card rounded-xl p-5 shadow-sm flex flex-col gap-space-lg">
+<div class="flex items-center justify-between pb-space-sm">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-primary text-[20px]">info</span>
+<h2 class="font-headline-md text-headline-md text-text-primary">Thông tin chung</h2>
+</div>
+<span class="text-text-muted font-body-sm text-body-sm">* Trường bắt buộc nhập</span>
+</div>
+<!-- Tên sản phẩm -->
+<div class="flex flex-col gap-1.5">
+<div class="flex items-center justify-between">
+<label class="font-label-md text-label-md text-text-primary" for="product-name">
+              Tên sản phẩm <span class="text-status-danger font-bold">*</span>
+</label>
+<span class="font-data-mono text-label-sm text-text-muted" id="name-counter">42/256</span>
+</div>
+<input class="w-full h-9 px-3 rounded-lg bg-canvas-bg font-body-md text-body-md text-text-primary placeholder:text-text-muted focus:outline-none focus:ring-1 focus:ring-status-info transition-shadow" id="product-name" placeholder="Nhập tên sản phẩm..." type="text" value="Áo thun Polo Nam Cotton Compact Pima Cao Cấp">
+<div class="flex items-center gap-1 text-text-muted font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[14px]">help_outline</span>
+<span class="">Tối đa 256 ký tự. Tên sản phẩm rõ ràng giúp tối ưu hóa tìm kiếm kho và kênh bán.</span>
+</div>
+</div>
+<!-- Grid 3 columns: SKU, Mã vạch, Đơn vị tính -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-space-md">
+<!-- SKU -->
+<div class="flex flex-col gap-1.5">
+<label class="font-label-md text-label-md text-text-primary flex items-center justify-between" for="product-sku">
+<span class="">Mã SKU</span>
+<span class="text-[11px] text-text-muted font-normal">Tự sinh nếu trống</span>
+</label>
+<input class="w-full h-9 px-3 rounded-lg bg-canvas-bg font-body-md text-body-md text-text-primary placeholder:text-text-muted focus:outline-none focus:ring-1 focus:ring-status-info" id="product-sku" placeholder="VD: SP-00123" type="text" value="POLO-PIMA-001">
+</div>
+<!-- Mã vạch -->
+<div class="flex flex-col gap-1.5">
+<label class="font-label-md text-label-md text-text-primary" for="product-barcode">Mã vạch / Barcode</label>
+<div class="relative">
+<input class="w-full h-9 pl-3 pr-8 rounded-lg bg-canvas-bg font-body-md text-body-md text-text-primary placeholder:text-text-muted focus:outline-none focus:ring-1 focus:ring-status-info" id="product-barcode" placeholder="VD: 89360..." type="text" value="8936018247910">
+<span class="material-symbols-outlined absolute right-2.5 top-2 text-[18px] text-text-muted cursor-pointer hover:text-text-primary" title="Quét barcode">barcode_scanner</span>
+</div>
+</div>
+<!-- Đơn vị tính -->
+<div class="flex flex-col gap-1.5">
+<label class="font-label-md text-label-md text-text-primary" for="product-unit">Đơn vị tính</label>
+<div class="relative">
+<select class="w-full h-9 px-3 pr-8 rounded-lg bg-canvas-bg font-body-md text-body-md text-text-primary focus:outline-none focus:ring-1 focus:ring-status-info appearance-none cursor-pointer" id="product-unit">
+<option selected="" value="Cái">Cái</option>
+<option value="Chiếc">Chiếc</option>
+<option value="Bộ">Bộ</option>
+<option value="Hộp">Hộp</option>
+<option value="Kg">Kg</option>
+<option value="Lít">Lít</option>
+</select>
+<span class="material-symbols-outlined absolute right-2.5 top-2 text-[18px] text-text-muted pointer-events-none">unfold_more</span>
+</div>
+</div>
+</div>
+<!-- Mô tả ngắn -->
+<div class="flex flex-col gap-1.5"><div class="flex items-center justify-between"><label class="font-label-md text-label-md text-text-primary" for="product-short-desc">Mô tả ngắn</label><span class="font-label-sm text-label-sm text-text-muted">Xuất hiện ở danh sách sản phẩm và phiếu gửi hàng</span></div><div class="rounded-lg overflow-hidden bg-canvas-bg"><div class="flex flex-wrap items-center gap-0.5 px-3 py-2 bg-surface-container-low text-text-secondary select-none"><button class="p-1 rounded hover:bg-surface-card hover:text-text-primary transition-colors" title="Đậm (Ctrl+B)" type="button"><span class="material-symbols-outlined text-[18px]">format_bold</span></button><button class="p-1 rounded hover:bg-surface-card hover:text-text-primary transition-colors" title="Nghiêng (Ctrl+I)" type="button"><span class="material-symbols-outlined text-[18px]">format_italic</span></button><button class="p-1 rounded hover:bg-surface-card hover:text-text-primary transition-colors" title="Gạch chân (Ctrl+U)" type="button"><span class="material-symbols-outlined text-[18px]">format_underlined</span></button><div class="h-4 w-px bg-outline-variant mx-1"></div><button class="p-1 rounded hover:bg-surface-card hover:text-text-primary transition-colors" title="Danh sách chấm" type="button"><span class="material-symbols-outlined text-[18px]">format_list_bulleted</span></button><button class="p-1 rounded hover:bg-surface-card hover:text-text-primary transition-colors" title="Danh sách số" type="button"><span class="material-symbols-outlined text-[18px]">format_list_numbered</span></button><div class="h-4 w-px bg-outline-variant mx-1"></div><button class="p-1 rounded hover:bg-surface-card hover:text-text-primary transition-colors" title="Căn trái" type="button"><span class="material-symbols-outlined text-[18px]">format_align_left</span></button><button class="p-1 rounded hover:bg-surface-card hover:text-text-primary transition-colors" title="Căn giữa" type="button"><span class="material-symbols-outlined text-[18px]">format_align_center</span></button><button class="p-1 rounded hover:bg-surface-card hover:text-text-primary transition-colors" title="Căn phải" type="button"><span class="material-symbols-outlined text-[18px]">format_align_right</span></button><div class="h-4 w-px bg-outline-variant mx-1"></div><button class="p-1 rounded hover:bg-surface-card hover:text-text-primary transition-colors" title="Chèn liên kết" type="button"><span class="material-symbols-outlined text-[18px]">link</span></button><button class="p-1 rounded hover:bg-surface-card hover:text-text-primary transition-colors" title="Chèn hình ảnh" type="button"><span class="material-symbols-outlined text-[18px]">image</span></button><button class="p-1 rounded hover:bg-surface-card hover:text-text-primary transition-colors" title="Bảng" type="button"><span class="material-symbols-outlined text-[18px]">table_chart</span></button><button class="p-1 rounded hover:bg-surface-card hover:text-text-primary transition-colors" title="Mã nguồn" type="button"><span class="material-symbols-outlined text-[18px]">code</span></button></div><div class="min-h-[110px] p-3.5 bg-surface-card font-body-md text-body-md text-text-primary focus:outline-none leading-relaxed" id="product-short-desc"><p class="text-on-surface-variant">Áo thun polo nam thiết kế cổ bẻ thanh lịch, sợi cotton compact dệt mật độ cao chống xù lông, thấm hút mồ hôi vượt trội và bền form sau nhiều lần giặt.</p></div></div></div>
+<!-- Mô tả chi tiết (Rich Text Editor UI) -->
+<div class="flex flex-col gap-1.5">
+<label class="font-label-md text-label-md text-text-primary">Mô tả chi tiết</label>
+<div class="rounded-lg overflow-hidden bg-canvas-bg">
+<!-- WYSIWYG Toolbar -->
+<div class="flex flex-wrap items-center gap-0.5 px-3 py-2 bg-surface-container-low text-text-secondary select-none">
+<button class="p-1 rounded hover:bg-surface-card hover:text-text-primary transition-colors" title="Đậm (Ctrl+B)" type="button">
+<span class="material-symbols-outlined text-[18px]">format_bold</span>
+</button>
+<button class="p-1 rounded hover:bg-surface-card hover:text-text-primary transition-colors" title="Nghiêng (Ctrl+I)" type="button">
+<span class="material-symbols-outlined text-[18px]">format_italic</span>
+</button>
+<button class="p-1 rounded hover:bg-surface-card hover:text-text-primary transition-colors" title="Gạch chân (Ctrl+U)" type="button">
+<span class="material-symbols-outlined text-[18px]">format_underlined</span>
+</button>
+<div class="h-4 w-px bg-outline-variant mx-1"></div>
+<button class="p-1 rounded hover:bg-surface-card hover:text-text-primary transition-colors" title="Danh sách chấm" type="button">
+<span class="material-symbols-outlined text-[18px]">format_list_bulleted</span>
+</button>
+<button class="p-1 rounded hover:bg-surface-card hover:text-text-primary transition-colors" title="Danh sách số" type="button">
+<span class="material-symbols-outlined text-[18px]">format_list_numbered</span>
+</button>
+<div class="h-4 w-px bg-outline-variant mx-1"></div>
+<button class="p-1 rounded hover:bg-surface-card hover:text-text-primary transition-colors" title="Căn trái" type="button">
+<span class="material-symbols-outlined text-[18px]">format_align_left</span>
+</button>
+<button class="p-1 rounded hover:bg-surface-card hover:text-text-primary transition-colors" title="Căn giữa" type="button">
+<span class="material-symbols-outlined text-[18px]">format_align_center</span>
+</button>
+<button class="p-1 rounded hover:bg-surface-card hover:text-text-primary transition-colors" title="Căn phải" type="button">
+<span class="material-symbols-outlined text-[18px]">format_align_right</span>
+</button>
+<div class="h-4 w-px bg-outline-variant mx-1"></div>
+<button class="p-1 rounded hover:bg-surface-card hover:text-text-primary transition-colors" title="Chèn liên kết" type="button">
+<span class="material-symbols-outlined text-[18px]">link</span>
+</button>
+<button class="p-1 rounded hover:bg-surface-card hover:text-text-primary transition-colors" title="Chèn hình ảnh" type="button">
+<span class="material-symbols-outlined text-[18px]">image</span>
+</button>
+<button class="p-1 rounded hover:bg-surface-card hover:text-text-primary transition-colors" title="Bảng" type="button">
+<span class="material-symbols-outlined text-[18px]">table_chart</span>
+</button>
+<button class="p-1 rounded hover:bg-surface-card hover:text-text-primary transition-colors" title="Mã nguồn" type="button">
+<span class="material-symbols-outlined text-[18px]">code</span>
+</button>
+</div>
+<!-- Styled Rich Editor Canvas -->
+<div class="min-h-[160px] p-4 bg-surface-card font-body-md text-body-md text-text-primary focus:outline-none leading-relaxed">
+<p class="font-semibold text-text-primary mb-2">Đặc điểm nổi bật:</p>
+<ul class="list-disc pl-5 space-y-1 text-on-surface-variant">
+<li class="">Chất liệu: 95% Cotton Compact Pima mềm mượt, 5% Spandex tăng độ đàn hồi vận động.</li>
+<li class="">Công nghệ dệt Double-Face hạn chế nhăn nhàu gấp 3 lần cotton thông thường.</li>
+<li class="">Bo cổ và bo tay dệt jacquard tinh xảo, cúc cài khắc laser chìm thương hiệu.</li>
+<li class="">Phom dáng Regular Fit chuẩn chỉn cho môi trường công sở lẫn dạo phố cuối tuần.</li>
+</ul>
+<p class="mt-3 text-on-surface-variant">Hướng dẫn bảo quản: Giặt máy ở chế độ nhẹ nhàng, phơi mặt trái dưới bóng râm, ủi ở nhiệt độ trung bình.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Card 2: Tối ưu SEO (Công cụ tìm kiếm) -->
+<section class="bg-surface-card rounded-xl p-5 shadow-sm flex flex-col gap-space-lg">
+<div class="flex flex-col gap-1 pb-space-xs">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-primary text-[20px]">travel_explore</span>
+<h2 class="font-headline-md text-headline-md text-text-primary">Tối ưu SEO (Công cụ tìm kiếm)</h2>
+</div>
+<button class="text-status-info hover:text-primary-hover font-label-sm text-label-sm" type="button">Chỉnh sửa nhanh</button>
+</div>
+<p class="font-body-sm text-body-sm text-text-secondary">Cài đặt hiển thị tiêu đề và thẻ mô tả khi người dùng tìm kiếm trên Google.</p>
+</div>
+<!-- Google SERP Live Simulation Box -->
+<div class="p-4 rounded-xl bg-canvas-bg flex flex-col gap-1.5">
+<div class="flex items-center justify-between mb-1">
+<span class="font-label-sm text-label-sm text-text-secondary flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px] text-text-muted">preview</span>
+              Xem trước kết quả tìm kiếm trên Google
+            </span>
+<span class="px-2 py-0.5 rounded bg-surface-card font-data-mono text-[11px] text-text-secondary">Desktop Preview</span>
+</div>
+<div class="bg-surface-card p-4 rounded-lg shadow-sm flex flex-col gap-1">
+<span class="text-[13px] leading-tight text-[#202124] flex items-center gap-1.5">
+<span class="w-4 h-4 rounded-full bg-status-info/10 flex items-center justify-center text-status-info text-[10px] font-bold">S</span>
+<span class="text-[#006621] font-normal truncate">https://tracdiathienphu.vn › san-pham › ao-thun-polo-nam-cotton-compact</span>
+</span>
+<a class="text-[#1A0DAB] hover:underline font-headline-md text-[18px] leading-snug line-clamp-1 font-medium" href="javascript:void(0)">Áo thun Polo Nam Cotton Compact Pima | Trắc địa Thiên Phú</a>
+<p class="text-[#545454] font-body-sm text-body-sm leading-relaxed line-clamp-2">
+              Chất liệu cotton compact Pima cao cấp, thoáng mát, co giãn 4 chiều. Thiết kế chuẩn form công sở hiện đại, thấm hút mồ hôi tối đa, giao hàng nhanh 2h toàn quốc.
+            </p>
+</div>
+</div>
+<!-- Tiêu đề trang -->
+<div class="flex flex-col gap-1.5">
+<div class="flex items-center justify-between">
+<label class="font-label-md text-label-md text-text-primary" for="seo-title">Tiêu đề trang</label>
+<span class="font-data-mono text-label-sm text-status-success font-medium">45/256</span>
+</div>
+<input class="w-full h-9 px-3 rounded-lg bg-canvas-bg font-body-md text-body-md text-text-primary placeholder:text-text-muted focus:outline-none focus:ring-1 focus:ring-status-info" id="seo-title" placeholder="Tiêu đề trang sản phẩm" type="text" value="Áo thun Polo Nam Cotton Compact Pima | Trắc địa Thiên Phú">
+</div>
+<!-- Thẻ mô tả -->
+<div class="flex flex-col gap-1.5">
+<div class="flex items-center justify-between">
+<label class="font-label-md text-label-md text-text-primary" for="seo-description">Thẻ mô tả</label>
+<span class="font-data-mono text-label-sm text-status-success font-medium">120/256</span>
+</div>
+<textarea class="w-full p-3 rounded-lg bg-canvas-bg font-body-md text-body-md text-text-primary placeholder:text-text-muted focus:outline-none focus:ring-1 focus:ring-status-info resize-none" id="seo-description" placeholder="Mô tả ngắn gọn nội dung sản phẩm cho bot tìm kiếm" rows="3">Chất liệu cotton compact Pima cao cấp, thoáng mát, co giãn 4 chiều. Thiết kế chuẩn form công sở hiện đại, thấm hút mồ hôi tối đa, giao hàng nhanh 2h toàn quốc.</textarea>
+</div>
+<!-- Đường dẫn (slug) -->
+<div class="flex flex-col gap-1.5">
+<label class="font-label-md text-label-md text-text-primary" for="seo-slug">Đường dẫn (slug)</label>
+<div class="flex items-center w-full rounded-lg bg-canvas-bg overflow-hidden focus-within:ring-1 focus-within:ring-status-info">
+<span class="h-9 px-3 flex items-center bg-surface-container-low text-text-secondary font-label-sm text-label-sm select-none truncate max-w-[240px]">https://tracdiathienphu.vn/san-pham/</span>
+<input class="w-full h-9 px-3 bg-transparent font-body-md text-body-md text-text-primary placeholder:text-text-muted focus:outline-none" id="seo-slug" type="text" value="ao-thun-polo-nam-cotton-compact">
+</div>
+</div>
+</section>
+</div>
+<!-- RIGHT CONTEXTUAL RAIL (approx 30% ~ 4 cols of 12) -->
+<div class="lg:col-span-4 flex flex-col gap-space-xl">
+<!-- Card 1: Danh mục -->
+<section class="bg-surface-card rounded-xl p-5 shadow-sm flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<h2 class="font-headline-md text-headline-md text-text-primary">
+            Danh mục <span class="text-status-danger font-bold">*</span>
+</h2>
+<span class="material-symbols-outlined text-[18px] text-text-muted cursor-pointer hover:text-text-primary" title="Làm mới danh mục">refresh</span>
+</div>
+<div class="flex flex-col gap-2">
+<!-- Searchable Select Box -->
+<div class="relative">
+<div class="min-h-9 p-1.5 rounded-lg bg-canvas-bg flex flex-wrap items-center gap-1.5 focus-within:ring-1 focus-within:ring-status-info">
+<!-- Selected Tag Chip -->
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-surface-container-high text-primary font-label-sm text-label-sm">
+<span class="">Thời trang nam</span>
+<button class="material-symbols-outlined text-[14px] hover:text-status-danger" title="Gỡ" type="button">close</button>
+</span>
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-surface-container-high text-primary font-label-sm text-label-sm">
+<span class="">Áo polo</span>
+<button class="material-symbols-outlined text-[14px] hover:text-status-danger" title="Gỡ" type="button">close</button>
+</span>
+<input class="flex-1 min-w-[100px] h-6 bg-transparent px-1 font-body-sm text-body-sm text-text-primary placeholder:text-text-muted focus:outline-none" placeholder="Tìm danh mục..." type="text">
+</div>
+</div>
+<!-- Quick management link -->
+<div class="flex items-center justify-between pt-1">
+<a class="text-status-info hover:text-primary-hover font-label-sm text-label-sm flex items-center gap-1 hover:underline" href="#">
+<span class="material-symbols-outlined text-[14px]">add</span>
+<span class="">Quản lý danh mục</span>
+</a>
+<span class="text-text-muted font-label-sm text-label-sm">2/10 đã chọn</span>
+</div>
+</div>
+<!-- Additional classification helpers -->
+<div class="pt-2 border-t border-border-card flex flex-col gap-3">
+<div class="flex flex-col gap-1">
+<label class="font-label-sm text-label-sm text-text-secondary">Loại sản phẩm</label>
+<input class="w-full h-8 px-2.5 rounded-lg bg-canvas-bg font-body-sm text-body-sm text-text-primary focus:outline-none focus:ring-1 focus:ring-status-info" placeholder="VD: Quần tây, Đầm..." type="text" value="Áo thun">
+</div>
+<div class="flex flex-col gap-1">
+<label class="font-label-sm text-label-sm text-text-secondary">Nhãn hiệu / Thương hiệu</label>
+<input class="w-full h-8 px-2.5 rounded-lg bg-canvas-bg font-body-sm text-body-sm text-text-primary focus:outline-none focus:ring-1 focus:ring-status-info" placeholder="VD: Nike, Zara..." type="text" value="Thiên Phú Signature">
+</div>
+</div>
+</section>
+<!-- Card 2: Ảnh sản phẩm -->
+<section class="bg-surface-card rounded-xl p-5 shadow-sm flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<h2 class="font-headline-md text-headline-md text-text-primary">Ảnh sản phẩm</h2>
+<span class="px-2 py-0.2 rounded-full bg-surface-container text-text-secondary font-data-mono text-[11px]">3/8</span>
+</div>
+<button class="text-status-info hover:text-primary-hover font-label-sm text-label-sm hover:underline" type="button">Thêm từ URL</button>
+</div>
+<!-- Multi-image Drag & Drop Zone -->
+<div class="rounded-xl border-2 border-dashed border-outline-variant bg-canvas-bg/60 p-6 flex flex-col items-center justify-center text-center hover:border-status-info hover:bg-primary-light/30 transition-all cursor-pointer group">
+<div class="w-10 h-10 rounded-full bg-surface-card flex items-center justify-center text-status-info shadow-sm group-hover:scale-105 transition-transform mb-2">
+<span class="material-symbols-outlined text-[24px]">cloud_upload</span>
+</div>
+<p class="font-label-md text-label-md text-text-primary font-medium">Kéo thả ảnh vào đây hoặc bấm để chọn</p>
+<p class="font-label-sm text-label-sm text-text-muted mt-1">Hỗ trợ PNG, JPG, WEBP tối đa 5MB mỗi ảnh</p>
+</div>
+<!-- Thumbnail Grid with Previews -->
+<div class="grid grid-cols-3 gap-2.5 pt-1">
+<!-- Image 1: Main Image -->
+<div class="relative group rounded-lg overflow-hidden aspect-square bg-canvas-bg shadow-sm">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" data-alt="A clean, studio-lit front view of an elegant navy blue men's cotton polo shirt laid flat with neat folds on a crisp minimal white background, commercial e-commerce product photograph, sharp detail, high resolution, cool tones." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBarwz9hmdLXsPTm_RV3sxxe7SMAeNqxfb76bcIAFQuDKEbSLfs6mnEWFujxv_HU0VdL5HZAAOR-pm4LdjZZHxsG24jSUrUh3aJpj3g-F5lfyXk7qrJS0IIf-M2V1jkI27NUjOT40FX_lsaNaULeH9AueqicScdC5c1OcAXkRSN2UpQrzYZKKfU-aE8lvwX-c4DekT0YDp3tb_tg86SEyChqIj9smH-kM2uO-atTpE">
+<!-- Badge Ảnh chính -->
+<span class="absolute top-1.5 left-1.5 px-1.5 py-0.5 rounded-full bg-status-info text-on-primary font-label-sm text-[10px] font-semibold tracking-tight shadow-sm z-10">
+              Ảnh chính
+            </span>
+<!-- Hover Overlay Actions -->
+<div class="absolute inset-0 bg-sidebar-dark/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-1.5">
+<button class="p-1 rounded-md bg-surface-card/90 text-text-primary hover:bg-surface-card hover:text-status-info transition-colors" title="Kéo để đổi vị trí" type="button">
+<span class="material-symbols-outlined text-[16px]">drag_indicator</span>
+</button>
+<button class="p-1 rounded-md bg-surface-card/90 text-text-primary hover:bg-surface-card hover:text-status-danger transition-colors" title="Xóa ảnh" type="button">
+<span class="material-symbols-outlined text-[16px]">delete</span>
+</button>
+</div>
+</div>
+<!-- Image 2 -->
+<div class="relative group rounded-lg overflow-hidden aspect-square bg-canvas-bg shadow-sm">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" data-alt="Close-up macro detail of premium cotton polo collar and resin buttons, subtle fabric weave texture visible, pristine lighting, e-commerce catalog photography, elegant navy hue." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA7AlR9GVEglO8A5mv-757sCOc9rOCmAdR9QnSW3voi-rOD7qvmYR04daPDyjDx67OIsBbAL52-NuHS_woJPCLBWJSgEk3vUPDJ2U5rK_iivqg2GJDGMcefriaQClcun_Rt18Z3tRJkvi5mjOGgMFEDF9YzRMeRbQF5TwCrsj9Gsbc0m9k3EUGTgDlvnwQ5uya5GvGS3fihV4FmpAdNL1DF3aKpZtONvcoi39Au7rE">
+<!-- Hover Overlay Actions -->
+<div class="absolute inset-0 bg-sidebar-dark/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-1.5">
+<button class="p-1 rounded-md bg-surface-card/90 text-text-primary hover:bg-surface-card hover:text-status-info transition-colors" title="Đặt làm ảnh chính" type="button">
+<span class="material-symbols-outlined text-[16px]">star</span>
+</button>
+<button class="p-1 rounded-md bg-surface-card/90 text-text-primary hover:bg-surface-card hover:text-status-danger transition-colors" title="Xóa ảnh" type="button">
+<span class="material-symbols-outlined text-[16px]">delete</span>
+</button>
+</div>
+</div>
+<!-- Image 3 -->
+<div class="relative group rounded-lg overflow-hidden aspect-square bg-canvas-bg shadow-sm">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" data-alt="Male model wearing navy blue polo shirt standing against a modern architectural concrete wall, soft daylight, minimalist lifestyle fashion photography, relaxed fit." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCvp2un-LW_w2nNwCGfXcrFNB_KtFkRfUc7bwUbWW78wVlAPdGUrC5VvG2QOTy6dD-oo8UxXk7D2RU8rjt6hqvQnC3o45-sDCVDjFFutF4e89orrTWbNwDJiF2T2N2-uQzauvIBEbw2Oqi_54grPVMFdf_OXSmdIpL2Myv7CpGdegWrypfjsl7mewnjxxLz_CxdIyuqK1_tqYSKEZ6yM-jYgn84uDNLeCsEbbHHfM0">
+<!-- Hover Overlay Actions -->
+<div class="absolute inset-0 bg-sidebar-dark/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-1.5">
+<button class="p-1 rounded-md bg-surface-card/90 text-text-primary hover:bg-surface-card hover:text-status-info transition-colors" title="Đặt làm ảnh chính" type="button">
+<span class="material-symbols-outlined text-[16px]">star</span>
+</button>
+<button class="p-1 rounded-md bg-surface-card/90 text-text-primary hover:bg-surface-card hover:text-status-danger transition-colors" title="Xóa ảnh" type="button">
+<span class="material-symbols-outlined text-[16px]">delete</span>
+</button>
+</div>
+</div>
+</div>
+<p class="font-label-sm text-[11px] text-text-muted text-center pt-1">
+          Kéo thả các ô ảnh để sắp xếp thứ tự hiển thị trên website bán hàng
+        </p>
+</section>
+<!-- Card 3: Trạng thái & Kênh bán (Context booster) -->
+<section class="bg-surface-card rounded-xl p-5 shadow-sm flex flex-col gap-3">
+<h2 class="font-headline-md text-headline-md text-text-primary">Trạng thái bán</h2>
+<div class="flex items-center justify-between">
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-text-primary">Hiển thị trên website</span>
+<span class="font-label-sm text-label-sm text-text-muted">Khách hàng có thể tìm và mua ngay</span>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox">
+<div class="w-11 h-6 bg-outline-variant peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-surface-card after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-surface-card after:border-border-card after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-status-info"></div>
+</label>
+</div>
+</section>
+</div>
+</div>
+<!-- STICKY BOTTOM ACTION BAR -->
+<aside class="fixed bottom-0 left-60 right-0 h-16 bg-surface-card/95 backdrop-blur-md z-40 px-margin-desktop flex items-center justify-between shadow-[0_-2px_8px_rgba(0,0,0,0.06)] border-t border-border-card">
+<div class="flex items-center gap-space-sm text-text-secondary font-label-sm text-label-sm">
+<span class="w-2 h-2 rounded-full bg-status-warning animate-pulse"></span>
+<span class="">Đang có các thay đổi chưa được lưu vào hệ thống</span>
+</div>
+<div class="flex items-center gap-3">
+<button class="h-9 px-5 rounded-lg bg-surface-card hover:bg-canvas-bg text-text-primary font-label-md text-label-md transition-colors shadow-sm active:scale-[0.98]" type="button">
+        Hủy
+      </button>
+<button class="h-9 px-6 rounded-lg bg-status-info hover:bg-primary-hover active:bg-[#005FB3] text-on-primary font-label-md text-label-md font-medium transition-all shadow-sm flex items-center gap-1.5 active:scale-[0.98]" type="button">
+<span class="material-symbols-outlined text-[18px]">check</span>
+<span class="">Lưu</span>
+</button>
+</div>
+</aside>
+</div>
+<script>
+  // Simple reactive char counter micro-interaction for Product Name
+  const nameInput = document.getElementById('product-name');
+  const nameCounter = document.getElementById('name-counter');
+  if (nameInput && nameCounter) {
+    nameInput.addEventListener('input', (e) => {
+      const len = e.target.value.length;
+      nameCounter.textContent = `${len}/256`;
+      if (len > 256) {
+        nameCounter.classList.add('text-status-danger');
+      } else {
+        nameCounter.classList.remove('text-status-danger');
+      }
+    });
+  }
+</script></main></div>
+
+</body></html>

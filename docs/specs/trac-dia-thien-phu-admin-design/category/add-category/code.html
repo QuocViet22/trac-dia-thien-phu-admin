@@ -1,0 +1,341 @@
+<!DOCTYPE html><html lang="vi" style=""><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0" name="viewport"><meta content="web_dashboard" name="shell-type"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;display=swap" rel="stylesheet"><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{colors:{"surface":"#f7f9ff","secondary":"#505f79","on-primary":"#ffffff","tertiary":"#006947","sidebar-dark":"#111C2D","surface-container-high":"#d9eaff","surface-container-lowest":"#ffffff","status-warning":"#F59E0B","outline":"#717785","text-secondary":"#5C6F84","surface-bright":"#f7f9ff","border-card":"#E0E6ED","on-surface-variant":"#404754","on-secondary":"#ffffff","text-primary":"#182538","on-secondary-fixed":"#0c1c32","on-primary-fixed":"#001b3c","on-tertiary-container":"#f5fff6","tertiary-container":"#00855b","inverse-on-surface":"#e8f1ff","on-error-container":"#93000a","on-tertiary-fixed":"#002113","tertiary-fixed-dim":"#4edea3","on-surface":"#081d2f","on-error":"#ffffff","background":"#f7f9ff","sidebar-hover":"#243B5A","sidebar-active-link":"#4DA3FF","primary-light":"#E5F3FF","surface-container-low":"#edf4ff","status-danger":"#EF4444","on-tertiary":"#ffffff","sidebar-base":"#1B2A41","on-secondary-fixed-variant":"#394760","outline-variant":"#c0c6d6","canvas-bg":"#F4F6F8","on-background":"#081d2f","secondary-fixed":"#d5e3ff","status-success":"#10B981","on-primary-container":"#fefcff","primary":"#005baf","text-muted":"#8C9BA5","inverse-primary":"#a8c8ff","surface-dim":"#c8dcf4","status-info":"#0088FF","surface-tint":"#005eb3","primary-fixed-dim":"#a8c8ff","error-container":"#ffdad6","secondary-container":"#d1e0ff","surface-variant":"#d1e4fd","on-primary-fixed-variant":"#004689","surface-card":"#FFFFFF","primary-fixed":"#d5e3ff","error":"#ba1a1a","primary-hover":"#0070D2","on-tertiary-fixed-variant":"#005236","tertiary-fixed":"#6ffbbe","surface-container-highest":"#d1e4fd","on-secondary-container":"#54637d","primary-container":"#0074db","secondary-fixed-dim":"#b8c7e5","surface-container":"#e3efff","inverse-surface":"#1f3245"},borderRadius:{"DEFAULT":"0.125rem","lg":"0.25rem","xl":"0.5rem","full":"0.75rem"},spacing:{"space-xs":"4px","space-xl":"24px","space-sm":"8px","gutter":"16px","space-lg":"16px","margin-desktop":"24px","gutter-desktop":"20px","margin":"16px","space-md":"12px"},fontFamily:{"headline-xl":["Inter"],"data-mono":["Inter"],"label-md":["Inter"],"label-sm":["Inter"],"body-md":["Inter"],"body-lg":["Inter"],"headline-md":["Inter"],"body-sm":["Inter"],"headline-lg":["Inter"]},fontSize:{"headline-xl":["24px",{lineHeight:"32px",letterSpacing:"-0.015em",fontWeight:"700"}],"data-mono":["13px",{lineHeight:"18px",letterSpacing:"0.02em",fontWeight:"600"}],"label-md":["14px",{lineHeight:"20px",fontWeight:"500"}],"label-sm":["12px",{lineHeight:"16px",fontWeight:"500"}],"body-md":["14px",{lineHeight:"20px",fontWeight:"400"}],"body-lg":["15px",{lineHeight:"22px",fontWeight:"400"}],"headline-md":["16px",{lineHeight:"24px",fontWeight:"600"}],"body-sm":["13px",{lineHeight:"18px",fontWeight:"400"}],"headline-lg":["20px",{lineHeight:"28px",letterSpacing:"-0.01em",fontWeight:"600"}]}}}};</script></head><body class="bg-canvas-bg font-body-md text-text-primary"><aside class="fixed left-0 top-0 h-screen w-60 bg-sidebar-dark z-50 flex flex-col justify-between select-none shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="flex flex-col"><div class="h-14 px-space-lg flex items-center gap-space-sm bg-sidebar-dark"><img alt="Trắc địa Thiên Phú Admin Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1UM617Phk2vLvBRQ13XhpdHD3--VfqCJ1kGEm8_HrSQ9qTuLdwEe8ytlMCJW-ZYu4ObqzJuwCZmGgNpFA_Vfrg5ptE1PFVEhGhxIDW6ENSFBYXKH4RxCgn9PFHIAgUjeGSonwrJ9YIVj9djZ8q7TgD7Yh6hnq79JfhOHm2CjVy1ntl-yzLPTwlczZ0xWq63jP1b5PHmVQn3uvGkpgGPqXAgEPC5Wq454ENG-Jg-52n3"><span class="font-headline-md text-headline-md font-bold tracking-tight text-on-primary">Trắc địa Thiên Phú Admin</span></div><nav class="flex flex-col px-space-sm py-space-sm gap-1" data-active-classes="bg-sidebar-hover text-sidebar-active-link font-medium"><div class="flex flex-col"><div class="flex items-center justify-between px-space-md py-space-sm rounded-lg bg-sidebar-hover text-on-primary font-label-md text-label-md cursor-pointer"><div class="flex items-center gap-space-md"><span class="material-symbols-outlined text-[20px]">inventory_2</span><span class="">Sản phẩm</span></div><span class="material-symbols-outlined text-[18px] text-slate-400">expand_more</span></div><div class="flex flex-col pl-9 pr-space-xs py-1 gap-1"><a class="flex items-center py-1.5 px-space-sm rounded-lg text-slate-300 hover:bg-sidebar-hover hover:text-on-primary transition-colors font-label-sm text-label-sm" data-path="danh-sach-san-pham" href="#"><span class="">Danh sách sản phẩm</span></a><a class="flex items-center py-1.5 px-space-sm rounded-lg text-slate-300 hover:bg-sidebar-hover hover:text-on-primary transition-colors font-label-sm text-label-sm" data-path="danh-muc-san-pham" href="#"><span class="">Danh mục sản phẩm</span></a></div></div><a class="flex items-center gap-space-md px-space-md py-space-sm rounded-lg text-slate-300 hover:bg-sidebar-hover hover:text-on-primary transition-colors font-label-md text-label-md" data-path="cai-dat" href="#"><span class="material-symbols-outlined text-[20px]">settings</span><span class="">Cài đặt</span></a></nav></div><div class="p-space-md bg-sidebar-dark/60"><div class="flex items-center justify-between px-space-sm py-space-xs text-slate-400 font-label-sm text-label-sm"><span class="">Phiên bản v4.2.0</span><span class="material-symbols-outlined text-[16px]">cloud_done</span></div></div></aside><div class="pl-60"><header class="fixed top-0 left-60 right-0 h-14 bg-surface-card z-40 px-margin-desktop flex items-center shadow-[0_1px_8px_rgba(0,0,0,0.04)] justify-end"><div class="flex items-center gap-space-lg"><div class="flex items-center gap-space-sm pl-1 cursor-pointer"><div class="relative"><img alt="Profile" class="w-8 h-8 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCCEu8hfTmBA_wo9fxeDjdq4v9UOOR5UZV0SG-tGOgrDYfVLQhOFOTJzFgJ38toRc3S3C68KY-kvkWEqPDZKvb_BZcQ5iptg28niqBHzxAQS4KynphfWzfJK3nHu2U9QcRNX_bxUM0slVHNGC20Gn6hRJhTffg3soLh5jlfhga5tFkd9F-_RNuNP7RU7zjHUwE8ywY96hF_6w4H5GvaGcKNZl5CPCjyEqr1aLCpLS4"><span class="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-status-success ring-2 ring-surface-card"></span></div><div class="flex flex-col text-left"><span class="font-label-sm text-label-sm text-text-primary leading-tight font-medium">Nguyễn Thu Trang</span><span class="font-body-sm text-[11px] text-text-secondary leading-tight">Quản trị viên</span></div></div></div></header><main class="w-full pt-14 px-margin-desktop py-space-xl bg-canvas-bg"><div class="flex flex-col w-full pb-24">
+<!-- Toast Notification Preview -->
+<div class="fixed top-16 right-6 z-50 flex items-center gap-space-md px-space-lg py-3 rounded-lg bg-surface-container-lowest text-on-surface shadow-xl transition-all duration-300 transform translate-y-0 opacity-100" id="toast-success">
+<div class="w-7 h-7 rounded-full bg-status-success/15 flex items-center justify-center text-status-success">
+<span class="material-symbols-outlined text-[18px]">check_circle</span>
+</div>
+<div class="flex flex-col">
+<span class="font-headline-md text-body-sm font-semibold text-text-primary">Lưu thành công</span>
+<span class="font-body-sm text-[12px] text-text-secondary">Dữ liệu danh mục đã được đồng bộ lên hệ thống</span>
+</div>
+<button class="ml-2 text-text-muted hover:text-text-primary" onclick="document.getElementById('toast-success').classList.add('opacity-0','pointer-events-none')">
+<span class="material-symbols-outlined text-[18px]">close</span>
+</button>
+</div>
+<!-- Header Breadcrumb & Actions -->
+<div class="flex flex-col gap-space-xs mb-space-lg">
+<a class="inline-flex items-center gap-1.5 text-text-secondary hover:text-primary transition-colors font-label-sm text-label-sm w-fit group" href="#">
+<span class="material-symbols-outlined text-[16px] transition-transform group-hover:-translate-x-0.5">arrow_back</span>
+<span class="">Quay lại danh mục sản phẩm</span>
+</a>
+<div class="flex items-center justify-between mt-1">
+<div class="flex items-center gap-space-md">
+<h1 class="font-headline-xl text-headline-xl text-text-primary tracking-tight">Thêm mới danh mục sản phẩm</h1>
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full bg-surface-container-high text-primary font-label-sm text-label-sm">Bản nháp</span>
+</div>
+<div class="flex items-center gap-space-sm text-text-secondary font-body-sm text-body-sm">
+<span class="material-symbols-outlined text-[18px] text-text-muted">history</span>
+<span class="">Lần sửa cuối: Vừa xong</span>
+</div>
+</div>
+</div>
+<!-- Two Column Layout: 70% Left / 30% Right -->
+<form class="grid grid-cols-12 gap-gutter-desktop items-start" id="categoryForm" onsubmit="event.preventDefault(); triggerSave();">
+<!-- LEFT COLUMN (70% ~ 8 of 12 cols or 70/30 tailored) -->
+<div class="col-span-12 lg:col-span-8 flex flex-col gap-gutter-desktop">
+<!-- Card 1: Thông tin chung -->
+<div class="bg-surface-card rounded-xl p-5 shadow-sm">
+<div class="flex items-center justify-between pb-3 mb-space-lg">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[20px]">category</span>
+<h2 class="font-headline-md text-headline-md text-text-primary">Thông tin chung</h2>
+</div>
+<span class="text-status-danger font-label-sm text-label-sm font-normal">* Mục bắt buộc</span>
+</div>
+<div class="flex flex-col gap-space-lg">
+<!-- Tên danh mục -->
+<div class="flex flex-col gap-1.5">
+<div class="flex items-center justify-between">
+<label class="font-label-md text-label-md text-text-primary flex items-center gap-1" for="categoryName">
+                Tên danh mục <span class="text-status-danger">*</span>
+</label>
+<span class="font-data-mono text-[11px] text-text-muted" id="nameCounter">0/256</span>
+</div>
+<div class="relative">
+<input class="w-full h-10 px-3.5 rounded-lg bg-surface font-body-md text-body-md text-text-primary placeholder:text-text-muted focus:bg-surface-card focus:outline-none focus:ring-2 focus:ring-status-info/20 focus:text-text-primary transition-all" id="categoryName" maxlength="256" oninput="updateNameFeedback(this.value)" placeholder="Nhập tên danh mục (VD: Quần tây nam, Váy dạ hội...)" required="" type="text">
+</div>
+<div class="flex items-center gap-1.5 text-text-secondary font-body-sm text-[12px] mt-0.5">
+<span class="material-symbols-outlined text-[15px] text-text-muted">info</span>
+<span class="">Trường này là bắt buộc. Tối đa 256 ký tự.</span>
+</div>
+</div>
+<!-- Mô tả ngắn -->
+<div class="flex flex-col gap-1.5">
+<div class="flex items-center justify-between">
+<label class="font-label-md text-label-md text-text-primary" for="shortDesc">Mô tả ngắn</label>
+<span class="font-data-mono text-[11px] text-text-muted">Tối ưu thẻ tóm tắt</span>
+</div>
+<div class="rounded-lg bg-surface overflow-hidden" id="shortDescEditor"><div class="flex flex-wrap items-center gap-1 p-2 bg-surface-container-low"><button class="w-8 h-8 rounded flex items-center justify-center text-text-secondary hover:bg-surface-container-high hover:text-text-primary transition-colors" title="In đậm" type="button"><span class="material-symbols-outlined text-[18px]">format_bold</span></button><button class="w-8 h-8 rounded flex items-center justify-center text-text-secondary hover:bg-surface-container-high hover:text-text-primary transition-colors" title="In nghiêng" type="button"><span class="material-symbols-outlined text-[18px]">format_italic</span></button><button class="w-8 h-8 rounded flex items-center justify-center text-text-secondary hover:bg-surface-container-high hover:text-text-primary transition-colors" title="Gạch chân" type="button"><span class="material-symbols-outlined text-[18px]">format_underlined</span></button><div class="h-4 w-px bg-surface-variant mx-1"></div><button class="w-8 h-8 rounded flex items-center justify-center text-text-secondary hover:bg-surface-container-high hover:text-text-primary transition-colors" title="Danh sách số" type="button"><span class="material-symbols-outlined text-[18px]">format_list_numbered</span></button><button class="w-8 h-8 rounded flex items-center justify-center text-text-secondary hover:bg-surface-container-high hover:text-text-primary transition-colors" title="Danh sách chấm" type="button"><span class="material-symbols-outlined text-[18px]">format_list_bulleted</span></button><div class="h-4 w-px bg-surface-variant mx-1"></div><button class="w-8 h-8 rounded flex items-center justify-center text-text-secondary hover:bg-surface-container-high hover:text-text-primary transition-colors" title="Chèn liên kết" type="button"><span class="material-symbols-outlined text-[18px]">link</span></button><button class="w-8 h-8 rounded flex items-center justify-center text-text-secondary hover:bg-surface-container-high hover:text-text-primary transition-colors" title="Chèn hình ảnh" type="button"><span class="material-symbols-outlined text-[18px]">image</span></button><button class="w-8 h-8 rounded flex items-center justify-center text-text-secondary hover:bg-surface-container-high hover:text-text-primary transition-colors" title="Bảng" type="button"><span class="material-symbols-outlined text-[18px]">table_chart</span></button><div class="ml-auto flex items-center gap-1"><button class="px-2 py-1 rounded text-text-secondary hover:bg-surface-container-high font-label-sm text-[11px] flex items-center gap-1" type="button"><span class="material-symbols-outlined text-[14px]">code</span><span class="">HTML</span></button></div></div><div class="min-h-[100px] p-3.5 bg-surface-card focus:outline-none font-body-md text-body-md text-text-primary leading-relaxed">Mô tả ngắn gọn về danh mục để hiển thị trên trang chủ hoặc bộ sưu tập nổi bật...</div></div>
+</div>
+<!-- Mô tả chi tiết (WYSIWYG Mock) -->
+<div class="flex flex-col gap-1.5">
+<label class="font-label-md text-label-md text-text-primary">Mô tả chi tiết</label>
+<div class="rounded-lg bg-surface overflow-hidden">
+<!-- Toolbar -->
+<div class="flex flex-wrap items-center gap-1 p-2 bg-surface-container-low">
+<button class="w-8 h-8 rounded flex items-center justify-center text-text-secondary hover:bg-surface-container-high hover:text-text-primary transition-colors" title="In đậm" type="button">
+<span class="material-symbols-outlined text-[18px]">format_bold</span>
+</button>
+<button class="w-8 h-8 rounded flex items-center justify-center text-text-secondary hover:bg-surface-container-high hover:text-text-primary transition-colors" title="In nghiêng" type="button">
+<span class="material-symbols-outlined text-[18px]">format_italic</span>
+</button>
+<button class="w-8 h-8 rounded flex items-center justify-center text-text-secondary hover:bg-surface-container-high hover:text-text-primary transition-colors" title="Gạch chân" type="button">
+<span class="material-symbols-outlined text-[18px]">format_underlined</span>
+</button>
+<div class="h-4 w-px bg-surface-variant mx-1"></div>
+<button class="w-8 h-8 rounded flex items-center justify-center text-text-secondary hover:bg-surface-container-high hover:text-text-primary transition-colors" title="Danh sách số" type="button">
+<span class="material-symbols-outlined text-[18px]">format_list_numbered</span>
+</button>
+<button class="w-8 h-8 rounded flex items-center justify-center text-text-secondary hover:bg-surface-container-high hover:text-text-primary transition-colors" title="Danh sách chấm" type="button">
+<span class="material-symbols-outlined text-[18px]">format_list_bulleted</span>
+</button>
+<div class="h-4 w-px bg-surface-variant mx-1"></div>
+<button class="w-8 h-8 rounded flex items-center justify-center text-text-secondary hover:bg-surface-container-high hover:text-text-primary transition-colors" title="Chèn liên kết" type="button">
+<span class="material-symbols-outlined text-[18px]">link</span>
+</button>
+<button class="w-8 h-8 rounded flex items-center justify-center text-text-secondary hover:bg-surface-container-high hover:text-text-primary transition-colors" title="Chèn hình ảnh" type="button">
+<span class="material-symbols-outlined text-[18px]">image</span>
+</button>
+<button class="w-8 h-8 rounded flex items-center justify-center text-text-secondary hover:bg-surface-container-high hover:text-text-primary transition-colors" title="Bảng" type="button">
+<span class="material-symbols-outlined text-[18px]">table_chart</span>
+</button>
+<div class="ml-auto flex items-center gap-1">
+<button class="px-2 py-1 rounded text-text-secondary hover:bg-surface-container-high font-label-sm text-[11px] flex items-center gap-1" type="button">
+<span class="material-symbols-outlined text-[14px]">code</span>
+<span class="">HTML</span>
+</button>
+</div>
+</div>
+<!-- Writing Canvas -->
+<div class="min-h-[160px] p-3.5 bg-surface-card focus:outline-none font-body-md text-body-md text-text-primary leading-relaxed" placeholder="Nhập nội dung mô tả đầy đủ với các hình ảnh hoặc định dạng văn bản cho danh mục...">Bộ sưu tập thời trang được tuyển chọn kỹ lưỡng, phù hợp xu hướng thời thượng cùng chất liệu cao cấp thoáng mát.</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Card 2: Tối ưu SEO -->
+<div class="bg-surface-card rounded-xl p-5 shadow-sm flex flex-col gap-space-lg">
+<div class="flex items-center justify-between pb-3">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-status-info text-[20px]">troubleshoot</span>
+<h2 class="font-headline-md text-headline-md text-text-primary">Tối ưu SEO (Công cụ tìm kiếm)</h2>
+</div>
+<span class="font-body-sm text-[12px] text-text-secondary">Thiết lập thẻ Meta &amp; Đường dẫn thân thiện</span>
+</div>
+<!-- Google SERP Preview Box -->
+<div class="p-4 rounded-lg bg-surface flex flex-col gap-1.5 shadow-sm">
+<div class="flex items-center justify-between pb-1">
+<div class="flex items-center gap-1.5 text-text-secondary font-label-sm text-[12px]">
+<span class="material-symbols-outlined text-[16px] text-primary">visibility</span>
+<span class="font-semibold text-text-primary">Xem trước kết quả tìm kiếm Google</span>
+</div>
+<span class="text-[11px] font-data-mono text-status-success bg-status-success/10 px-2 py-0.5 rounded">Desktop &amp; Mobile</span>
+</div>
+<div class="flex flex-col pt-1">
+<span class="font-body-sm text-[13px] text-tertiary leading-tight truncate" id="serpUrl">https://tracdiathienphu.com/danh-muc/quan-tay-nam</span>
+<a class="font-headline-md text-[18px] text-[#1A0DAB] hover:underline leading-snug cursor-pointer font-medium mt-0.5" href="#" id="serpTitle">Quần tây nam cao cấp chính hãng - Kiểu dáng lịch lãm | Trắc địa Thiên Phú</a>
+<p class="font-body-sm text-[13px] text-on-surface-variant leading-relaxed line-clamp-2 mt-1" id="serpDesc">
+              Khám phá danh mục quần tây nam thời trang mới nhất. Thiết kế sang trọng, phom dáng chuẩn công sở, chất vải co giãn nhẹ đem lại sự thoải mái suốt ngày dài.
+            </p>
+</div>
+</div>
+<!-- SEO Inputs -->
+<div class="grid grid-cols-1 gap-space-md">
+<!-- Tiêu đề trang (SEO) -->
+<div class="flex flex-col gap-1">
+<div class="flex items-center justify-between">
+<label class="font-label-md text-label-md text-text-primary" for="seoTitle">Tiêu đề trang (SEO)</label>
+<span class="font-data-mono text-[11px] text-text-muted" id="seoTitleCount">64/256</span>
+</div>
+<input class="w-full h-10 px-3.5 rounded-lg bg-surface font-body-md text-body-md text-text-primary placeholder:text-text-muted focus:bg-surface-card focus:outline-none focus:ring-2 focus:ring-status-info/20 transition-all" id="seoTitle" maxlength="256" oninput="syncSeoTitle(this.value)" placeholder="Tiêu đề tối ưu hóa tìm kiếm" type="text" value="Quần tây nam cao cấp chính hãng - Kiểu dáng lịch lãm | Trắc địa Thiên Phú">
+</div>
+<!-- Mô tả SEO -->
+<div class="flex flex-col gap-1">
+<div class="flex items-center justify-between">
+<label class="font-label-md text-label-md text-text-primary" for="seoDescription">Mô tả SEO</label>
+<span class="font-data-mono text-[11px] text-text-muted" id="seoDescCount">142/256</span>
+</div>
+<textarea class="w-full p-3 rounded-lg bg-surface font-body-md text-body-md text-text-primary placeholder:text-text-muted focus:bg-surface-card focus:outline-none focus:ring-2 focus:ring-status-info/20 resize-none transition-all" id="seoDescription" maxlength="256" oninput="syncSeoDesc(this.value)" placeholder="Mô tả SEO tóm tắt hiển thị trên kết quả tìm kiếm..." rows="3">Khám phá danh mục quần tây nam thời trang mới nhất. Thiết kế sang trọng, phom dáng chuẩn công sở, chất vải co giãn nhẹ đem lại sự thoải mái suốt ngày dài.</textarea>
+</div>
+<!-- Đường dẫn (slug) -->
+<div class="flex flex-col gap-1">
+<label class="font-label-md text-label-md text-text-primary" for="seoSlug">Đường dẫn (slug)</label>
+<div class="flex items-center rounded-lg bg-surface overflow-hidden focus-within:ring-2 focus-within:ring-status-info/20 focus-within:bg-surface-card">
+<span class="px-3.5 py-2.5 bg-surface-container-low font-data-mono text-[12px] text-text-secondary select-none">https://tracdiathienphu.com/danh-muc/</span>
+<input class="flex-1 h-10 px-3 bg-transparent font-data-mono text-body-sm text-text-primary placeholder:text-text-muted focus:outline-none" id="seoSlug" oninput="syncSeoSlug(this.value)" placeholder="vd: quan-tay-nam" type="text" value="quan-tay-nam">
+</div>
+<span class="text-text-muted font-body-sm text-[12px]">Hệ thống tự động sinh slug từ tên danh mục. Bạn có thể tùy chỉnh lại theo ý muốn.</span>
+</div>
+</div>
+</div>
+</div>
+<!-- RIGHT COLUMN (30% ~ 4 of 12 cols) -->
+<div class="col-span-12 lg:col-span-4 flex flex-col gap-gutter-desktop">
+<!-- Card 3: Danh mục cha & Trạng thái -->
+<div class="bg-surface-card rounded-xl p-5 shadow-sm flex flex-col gap-space-lg">
+<div class="flex items-center gap-2 pb-2">
+<span class="material-symbols-outlined text-primary text-[20px]">account_tree</span>
+<h2 class="font-headline-md text-headline-md text-text-primary">Phân cấp danh mục</h2>
+</div>
+<!-- Danh mục cha Dropdown -->
+<div class="flex flex-col gap-1.5">
+<label class="font-label-md text-label-md text-text-primary" for="parentCategory">Danh mục cha</label>
+<span class="font-body-sm text-[12px] text-text-secondary leading-snug">
+            Chọn danh mục cấp trên nếu đây là danh mục con trong cây phân cấp
+          </span>
+<div class="relative mt-1">
+<select class="w-full h-10 pl-3.5 pr-10 rounded-lg bg-surface font-body-md text-body-md text-text-primary appearance-none focus:bg-surface-card focus:outline-none focus:ring-2 focus:ring-status-info/20 cursor-pointer" id="parentCategory">
+<option selected="" value="">Không có (danh mục gốc)</option>
+<option value="thoi-trang-nam">Thời trang nam</option>
+<option value="thoi-trang-nu">Thời trang nữ</option>
+<option value="phu-kien-the-thao">Phụ kiện thể thao</option>
+<option value="giay-dep">Giày dép</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-2.5 text-text-muted pointer-events-none text-[20px]">
+              expand_more
+            </span>
+</div>
+</div>
+
+<!-- Trạng thái (Radio buttons styled as interactive cards) -->
+
+</div>
+<!-- Card 4: Ảnh danh mục -->
+<div class="bg-surface-card rounded-xl p-5 shadow-sm flex flex-col gap-space-md">
+<div class="flex items-center justify-between pb-2">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[20px]">photo_library</span>
+<h2 class="font-headline-md text-headline-md text-text-primary">Ảnh danh mục</h2>
+</div>
+<span class="font-label-sm text-[11px] text-text-muted">1/5 ảnh</span>
+</div>
+<!-- Drag & Drop Uploader -->
+<div class="relative flex flex-col items-center justify-center p-5 rounded-lg bg-surface hover:bg-surface-container-low transition-colors cursor-pointer text-center group" id="dropzone" onclick="document.getElementById('fileInput').click()">
+<input accept="image/*" class="hidden" id="fileInput" type="file">
+<div class="w-12 h-12 rounded-full bg-primary-light flex items-center justify-center text-status-info mb-2 group-hover:scale-105 transition-transform">
+<span class="material-symbols-outlined text-[24px]">cloud_upload</span>
+</div>
+<span class="font-label-md text-label-sm text-text-primary font-medium">Kéo thả ảnh vào đây hoặc bấm để chọn</span>
+<span class="font-body-sm text-[12px] text-text-secondary mt-1">Định dạng JPG, PNG, WEBP</span>
+</div>
+<!-- Uploaded Image Preview Area -->
+<div class="flex flex-col gap-2 mt-1">
+<span class="font-label-sm text-label-sm text-text-secondary">Ảnh hiện tại</span>
+<div class="relative group flex items-center gap-3 p-2 rounded-lg bg-surface shadow-sm">
+<!-- Drag handle -->
+<div class="cursor-grab text-text-muted hover:text-text-primary">
+<span class="material-symbols-outlined text-[18px]">drag_indicator</span>
+</div>
+<!-- Thumbnail Image Placeholder -->
+<div class="relative w-16 h-16 rounded-md overflow-hidden bg-surface-container-high flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="Modern stylish tailored dress trousers hanging neatly in a minimal Scandinavian boutique, soft natural daylight, premium aesthetic with subtle navy tones" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBesOzBcMpBEZ_pOwS1zXKHq0_d7GzCV17IBruwop9YSBcwA3k9Gw5Te_GjJqnmAQ82pxUaFnAT4gVbWqsaEqTahdnE0ATFy2IU682GHT9LCgIMET-Dt2QEBn4g3bnXqWX4PWpUTGOcx2CXIjpEEH_i2jIO4J1TLHwE2gdzK2DsJ78yHmy16fIG-SLAQhI-QWGvoWMYFD_hh0UGODypYuf--HxXbF2jiWqD0RUPvgk">
+<span class="absolute top-1 left-1 px-1.5 py-0.5 rounded bg-primary text-on-primary font-data-mono text-[9px] uppercase tracking-wider font-bold">
+                Ảnh chính
+              </span>
+</div>
+<!-- File details -->
+<div class="flex flex-col flex-1 min-w-0">
+<span class="font-label-sm text-label-sm text-text-primary truncate font-medium">quan-tay-nam-banner.png</span>
+<span class="font-data-mono text-[11px] text-text-secondary">600 x 600 px • 1.2 MB</span>
+</div>
+<!-- Delete action -->
+<button class="w-8 h-8 rounded flex items-center justify-center text-status-danger hover:bg-status-danger/10 transition-colors" onclick="this.closest('.group').remove()" title="Xóa ảnh" type="button">
+<span class="material-symbols-outlined text-[18px]">delete</span>
+</button>
+</div>
+</div>
+<div class="flex items-center gap-1.5 text-text-muted font-body-sm text-[12px] mt-1">
+<span class="material-symbols-outlined text-[16px]">help_outline</span>
+<span class="">Kích thước khuyến nghị: 600x600px. Tối đa 5MB.</span>
+</div>
+</div>
+<!-- Quick Metrics / Extra Meta -->
+<div class="p-4 rounded-xl bg-surface-container-low flex items-center justify-between shadow-sm">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-lg bg-surface-card flex items-center justify-center text-primary shadow-sm">
+<span class="material-symbols-outlined text-[20px]">layers</span>
+</div>
+<div class="flex flex-col">
+<span class="font-headline-md text-body-sm font-semibold text-text-primary">28 sản phẩm</span>
+<span class="font-body-sm text-[12px] text-text-secondary">Đang thuộc danh mục tương tự</span>
+</div>
+</div>
+<span class="material-symbols-outlined text-text-muted text-[18px]">chevron_right</span>
+</div>
+</div>
+</form>
+<!-- STICKY FOOTER ACTION BAR -->
+<div class="fixed bottom-0 left-60 right-0 h-16 bg-surface-card z-30 px-margin-desktop flex items-center justify-between shadow-xl">
+<div class="flex items-center gap-space-sm text-text-secondary font-body-sm text-body-sm">
+<span class="inline-block w-2 h-2 rounded-full bg-status-warning"></span>
+<span class="">Thay đổi chưa được lưu</span>
+</div>
+<div class="flex items-center gap-space-md">
+<button class="h-9 px-4 rounded-lg bg-surface-card hover:bg-surface text-text-primary font-label-md text-label-md transition-colors shadow-sm" onclick="window.history.back()" type="button">
+        Hủy
+      </button>
+<button class="h-9 px-5 rounded-lg bg-status-info hover:bg-primary-hover active:bg-primary text-on-primary font-label-md text-label-md font-medium transition-colors flex items-center gap-1.5 shadow-sm" onclick="triggerSave()" type="button">
+<span class="material-symbols-outlined text-[18px]">save</span>
+<span class="">Lưu</span>
+</button>
+</div>
+</div>
+</div>
+<script>
+  function updateNameFeedback(val) {
+    const counter = document.getElementById('nameCounter');
+    counter.innerText = val.length + '/256';
+
+    // Auto slugify if user hasn't explicitly customized slug heavily
+    const slugInput = document.getElementById('seoSlug');
+    if (val.trim()) {
+      const generatedSlug = toSlug(val);
+      slugInput.value = generatedSlug;
+      syncSeoSlug(generatedSlug);
+    }
+  }
+
+  function toSlug(str) {
+    let slug = str.toLowerCase();
+    slug = slug.replace(/á|à|ả|ạ|ã|ă|ắ|ằ|ẳ|ẵ|ặ|â|ấ|ầ|ẩ|ẫ|ậ/gi, 'a');
+    slug = slug.replace(/é|è|ẻ|ẽ|ẹ|ê|ế|ề|ể|ễ|ệ/gi, 'e');
+    slug = slug.replace(/i|í|ì|ỉ|ĩ|ị/gi, 'i');
+    slug = slug.replace(/ó|ò|ỏ|õ|ọ|ô|ố|ồ|ổ|ỗ|ộ|ơ|ớ|ờ|ở|ỡ|ợ/gi, 'o');
+    slug = slug.replace(/ú|ù|ủ|ũ|ụ|ư|ứ|ừ|ử|ữ|ự/gi, 'u');
+    slug = slug.replace(/ý|ỳ|ỷ|ỹ|ỵ/gi, 'y');
+    slug = slug.replace(/đ/gi, 'd');
+    slug = slug.replace(/[^a-z0-9 -]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-');
+    return slug;
+  }
+
+  function syncSeoTitle(val) {
+    document.getElementById('seoTitleCount').innerText = val.length + '/256';
+    const preview = document.getElementById('serpTitle');
+    preview.innerText = val || 'Tiêu đề tối ưu hóa tìm kiếm Google';
+  }
+
+  function syncSeoDesc(val) {
+    document.getElementById('seoDescCount').innerText = val.length + '/256';
+    const preview = document.getElementById('serpDesc');
+    preview.innerText = val || 'Mô tả trang web hiển thị trong kết quả tìm kiếm của Google...';
+  }
+
+  function syncSeoSlug(val) {
+    const preview = document.getElementById('serpUrl');
+    preview.innerText = 'https://cuahang.mysapo.net/danh-muc/' + (val || 'danh-muc');
+  }
+
+  function triggerSave() {
+    const toast = document.getElementById('toast-success');
+    toast.classList.remove('opacity-0', 'pointer-events-none', '-translate-y-4');
+    toast.classList.add('opacity-100', 'translate-y-0');
+    
+    setTimeout(() => {
+      toast.classList.remove('opacity-100', 'translate-y-0');
+      toast.classList.add('opacity-0', '-translate-y-4', 'pointer-events-none');
+    }, 3500);
+  }
+</script></main></div>
+
+</body></html>

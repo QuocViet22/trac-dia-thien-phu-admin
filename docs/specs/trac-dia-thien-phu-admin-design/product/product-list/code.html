@@ -1,0 +1,437 @@
+<!DOCTYPE html><html lang="vi" style=""><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0" name="viewport"><meta content="web_dashboard" name="shell-type"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;display=swap" rel="stylesheet"><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{colors:{"surface":"#f7f9ff","secondary":"#505f79","on-primary":"#ffffff","tertiary":"#006947","sidebar-dark":"#111C2D","surface-container-high":"#d9eaff","surface-container-lowest":"#ffffff","status-warning":"#F59E0B","outline":"#717785","text-secondary":"#5C6F84","surface-bright":"#f7f9ff","border-card":"#E0E6ED","on-surface-variant":"#404754","on-secondary":"#ffffff","text-primary":"#182538","on-secondary-fixed":"#0c1c32","on-primary-fixed":"#001b3c","on-tertiary-container":"#f5fff6","tertiary-container":"#00855b","inverse-on-surface":"#e8f1ff","on-error-container":"#93000a","on-tertiary-fixed":"#002113","tertiary-fixed-dim":"#4edea3","on-surface":"#081d2f","on-error":"#ffffff","background":"#f7f9ff","sidebar-hover":"#243B5A","sidebar-active-link":"#4DA3FF","primary-light":"#E5F3FF","surface-container-low":"#edf4ff","status-danger":"#EF4444","on-tertiary":"#ffffff","sidebar-base":"#1B2A41","on-secondary-fixed-variant":"#394760","outline-variant":"#c0c6d6","canvas-bg":"#F4F6F8","on-background":"#081d2f","secondary-fixed":"#d5e3ff","status-success":"#10B981","on-primary-container":"#fefcff","primary":"#005baf","text-muted":"#8C9BA5","inverse-primary":"#a8c8ff","surface-dim":"#c8dcf4","status-info":"#0088FF","surface-tint":"#005eb3","primary-fixed-dim":"#a8c8ff","error-container":"#ffdad6","secondary-container":"#d1e0ff","surface-variant":"#d1e4fd","on-primary-fixed-variant":"#004689","surface-card":"#FFFFFF","primary-fixed":"#d5e3ff","error":"#ba1a1a","primary-hover":"#0070D2","on-tertiary-fixed-variant":"#005236","tertiary-fixed":"#6ffbbe","surface-container-highest":"#d1e4fd","on-secondary-container":"#54637d","primary-container":"#0074db","secondary-fixed-dim":"#b8c7e5","surface-container":"#e3efff","inverse-surface":"#1f3245"},borderRadius:{"DEFAULT":"0.125rem","lg":"0.25rem","xl":"0.5rem","full":"0.75rem"},spacing:{"space-xs":"4px","space-xl":"24px","space-sm":"8px","gutter":"16px","space-lg":"16px","margin-desktop":"24px","gutter-desktop":"20px","margin":"16px","space-md":"12px"},fontFamily:{"headline-xl":["Inter"],"data-mono":["Inter"],"label-md":["Inter"],"label-sm":["Inter"],"body-md":["Inter"],"body-lg":["Inter"],"headline-md":["Inter"],"body-sm":["Inter"],"headline-lg":["Inter"]},fontSize:{"headline-xl":["24px",{lineHeight:"32px",letterSpacing:"-0.015em",fontWeight:"700"}],"data-mono":["13px",{lineHeight:"18px",letterSpacing:"0.02em",fontWeight:"600"}],"label-md":["14px",{lineHeight:"20px",fontWeight:"500"}],"label-sm":["12px",{lineHeight:"16px",fontWeight:"500"}],"body-md":["14px",{lineHeight:"20px",fontWeight:"400"}],"body-lg":["15px",{lineHeight:"22px",fontWeight:"400"}],"headline-md":["16px",{lineHeight:"24px",fontWeight:"600"}],"body-sm":["13px",{lineHeight:"18px",fontWeight:"400"}],"headline-lg":["20px",{lineHeight:"28px",letterSpacing:"-0.01em",fontWeight:"600"}]}}}};</script></head><body class="bg-canvas-bg font-body-md text-text-primary"><aside class="fixed left-0 top-0 h-screen w-60 bg-sidebar-dark z-50 flex flex-col justify-between select-none shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="flex flex-col"><div class="h-14 px-space-lg flex items-center gap-space-sm bg-sidebar-dark"><img alt="Trắc địa Thiên Phú Admin Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1UM617Phk2vLvBRQ13XhpdHD3--VfqCJ1kGEm8_HrSQ9qTuLdwEe8ytlMCJW-ZYu4ObqzJuwCZmGgNpFA_Vfrg5ptE1PFVEhGhxIDW6ENSFBYXKH4RxCgn9PFHIAgUjeGSonwrJ9YIVj9djZ8q7TgD7Yh6hnq79JfhOHm2CjVy1ntl-yzLPTwlczZ0xWq63jP1b5PHmVQn3uvGkpgGPqXAgEPC5Wq454ENG-Jg-52n3"><span class="font-headline-md text-headline-md font-bold tracking-tight text-on-primary">Trắc địa Thiên Phú Admin</span></div><nav class="flex flex-col px-space-sm py-space-sm gap-1" data-active-classes="bg-sidebar-hover text-sidebar-active-link font-medium"><div class="flex flex-col"><div class="flex items-center justify-between px-space-md py-space-sm rounded-lg bg-sidebar-hover text-on-primary font-label-md text-label-md cursor-pointer"><div class="flex items-center gap-space-md"><span class="material-symbols-outlined text-[20px]">inventory_2</span><span class="">Sản phẩm</span></div><span class="material-symbols-outlined text-[18px] text-slate-400">expand_more</span></div><div class="flex flex-col pl-9 pr-space-xs py-1 gap-1"><a class="flex items-center py-1.5 px-space-sm rounded-lg text-slate-300 hover:bg-sidebar-hover hover:text-on-primary transition-colors font-label-sm text-label-sm" data-path="danh-sach-san-pham" href="#"><span class="">Danh sách sản phẩm</span></a><a class="flex items-center py-1.5 px-space-sm rounded-lg text-slate-300 hover:bg-sidebar-hover hover:text-on-primary transition-colors font-label-sm text-label-sm" data-path="danh-muc-san-pham" href="#"><span class="">Danh mục sản phẩm</span></a></div></div><a class="flex items-center gap-space-md px-space-md py-space-sm rounded-lg text-slate-300 hover:bg-sidebar-hover hover:text-on-primary transition-colors font-label-md text-label-md" data-path="cai-dat" href="#"><span class="material-symbols-outlined text-[20px]">settings</span><span class="">Cài đặt</span></a></nav></div><div class="p-space-md bg-sidebar-dark/60"><div class="flex items-center justify-between px-space-sm py-space-xs text-slate-400 font-label-sm text-label-sm"><span class="">Phiên bản v4.2.0</span><span class="material-symbols-outlined text-[16px]">cloud_done</span></div></div></aside><div class="pl-60"><header class="fixed top-0 left-60 right-0 h-14 bg-surface-card z-40 px-margin-desktop flex items-center shadow-[0_1px_8px_rgba(0,0,0,0.04)] justify-end"><div class="flex items-center gap-space-lg"><div class="flex items-center gap-space-sm pl-1 cursor-pointer"><div class="relative"><img alt="Profile" class="w-8 h-8 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCCEu8hfTmBA_wo9fxeDjdq4v9UOOR5UZV0SG-tGOgrDYfVLQhOFOTJzFgJ38toRc3S3C68KY-kvkWEqPDZKvb_BZcQ5iptg28niqBHzxAQS4KynphfWzfJK3nHu2U9QcRNX_bxUM0slVHNGC20Gn6hRJhTffg3soLh5jlfhga5tFkd9F-_RNuNP7RU7zjHUwE8ywY96hF_6w4H5GvaGcKNZl5CPCjyEqr1aLCpLS4"><span class="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-status-success ring-2 ring-surface-card"></span></div><div class="flex flex-col text-left"><span class="font-label-sm text-label-sm text-text-primary leading-tight font-medium">Nguyễn Thu Trang</span><span class="font-body-sm text-[11px] text-text-secondary leading-tight">Quản trị viên</span></div></div></div></header><main class="w-full pt-14 px-margin-desktop py-space-xl bg-canvas-bg"><div class="flex flex-col w-full gap-space-lg pb-12">
+<!-- BREADCRUMB & PAGE HEADER -->
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-space-md">
+<div class="flex flex-col gap-1">
+<nav class="flex items-center gap-1.5 font-label-sm text-label-sm text-text-secondary">
+<a class="hover:text-status-info transition-colors" href="#">Sản phẩm</a>
+<span class="material-symbols-outlined text-[14px] text-text-muted">chevron_right</span>
+<span class="text-text-primary font-medium">Danh sách sản phẩm</span>
+</nav>
+<div class="flex items-center gap-3 mt-1">
+<h1 class="font-headline-xl text-headline-xl text-text-primary tracking-tight">Danh sách sản phẩm</h1>
+<span class="px-2 py-0.5 rounded-full bg-surface-container text-text-secondary font-data-mono text-label-sm">120 mặt hàng</span>
+</div>
+</div>
+<!-- ACTION BUTTON GROUP -->
+<div class="flex items-center gap-space-sm flex-wrap"><button class="h-9 px-4 bg-status-info hover:bg-primary-hover text-on-primary rounded-lg font-label-md text-label-md font-semibold flex items-center gap-1.5 shadow-sm transition-all active:scale-[0.98]" type="button"><span class="material-symbols-outlined text-[20px]">add</span><span class="">Thêm sản phẩm</span></button></div>
+</div>
+<!-- KPI SUMMARY STRIP (Operational glance) -->
+
+<!-- MAIN CARD CONTAINER -->
+<div class="bg-surface-card rounded-xl shadow-sm flex flex-col overflow-hidden">
+<!-- FILTER TABS -->
+<div class="flex items-center px-space-lg pt-2 bg-surface-card overflow-x-auto shadow-inner">
+<button class="flex items-center gap-2 pb-3 pt-2 px-4 font-label-md text-label-md font-semibold text-status-info border-b-2 border-status-info whitespace-nowrap transition-colors" type="button">
+<span class="">Tất cả sản phẩm</span>
+<span class="px-1.5 py-0.2 rounded-full bg-primary-light text-status-info text-[11px] font-data-mono">120</span>
+</button>
+
+
+</div>
+<!-- FILTER & SEARCH BAR -->
+<div class="p-space-lg flex flex-col md:flex-row items-stretch md:items-center gap-space-md bg-surface-card">
+<div class="relative flex-1 flex items-center">
+<span class="material-symbols-outlined absolute left-3 text-text-muted text-[18px]">search</span>
+<input class="w-full h-9 pl-9 pr-4 rounded-lg bg-canvas-bg font-body-sm text-body-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:ring-1 focus:ring-status-info transition-all" placeholder="Tìm kiếm theo tên, mã SKU, mã vạch..." type="text">
+</div>
+<div class="flex items-center gap-space-sm flex-wrap">
+<!-- Category Dropdown Trigger -->
+<button class="h-9 px-3 rounded-lg bg-surface-card hover:bg-surface-container-low text-text-primary font-label-sm text-label-sm flex items-center gap-1.5 shadow-sm transition-colors" type="button">
+<span class="text-text-secondary">Danh mục:</span>
+<span class="font-medium">Tất cả</span>
+<span class="material-symbols-outlined text-[16px] text-text-muted">expand_more</span>
+</button>
+<!-- Brand / Filter Funnel -->
+<button class="h-9 px-3 rounded-lg bg-surface-card hover:bg-surface-container-low text-text-primary font-label-sm text-label-sm flex items-center gap-1.5 shadow-sm transition-colors" type="button">
+<span class="material-symbols-outlined text-[16px] text-text-secondary">filter_list</span>
+<span class="">Bộ lọc khác</span>
+<span class="w-1.5 h-1.5 rounded-full bg-status-info"></span>
+</button>
+<!-- Column Settings Icon -->
+<button class="h-9 w-9 rounded-lg bg-surface-card hover:bg-surface-container-low text-text-secondary hover:text-text-primary flex items-center justify-center shadow-sm transition-colors" title="Cột hiển thị" type="button">
+<span class="material-symbols-outlined text-[18px]">view_column</span>
+</button>
+</div>
+</div>
+<!-- FLOATING BULK ACTIONS BANNER (Simulated state: 3 items checked) -->
+<div class="mx-space-lg mb-space-md p-space-sm px-space-md bg-surface-container-high rounded-lg flex flex-wrap items-center justify-between gap-space-sm transition-all" id="bulkActionBar">
+<div class="flex items-center gap-space-md">
+<div class="flex items-center gap-2">
+<span class="w-2.5 h-2.5 rounded-full bg-status-info animate-pulse"></span>
+<span class="font-label-md text-label-md text-text-primary font-semibold">Đã chọn 3 sản phẩm</span>
+</div>
+<span class="hidden sm:inline text-text-muted text-[13px]">|</span>
+<button class="text-status-info hover:underline font-label-sm text-label-sm" onclick="deselectAll()" type="button">Bỏ chọn tất cả</button>
+</div>
+<div class="flex items-center gap-space-sm flex-wrap"><button class="h-9 px-4 bg-status-info hover:bg-primary-hover text-on-primary rounded-lg font-label-md text-label-md font-semibold flex items-center gap-1.5 shadow-sm transition-all active:scale-[0.98]" type="button"><span class="material-symbols-outlined text-[20px]">add</span><span class="">Thêm sản phẩm</span></button></div>
+</div>
+<!-- DATA TABLE CONTAINER -->
+<div class="w-full overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="h-10 bg-canvas-bg font-label-sm text-[12px] uppercase tracking-wider text-text-secondary select-none">
+<th class="w-10 px-space-md text-center">
+<label class="inline-flex items-center cursor-pointer">
+<input checked="" class="w-4 h-4 rounded text-status-info focus:ring-0 cursor-pointer accent-[#0088FF]" type="checkbox">
+</label>
+</th>
+<th class="w-14 px-space-sm">Ảnh</th>
+<th class="min-w-[240px] px-space-md">Tên sản phẩm</th>
+<th class="min-w-[110px] px-space-md">Mã SKU</th>
+<th class="min-w-[130px] px-space-md">Mã vạch</th>
+<th class="min-w-[130px] px-space-md">Danh mục</th>
+<th class="min-w-[90px] px-space-md text-center">ĐVT</th>
+<th class="min-w-[130px] px-space-md">Trạng thái</th>
+<th class="w-24 px-space-md text-right pr-space-lg">Thao tác</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-surface-container-low font-body-sm text-body-sm text-text-primary">
+<!-- Row 1: Selected -->
+<tr class="h-14 bg-surface-container-low/60 hover:bg-surface-container-high/40 transition-colors">
+<td class="px-space-md text-center">
+<input checked="" class="w-4 h-4 rounded text-status-info focus:ring-0 cursor-pointer accent-[#0088FF]" type="checkbox">
+</td>
+<td class="px-space-sm">
+<div class="w-10 h-10 rounded-lg overflow-hidden bg-surface-container flex items-center justify-center relative shadow-xs">
+<img class="w-full h-full object-cover" data-alt="Modern navy blue men's polo shirt cleanly folded in an e-commerce studio flat lay setting, high resolution fabric texture, professional soft lighting, clean slate background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBQhD2sPz-tjzDvCwInkhEUg5JOlDtYOBWFqTMINx_9Fe6KxFK1Qsun-o5N6RqgmyddF3wgRKYJeAwX4CO8yEKaBFXWTgYCYWJWMI5ZK5fqTYAVDoc4qKuU7xAIgHoAg043TGsdxzV85_EpxPMF6PIodqt9KwZke0ajCv2ZAVqXEps95bEdJiFq18W7ckc1mIGItr_iTiHxoJiJJN8IUcEVNHWaDHWi1C34o2Oh8nY">
+</div>
+</td>
+<td class="px-space-md">
+<div class="flex flex-col">
+<a class="font-label-md text-label-md text-status-info hover:underline font-medium line-clamp-1" href="#">
+                  Áo thun Polo Nam Cotton Compact Pima
+                </a>
+<span class="text-text-muted text-[11px]">Tồn kho: <strong class="text-text-primary font-medium">142</strong> | 3 biến thể</span>
+</div>
+</td>
+<td class="px-space-md font-data-mono text-data-mono text-text-secondary">APO-001</td>
+<td class="px-space-md font-data-mono text-[12px] text-text-muted">8936012345678</td>
+<td class="px-space-md">
+<span class="inline-flex items-center px-2 py-0.5 rounded bg-surface-container text-text-primary font-label-sm text-[12px]">
+                Thời trang nam
+              </span>
+</td>
+<td class="px-space-md text-center font-medium">Cái</td>
+<td class="px-space-md">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-50 text-status-success font-label-sm text-[12px] font-medium">
+<span class="w-1.5 h-1.5 rounded-full bg-status-success"></span>
+                Đang kinh doanh
+              </span>
+</td>
+<td class="px-space-md text-right pr-space-lg">
+<div class="flex items-center justify-end gap-1">
+<button class="p-1 rounded text-text-secondary hover:text-status-info hover:bg-surface-card transition-colors" title="Chỉnh sửa" type="button">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+</button>
+<button class="p-1 rounded text-text-secondary hover:text-text-primary hover:bg-surface-card transition-colors" title="Nhân bản" type="button">
+<span class="material-symbols-outlined text-[18px]">content_copy</span>
+</button>
+<button class="p-1 rounded text-text-secondary hover:text-status-danger hover:bg-surface-card transition-colors" title="Xóa" type="button">
+<span class="material-symbols-outlined text-[18px]">delete</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 2: Selected -->
+<tr class="h-14 bg-surface-container-low/60 hover:bg-surface-container-high/40 transition-colors">
+<td class="px-space-md text-center">
+<input checked="" class="w-4 h-4 rounded text-status-info focus:ring-0 cursor-pointer accent-[#0088FF]" type="checkbox">
+</td>
+<td class="px-space-sm">
+<div class="w-10 h-10 rounded-lg overflow-hidden bg-surface-container flex items-center justify-center relative shadow-xs">
+<img class="w-full h-full object-cover" data-alt="Slim fit dark indigo denim jeans arranged neatly on minimalist light surface, premium retail apparel photography, studio ambient reflections." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBEoT_j9G64QBzO-S4u4n0xpQ3W3IKRGeK4IHc6AMHXY8M-LNDNDVxJbC4RKkzyJa9qUUisnZZIfX1qBjVfZEuCyu3xxBtS5-WdOZNU2t-qhDYqCA4sOSetZ_p3Ec3nGQu95drrs02fzdxazbb_OKp8Lx-icnFeBY19Ieo14Be-k9-w1VTveOmzySo9u7mc206MPTHwmh9zJAQO3Zih_e3339NYj_S2MckfFSiKpxI">
+</div>
+</td>
+<td class="px-space-md">
+<div class="flex flex-col">
+<a class="font-label-md text-label-md text-status-info hover:underline font-medium line-clamp-1" href="#">
+                  Quần Jeans Slimfit Co Giãn Cao Cấp
+                </a>
+<span class="text-text-muted text-[11px]">Tồn kho: <strong class="text-text-primary font-medium">58</strong> | 4 biến thể</span>
+</div>
+</td>
+<td class="px-space-md font-data-mono text-data-mono text-text-secondary">QJ-102</td>
+<td class="px-space-md font-data-mono text-[12px] text-text-muted">8936012345685</td>
+<td class="px-space-md">
+<span class="inline-flex items-center px-2 py-0.5 rounded bg-surface-container text-text-primary font-label-sm text-[12px]">
+                Thời trang nam
+              </span>
+</td>
+<td class="px-space-md text-center font-medium">Cái</td>
+<td class="px-space-md">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-50 text-status-success font-label-sm text-[12px] font-medium">
+<span class="w-1.5 h-1.5 rounded-full bg-status-success"></span>
+                Đang kinh doanh
+              </span>
+</td>
+<td class="px-space-md text-right pr-space-lg">
+<div class="flex items-center justify-end gap-1">
+<button class="p-1 rounded text-text-secondary hover:text-status-info hover:bg-surface-card transition-colors" title="Chỉnh sửa" type="button">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+</button>
+<button class="p-1 rounded text-text-secondary hover:text-text-primary hover:bg-surface-card transition-colors" title="Nhân bản" type="button">
+<span class="material-symbols-outlined text-[18px]">content_copy</span>
+</button>
+<button class="p-1 rounded text-text-secondary hover:text-status-danger hover:bg-surface-card transition-colors" title="Xóa" type="button">
+<span class="material-symbols-outlined text-[18px]">delete</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 3: Selected -->
+<tr class="h-14 bg-surface-container-low/60 hover:bg-surface-container-high/40 transition-colors">
+<td class="px-space-md text-center">
+<input checked="" class="w-4 h-4 rounded text-status-info focus:ring-0 cursor-pointer accent-[#0088FF]" type="checkbox">
+</td>
+<td class="px-space-sm">
+<div class="w-10 h-10 rounded-lg overflow-hidden bg-surface-container flex items-center justify-center relative shadow-xs">
+<img class="w-full h-full object-cover" data-alt="Handcrafted minimalist genuine white leather sneakers positioned dynamically, commercial footwear product shot, neutral grey background with soft directional shadow." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDDaF3Rqtn_SnTO2EmLX9kig5PP1tcKsfyo-qXp1RGeqwRYGQzBRoe2jx9kaT3XL4dGfF4GZ073jPVtOzrumosYUgbc6lt8bMK0PMBnxgYb6LUK52neFjMKcOEK7Qu1B679jc-R3GeDc6-lt_gVGiOKp-owq_p_1BpHufps9_qnTCdVZymjBZqZP6CfRA-rS_4OblV23jn1OdvVkeCf5J2V2_npaZYW6XWxB0jK41c">
+</div>
+</td>
+<td class="px-space-md">
+<div class="flex flex-col">
+<a class="font-label-md text-label-md text-status-info hover:underline font-medium line-clamp-1" href="#">
+                  Giày Sneaker Da Bò Nguyên Tấm
+                </a>
+<span class="text-text-muted text-[11px]">Tồn kho: <strong class="text-text-primary font-medium">23</strong> | 5 biến thể</span>
+</div>
+</td>
+<td class="px-space-md font-data-mono text-data-mono text-text-secondary">GS-304</td>
+<td class="px-space-md font-data-mono text-[12px] text-text-muted">8936012345692</td>
+<td class="px-space-md">
+<span class="inline-flex items-center px-2 py-0.5 rounded bg-surface-container text-text-primary font-label-sm text-[12px]">
+                Giày dép
+              </span>
+</td>
+<td class="px-space-md text-center font-medium">Đôi</td>
+<td class="px-space-md">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-50 text-status-success font-label-sm text-[12px] font-medium">
+<span class="w-1.5 h-1.5 rounded-full bg-status-success"></span>
+                Đang kinh doanh
+              </span>
+</td>
+<td class="px-space-md text-right pr-space-lg">
+<div class="flex items-center justify-end gap-1">
+<button class="p-1 rounded text-text-secondary hover:text-status-info hover:bg-surface-card transition-colors" title="Chỉnh sửa" type="button">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+</button>
+<button class="p-1 rounded text-text-secondary hover:text-text-primary hover:bg-surface-card transition-colors" title="Nhân bản" type="button">
+<span class="material-symbols-outlined text-[18px]">content_copy</span>
+</button>
+<button class="p-1 rounded text-text-secondary hover:text-status-danger hover:bg-surface-card transition-colors" title="Xóa" type="button">
+<span class="material-symbols-outlined text-[18px]">delete</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 4: Unselected (Ngừng kinh doanh) -->
+<tr class="h-14 hover:bg-canvas-bg transition-colors">
+<td class="px-space-md text-center">
+<input class="w-4 h-4 rounded text-status-info focus:ring-0 cursor-pointer accent-[#0088FF]" type="checkbox">
+</td>
+<td class="px-space-sm">
+<div class="w-10 h-10 rounded-lg overflow-hidden bg-surface-container flex items-center justify-center relative shadow-xs opacity-75">
+<img class="w-full h-full object-cover" data-alt="Crisp light blue short sleeve silk formal shirt on a wooden hanger, clean department store visual merchandising backdrop, sharp balanced lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA6bz2dp7IWAJ24xx6FqVViOGiYetXhBiU4KaamXUG6CfywXEeJIJpaZLozZcm09ej8inzhPFT4AhNmpYTmKXQWa1SQ7JR8OnUAzHH9wnBaICKxOMOTgtaf6y-3iz_D1cE4ZA6IXMJ5OvKzwiuK0XuaPohb4rJzcc6KGrkpBFccJOHuYFFnwh0ocqQG7oFnqmUvSYxNhSdQpxK9T1x5MJWQu6Ed67J5qIZQ3kpRT_0">
+</div>
+</td>
+<td class="px-space-md">
+<div class="flex flex-col">
+<a class="font-label-md text-label-md text-text-secondary hover:underline font-medium line-clamp-1" href="#">
+                  Áo sơ mi lụa công sở ngắn tay
+                </a>
+<span class="text-text-muted text-[11px]">Tồn kho: <strong class="text-text-muted font-normal">0</strong> | 2 biến thể</span>
+</div>
+</td>
+<td class="px-space-md font-data-mono text-data-mono text-text-secondary">SM-551</td>
+<td class="px-space-md font-data-mono text-[12px] text-text-muted">8936012345708</td>
+<td class="px-space-md">
+<span class="inline-flex items-center px-2 py-0.5 rounded bg-surface-container text-text-primary font-label-sm text-[12px]">
+                Thời trang nam
+              </span>
+</td>
+<td class="px-space-md text-center font-medium">Cái</td>
+<td class="px-space-md">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-surface-container text-text-muted font-label-sm text-[12px] font-medium">
+<span class="w-1.5 h-1.5 rounded-full bg-text-muted"></span>
+                Ngừng kinh doanh
+              </span>
+</td>
+<td class="px-space-md text-right pr-space-lg">
+<div class="flex items-center justify-end gap-1">
+<button class="p-1 rounded text-text-secondary hover:text-status-info hover:bg-surface-card transition-colors" title="Chỉnh sửa" type="button">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+</button>
+<button class="p-1 rounded text-text-secondary hover:text-text-primary hover:bg-surface-card transition-colors" title="Nhân bản" type="button">
+<span class="material-symbols-outlined text-[18px]">content_copy</span>
+</button>
+<button class="p-1 rounded text-text-secondary hover:text-status-danger hover:bg-surface-card transition-colors" title="Xóa" type="button">
+<span class="material-symbols-outlined text-[18px]">delete</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 5: Unselected -->
+<tr class="h-14 hover:bg-canvas-bg transition-colors">
+<td class="px-space-md text-center">
+<input class="w-4 h-4 rounded text-status-info focus:ring-0 cursor-pointer accent-[#0088FF]" type="checkbox">
+</td>
+<td class="px-space-sm">
+<div class="w-10 h-10 rounded-lg overflow-hidden bg-surface-container flex items-center justify-center relative shadow-xs">
+<img class="w-full h-full object-cover" data-alt="Tan brown luxury unisex leather crossbody bag on sleek polished pedestal, soft shadows, warm highlights, premium e-commerce accessory styling." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCNIj1xO5ExDQ2a7KhvARrss70UWMZjEGtrsLWgHNr2qZt_NGoYzzi9LfiL7EtxPLBaPX-6-LV1d8hLYQNVAr2BdspyBcgSrLg7KTUWtrnT2wBujb8cuZvqTEjniRHDnzs_5QJwX322LsnNxJJ01yWi4UaZUbUnACio0-kzis1fVU6dYndeXjFFhIH6S3nOyFVCJ80zm0quNWNrhmCM58glOjIMJ3OLwR7T9obwtPo">
+</div>
+</td>
+<td class="px-space-md">
+<div class="flex flex-col">
+<a class="font-label-md text-label-md text-status-info hover:underline font-medium line-clamp-1" href="#">
+                  Túi xách da Crossbody Unisex
+                </a>
+<span class="text-text-muted text-[11px]">Tồn kho: <strong class="text-text-primary font-medium">85</strong> | 2 biến thể</span>
+</div>
+</td>
+<td class="px-space-md font-data-mono text-data-mono text-text-secondary">TX-882</td>
+<td class="px-space-md font-data-mono text-[12px] text-text-muted">8936012345715</td>
+<td class="px-space-md">
+<span class="inline-flex items-center px-2 py-0.5 rounded bg-surface-container text-text-primary font-label-sm text-[12px]">
+                Phụ kiện
+              </span>
+</td>
+<td class="px-space-md text-center font-medium">Chiếc</td>
+<td class="px-space-md">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-50 text-status-success font-label-sm text-[12px] font-medium">
+<span class="w-1.5 h-1.5 rounded-full bg-status-success"></span>
+                Đang kinh doanh
+              </span>
+</td>
+<td class="px-space-md text-right pr-space-lg">
+<div class="flex items-center justify-end gap-1">
+<button class="p-1 rounded text-text-secondary hover:text-status-info hover:bg-surface-card transition-colors" title="Chỉnh sửa" type="button">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+</button>
+<button class="p-1 rounded text-text-secondary hover:text-text-primary hover:bg-surface-card transition-colors" title="Nhân bản" type="button">
+<span class="material-symbols-outlined text-[18px]">content_copy</span>
+</button>
+<button class="p-1 rounded text-text-secondary hover:text-status-danger hover:bg-surface-card transition-colors" title="Xóa" type="button">
+<span class="material-symbols-outlined text-[18px]">delete</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 6: Unselected -->
+<tr class="h-14 hover:bg-canvas-bg transition-colors">
+<td class="px-space-md text-center">
+<input class="w-4 h-4 rounded text-status-info focus:ring-0 cursor-pointer accent-[#0088FF]" type="checkbox">
+</td>
+<td class="px-space-sm">
+<div class="w-10 h-10 rounded-lg overflow-hidden bg-surface-container flex items-center justify-center relative shadow-xs">
+<img class="w-full h-full object-cover" data-alt="Black full-grain Italian leather belt coiled tightly with brushed metallic automatic silver buckle, high clarity product photo, crisp light on surface." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCIHKWE2RVedkWcmTgvFrQjk-8uDtiK-ywO8Yw5U55SH7ITM8o9z14hjo-GlbPneyn5ZE3eYZYocq3gxChNfCph9W3C6sXyib-YM2Vp9xqtRyPNCXInFB6xYIgdiSppSz0MqnY_Bqbc5RI76n5kKPQm3EGNIxPE4ERt7HDXWocyVA9KRDu3Su9VyTo164uIB8-fMHcb-keDihXa4fg9Is4XRNvTauOr54cFJYGK2xM">
+</div>
+</td>
+<td class="px-space-md">
+<div class="flex flex-col">
+<a class="font-label-md text-label-md text-status-info hover:underline font-medium line-clamp-1" href="#">
+                  Thắt lưng da nam khóa kim tự động
+                </a>
+<span class="text-text-muted text-[11px]">Tồn kho: <strong class="text-text-primary font-medium">310</strong> | 1 biến thể</span>
+</div>
+</td>
+<td class="px-space-md font-data-mono text-data-mono text-text-secondary">TL-019</td>
+<td class="px-space-md font-data-mono text-[12px] text-text-muted">8936012345722</td>
+<td class="px-space-md">
+<span class="inline-flex items-center px-2 py-0.5 rounded bg-surface-container text-text-primary font-label-sm text-[12px]">
+                Phụ kiện
+              </span>
+</td>
+<td class="px-space-md text-center font-medium">Sợi</td>
+<td class="px-space-md">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-50 text-status-success font-label-sm text-[12px] font-medium">
+<span class="w-1.5 h-1.5 rounded-full bg-status-success"></span>
+                Đang kinh doanh
+              </span>
+</td>
+<td class="px-space-md text-right pr-space-lg">
+<div class="flex items-center justify-end gap-1">
+<button class="p-1 rounded text-text-secondary hover:text-status-info hover:bg-surface-card transition-colors" title="Chỉnh sửa" type="button">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+</button>
+<button class="p-1 rounded text-text-secondary hover:text-text-primary hover:bg-surface-card transition-colors" title="Nhân bản" type="button">
+<span class="material-symbols-outlined text-[18px]">content_copy</span>
+</button>
+<button class="p-1 rounded text-text-secondary hover:text-status-danger hover:bg-surface-card transition-colors" title="Xóa" type="button">
+<span class="material-symbols-outlined text-[18px]">delete</span>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- TABLE PAGINATION FOOTER -->
+<div class="p-space-md px-space-lg bg-surface-card flex flex-col sm:flex-row items-center justify-between gap-space-md">
+<div class="flex items-center gap-3 font-body-sm text-body-sm text-text-secondary">
+<div class="flex items-center gap-1.5">
+<span class="">Hiển thị</span>
+<select class="h-8 px-2 rounded-lg bg-canvas-bg border-none text-text-primary font-data-mono text-label-sm focus:outline-none focus:ring-1 focus:ring-status-info cursor-pointer">
+<option>20</option>
+<option>50</option>
+<option>100</option>
+</select>
+<span class="">/ trang</span>
+</div>
+<span class="text-text-muted">•</span>
+<span class="">Từ <strong class="text-text-primary font-medium">1</strong> đến <strong class="text-text-primary font-medium">20</strong> trên tổng <strong class="text-text-primary font-medium">120</strong></span>
+</div>
+<!-- Pagination Buttons -->
+<div class="flex items-center gap-1 select-none">
+<button class="h-8 w-8 rounded-lg flex items-center justify-center text-text-muted hover:text-text-primary hover:bg-canvas-bg disabled:opacity-30 disabled:pointer-events-none transition-colors" disabled="" type="button">
+<span class="material-symbols-outlined text-[18px]">chevron_left</span>
+</button>
+<button class="h-8 w-8 rounded-lg font-data-mono text-data-mono font-bold bg-status-info text-on-primary flex items-center justify-center shadow-xs" type="button">
+          1
+        </button>
+<button class="h-8 w-8 rounded-lg font-data-mono text-data-mono text-text-secondary hover:text-text-primary hover:bg-canvas-bg flex items-center justify-center transition-colors" type="button">
+          2
+        </button>
+<button class="h-8 w-8 rounded-lg font-data-mono text-data-mono text-text-secondary hover:text-text-primary hover:bg-canvas-bg flex items-center justify-center transition-colors" type="button">
+          3
+        </button>
+<span class="h-8 w-6 flex items-center justify-center text-text-muted text-body-sm">...</span>
+<button class="h-8 w-8 rounded-lg font-data-mono text-data-mono text-text-secondary hover:text-text-primary hover:bg-canvas-bg flex items-center justify-center transition-colors" type="button">
+          6
+        </button>
+<button class="h-8 w-8 rounded-lg flex items-center justify-center text-text-secondary hover:text-text-primary hover:bg-canvas-bg transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px]">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+<!-- TOAST NOTIFICATION (Fixed bottom-right feedback) -->
+<div class="fixed bottom-6 right-6 z-50 bg-surface-card rounded-xl p-space-md shadow-xl flex items-center gap-3 animate-bounce-subtle transition-all max-w-sm" id="toastSuccess">
+<div class="w-8 h-8 rounded-full bg-emerald-100 flex items-center justify-center text-status-success shrink-0">
+<span class="material-symbols-outlined text-[20px]">check</span>
+</div>
+<div class="flex flex-col pr-2">
+<span class="font-label-md text-label-md font-semibold text-text-primary">Lưu thành công</span>
+<span class="font-body-sm text-body-sm text-text-secondary">Đã đồng bộ thông tin 3 sản phẩm.</span>
+</div>
+<button class="text-text-muted hover:text-text-primary p-1" onclick="document.getElementById('toastSuccess').classList.add('hidden')" type="button">
+<span class="material-symbols-outlined text-[18px]">close</span>
+</button>
+</div>
+</div>
+<script>
+  function deselectAll() {
+    const bar = document.getElementById('bulkActionBar');
+    if (bar) {
+      bar.classList.add('opacity-0', 'pointer-events-none');
+      setTimeout(() => bar.classList.add('hidden'), 200);
+    }
+    const checkboxes = document.querySelectorAll('tbody input[type="checkbox"], thead input[type="checkbox"]');
+    checkboxes.forEach(cb => cb.checked = false);
+    const selectedRows = document.querySelectorAll('tbody tr.bg-surface-container-low\\/60');
+    selectedRows.forEach(r => r.classList.remove('bg-surface-container-low/60'));
+  }
+</script></main></div>
+
+</body></html>

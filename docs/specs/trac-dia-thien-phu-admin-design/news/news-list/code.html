@@ -1,0 +1,485 @@
+<!DOCTYPE html><html lang="vi" style=""><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0" name="viewport"><meta content="web_dashboard" name="shell-type"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{colors:{"surface":"#f7f9ff","secondary":"#505f79","on-primary":"#ffffff","tertiary":"#006947","sidebar-dark":"#111C2D","surface-container-high":"#d9eaff","surface-container-lowest":"#ffffff","status-warning":"#F59E0B","outline":"#717785","text-secondary":"#5C6F84","surface-bright":"#f7f9ff","border-card":"#E0E6ED","on-surface-variant":"#404754","on-secondary":"#ffffff","text-primary":"#182538","on-secondary-fixed":"#0c1c32","on-primary-fixed":"#001b3c","on-tertiary-container":"#f5fff6","tertiary-container":"#00855b","inverse-on-surface":"#e8f1ff","on-error-container":"#93000a","on-tertiary-fixed":"#002113","tertiary-fixed-dim":"#4edea3","on-surface":"#081d2f","on-error":"#ffffff","background":"#f7f9ff","sidebar-hover":"#243B5A","sidebar-active-link":"#4DA3FF","primary-light":"#E5F3FF","surface-container-low":"#edf4ff","status-danger":"#EF4444","on-tertiary":"#ffffff","sidebar-base":"#1B2A41","on-secondary-fixed-variant":"#394760","outline-variant":"#c0c6d6","canvas-bg":"#F4F6F8","on-background":"#081d2f","secondary-fixed":"#d5e3ff","status-success":"#10B981","on-primary-container":"#fefcff","primary":"#005baf","text-muted":"#8C9BA5","inverse-primary":"#a8c8ff","surface-dim":"#c8dcf4","status-info":"#0088FF","surface-tint":"#005eb3","primary-fixed-dim":"#a8c8ff","error-container":"#ffdad6","secondary-container":"#d1e0ff","surface-variant":"#d1e4fd","on-primary-fixed-variant":"#004689","surface-card":"#FFFFFF","primary-fixed":"#d5e3ff","error":"#ba1a1a","primary-hover":"#0070D2","on-tertiary-fixed-variant":"#005236","tertiary-fixed":"#6ffbbe","surface-container-highest":"#d1e4fd","on-secondary-container":"#54637d","primary-container":"#0074db","secondary-fixed-dim":"#b8c7e5","surface-container":"#e3efff","inverse-surface":"#1f3245"},borderRadius:{"DEFAULT":"0.125rem","lg":"0.25rem","xl":"0.5rem","full":"0.75rem"},spacing:{"space-xs":"4px","space-xl":"24px","space-sm":"8px","gutter":"16px","space-lg":"16px","margin-desktop":"24px","gutter-desktop":"20px","margin":"16px","space-md":"12px"},fontFamily:{"headline-xl":["Inter"],"data-mono":["Inter"],"label-md":["Inter"],"label-sm":["Inter"],"body-md":["Inter"],"body-lg":["Inter"],"headline-md":["Inter"],"body-sm":["Inter"],"headline-lg":["Inter"]},fontSize:{"headline-xl":["24px",{lineHeight:"32px",letterSpacing:"-0.015em",fontWeight:"700"}],"data-mono":["13px",{lineHeight:"18px",letterSpacing:"0.02em",fontWeight:"600"}],"label-md":["14px",{lineHeight:"20px",fontWeight:"500"}],"label-sm":["12px",{lineHeight:"16px",fontWeight:"500"}],"body-md":["14px",{lineHeight:"20px",fontWeight:"400"}],"body-lg":["15px",{lineHeight:"22px",fontWeight:"400"}],"headline-md":["16px",{lineHeight:"24px",fontWeight:"600"}],"body-sm":["13px",{lineHeight:"18px",fontWeight:"400"}],"headline-lg":["20px",{lineHeight:"28px",letterSpacing:"-0.01em",fontWeight:"600"}]}}}};</script></head><body class="bg-canvas-bg font-body-md text-text-primary"><aside class="fixed left-0 top-0 h-screen w-60 bg-sidebar-dark z-50 flex flex-col justify-between select-none shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="flex flex-col"><div class="h-14 px-space-lg flex items-center gap-space-sm bg-sidebar-dark"><img alt="Trắc địa Thiên Phú Admin Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1UM617Phk2vLvBRQ13XhpdHD3--VfqCJ1kGEm8_HrSQ9qTuLdwEe8ytlMCJW-ZYu4ObqzJuwCZmGgNpFA_Vfrg5ptE1PFVEhGhxIDW6ENSFBYXKH4RxCgn9PFHIAgUjeGSonwrJ9YIVj9djZ8q7TgD7Yh6hnq79JfhOHm2CjVy1ntl-yzLPTwlczZ0xWq63jP1b5PHmVQn3uvGkpgGPqXAgEPC5Wq454ENG-Jg-52n3"><span class="font-headline-md text-headline-md font-bold tracking-tight text-on-primary">Trắc địa Thiên Phú Admin</span></div><nav class="flex flex-col px-space-sm py-space-sm gap-1" data-active-classes="bg-sidebar-hover text-sidebar-active-link font-medium"><div class="flex flex-col"><div class="flex items-center justify-between px-space-md py-space-sm rounded-lg bg-sidebar-hover text-on-primary font-label-md text-label-md cursor-pointer"><div class="flex items-center gap-space-md"><span class="material-symbols-outlined text-[20px]">inventory_2</span><span class="">Sản phẩm</span></div><span class="material-symbols-outlined text-[18px] text-slate-400">expand_more</span></div><div class="flex flex-col pl-9 pr-space-xs py-1 gap-1"><a class="flex items-center py-1.5 px-space-sm rounded-lg text-slate-300 hover:bg-sidebar-hover hover:text-on-primary transition-colors font-label-sm text-label-sm" data-path="danh-sach-san-pham" href="#"><span class="">Danh sách sản phẩm</span></a><a class="flex items-center py-1.5 px-space-sm rounded-lg text-slate-300 hover:bg-sidebar-hover hover:text-on-primary transition-colors font-label-sm text-label-sm" data-path="them-danh-muc" href="#"><span class="">Danh mục sản phẩm</span></a></div></div><div class="flex flex-col"><div class="flex items-center justify-between px-space-md py-space-sm rounded-lg text-slate-300 hover:bg-sidebar-hover hover:text-on-primary font-label-md text-label-md cursor-pointer transition-colors"><div class="flex items-center gap-space-md"><span class="material-symbols-outlined text-[20px]">article</span><span class="">Tin tức</span></div><span class="material-symbols-outlined text-[18px] text-slate-400">expand_more</span></div><div class="flex flex-col pl-9 pr-space-xs py-1 gap-1"><a class="flex items-center py-1.5 px-space-sm rounded-lg text-slate-300 hover:bg-sidebar-hover hover:text-on-primary transition-colors font-label-sm text-label-sm" data-path="danh-sach-bai-viet" href="#"><span class="">Danh sách bài viết</span></a></div></div><a class="flex items-center gap-space-md px-space-md py-space-sm rounded-lg text-slate-300 hover:bg-sidebar-hover hover:text-on-primary transition-colors font-label-md text-label-md" data-path="cai-dat" href="#"><span class="material-symbols-outlined text-[20px]">settings</span><span class="">Cài đặt</span></a></nav></div><div class="p-space-md bg-sidebar-dark/60"><div class="flex items-center justify-between px-space-sm py-space-xs text-slate-400 font-label-sm text-label-sm"><span class="">Phiên bản v4.2.0</span><span class="material-symbols-outlined text-[16px]">cloud_done</span></div></div></aside><div class="pl-60"><header class="fixed top-0 left-60 right-0 h-14 bg-surface-card z-40 px-margin-desktop flex items-center shadow-[0_1px_8px_rgba(0,0,0,0.04)] justify-end"><div class="flex items-center gap-space-lg"><div class="flex items-center gap-space-sm pl-1 cursor-pointer"><div class="relative"><img alt="Profile" class="w-8 h-8 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCCEu8hfTmBA_wo9fxeDjdq4v9UOOR5UZV0SG-tGOgrDYfVLQhOFOTJzFgJ38toRc3S3C68KY-kvkWEqPDZKvb_BZcQ5iptg28niqBHzxAQS4KynphfWzfJK3nHu2U9QcRNX_bxUM0slVHNGC20Gn6hRJhTffg3soLh5jlfhga5tFkd9F-_RNuNP7RU7zjHUwE8ywY96hF_6w4H5GvaGcKNZl5CPCjyEqr1aLCpLS4"><span class="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-status-success ring-2 ring-surface-card"></span></div><div class="flex flex-col text-left"><span class="font-label-sm text-label-sm text-text-primary leading-tight font-medium">Nguyễn Thu Trang</span><span class="font-body-sm text-[11px] text-text-secondary leading-tight">Quản trị viên</span></div></div></div></header><main class="w-full pt-14 px-margin-desktop py-space-xl bg-canvas-bg"><div class="flex flex-col w-full">
+<!-- Top Breadcrumb & Action Heading -->
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-space-md mb-space-lg">
+<div class="flex flex-col gap-1">
+<div class="flex items-center gap-space-xs text-text-secondary font-label-sm text-label-sm">
+<span class="hover:text-text-primary cursor-pointer transition-colors">Tin tức</span>
+<span class="material-symbols-outlined text-[14px]">chevron_right</span>
+<span class="text-text-primary font-medium">Danh sách bài viết</span>
+</div>
+<div class="flex items-center gap-space-md mt-0.5">
+<h1 class="font-headline-xl text-headline-xl text-text-primary tracking-tight font-bold">Danh sách bài viết</h1>
+<span class="inline-flex items-center px-2 py-0.5 rounded-full bg-primary-light text-primary font-label-sm text-label-sm font-semibold">
+          28 bài viết
+        </span>
+</div>
+</div>
+<!-- Right Primary CTA -->
+<div class="flex items-center gap-space-sm">
+
+<a class="inline-flex items-center gap-1.5 h-9 px-space-md rounded-xl bg-status-info hover:bg-primary-hover text-on-primary font-label-md text-label-md shadow-sm transition-all shadow-status-info/20" href="#">
+<span class="material-symbols-outlined text-[18px]">add</span>
+<span class="">Thêm bài viết</span>
+</a>
+</div>
+</div>
+<!-- Status Tabs -->
+<div class="flex items-center gap-space-lg border-b border-border-card mb-space-md overflow-x-auto select-none">
+<button class="relative pb-2.5 font-label-md text-label-md font-semibold text-status-info border-b-2 border-status-info whitespace-nowrap">
+      Tất cả bài viết
+      <span class="ml-1.5 px-1.5 py-0.2 rounded-full bg-primary-light text-status-info font-data-mono text-body-sm font-bold">28</span>
+</button>
+
+
+
+</div>
+<!-- Search & Composite Filter Controls -->
+<div class="bg-surface-card rounded-t-xl p-space-sm shadow-sm flex flex-col md:flex-row items-stretch md:items-center justify-between gap-space-sm">
+<div class="flex-1 flex items-center bg-canvas-bg rounded-lg px-space-md py-1.5 gap-space-sm">
+<span class="material-symbols-outlined text-text-muted text-[18px]">search</span>
+<input class="w-full bg-transparent border-none outline-none text-text-primary placeholder:text-text-muted font-body-md text-body-md" placeholder="Tìm kiếm theo tiêu đề bài viết, tác giả, tags..." type="text">
+<button class="text-text-muted hover:text-text-primary transition-colors">
+<span class="material-symbols-outlined text-[16px]">close</span>
+</button>
+</div>
+<!-- Filters Group -->
+<div class="flex flex-wrap items-center gap-space-xs sm:gap-space-sm">
+<div class="relative">
+<button class="h-9 px-space-md rounded-lg bg-surface-card hover:bg-canvas-bg text-text-primary font-label-sm text-label-sm inline-flex items-center gap-1.5 shadow-sm transition-colors">
+<span class="text-text-secondary">Tác giả:</span>
+<span class="font-semibold">Tất cả</span>
+<span class="material-symbols-outlined text-[16px] text-text-muted">keyboard_arrow_down</span>
+</button>
+</div>
+<div class="relative">
+<button class="h-9 px-space-md rounded-lg bg-surface-card hover:bg-canvas-bg text-text-primary font-label-sm text-label-sm inline-flex items-center gap-1.5 shadow-sm transition-colors">
+<span class="text-text-secondary">Thời gian:</span>
+<span class="font-semibold">Mọi lúc</span>
+<span class="material-symbols-outlined text-[16px] text-text-muted">keyboard_arrow_down</span>
+</button>
+</div>
+<button class="h-9 px-space-md rounded-lg bg-surface-card hover:bg-canvas-bg text-text-primary font-label-sm text-label-sm inline-flex items-center gap-1.5 shadow-sm transition-colors">
+<span class="material-symbols-outlined text-[16px] text-text-secondary">tune</span>
+<span class="">Bộ lọc khác</span>
+</button>
+<button class="h-9 w-9 rounded-lg bg-surface-card hover:bg-canvas-bg text-text-secondary hover:text-text-primary inline-flex items-center justify-center shadow-sm transition-colors" title="Tùy chỉnh cột">
+<span class="material-symbols-outlined text-[18px]">view_column</span>
+</button>
+</div>
+</div>
+<!-- Dynamic Bulk Action Bar -->
+<div class="bg-primary-light px-space-md py-2 flex items-center justify-between transition-all duration-150" id="bulk-action-bar">
+<div class="flex items-center gap-space-md">
+<div class="flex items-center gap-2">
+<span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-status-info text-on-primary font-data-mono text-[11px] font-bold">2</span>
+<span class="font-label-md text-label-md text-text-primary font-medium">Đã chọn 2 bài viết</span>
+</div>
+<span class="text-text-muted text-body-sm">|</span>
+<button class="text-status-info hover:underline font-label-sm text-label-sm font-semibold">Bỏ chọn tất cả</button>
+</div>
+<div class="flex items-center gap-space-xs">
+<button class="h-7 px-space-sm rounded bg-surface-card hover:bg-canvas-bg text-text-primary font-label-sm text-label-sm inline-flex items-center gap-1 shadow-sm transition-colors">
+<span class="material-symbols-outlined text-[15px] text-status-warning">push_pin</span>
+<span class="">Ghim nổi bật</span>
+</button>
+<button class="h-7 px-space-sm rounded bg-surface-card hover:bg-canvas-bg text-text-primary font-label-sm text-label-sm inline-flex items-center gap-1 shadow-sm transition-colors">
+<span class="material-symbols-outlined text-[15px] text-text-secondary">drafts</span>
+<span class="">Chuyển thành bản nháp</span>
+</button>
+<button class="h-7 px-space-sm rounded bg-surface-card hover:bg-status-danger hover:text-on-primary text-status-danger font-label-sm text-label-sm inline-flex items-center gap-1 shadow-sm transition-colors">
+<span class="material-symbols-outlined text-[15px]">delete</span>
+<span class="">Xóa</span>
+</button>
+</div>
+</div>
+<!-- Dense Professional Data Table -->
+<div class="bg-surface-card shadow-sm overflow-x-auto select-none">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-canvas-bg h-10 font-label-sm text-label-sm text-text-secondary uppercase tracking-wider">
+<th class="w-10 px-space-md text-center">
+<input checked="" class="w-4 h-4 rounded cursor-pointer accent-status-info" type="checkbox">
+</th>
+<th class="w-20 px-space-sm py-2">ẢNH</th>
+<th class="min-w-[280px] px-space-md py-2">TIÊU ĐỀ BÀI VIẾT</th>
+<th class="min-w-[130px] px-space-md py-2">TÁC GIẢ</th>
+<th class="min-w-[160px] px-space-md py-2">THẺ (TAGS)</th>
+<th class="min-w-[130px] px-space-md py-2">NGÀY ĐĂNG</th>
+<th class="min-w-[90px] px-space-md py-2 text-right">LƯỢT XEM</th>
+<th class="min-w-[110px] px-space-md py-2 text-center">TRẠNG THÁI</th>
+<th class="w-20 px-space-md py-2 text-right">THAO TÁC</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-border-card font-body-sm text-body-sm text-text-primary">
+<!-- Row 1: Selected -->
+<tr class="bg-primary-light/40 hover:bg-primary-light/60 transition-colors">
+<td class="px-space-md text-center">
+<input checked="" class="w-4 h-4 rounded cursor-pointer accent-status-info" type="checkbox">
+</td>
+<td class="px-space-sm py-2.5">
+<div class="w-14 h-10 rounded-lg overflow-hidden bg-surface-container relative shadow-sm">
+<img class="w-full h-full object-cover" data-alt="Technical close-up photo of Topcon electronic total station equipment set on a tripod outdoors against bright sky, crisp industrial surveying device in rich blues and metallic silvers" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA5--XpUXXq3Msxxk0klEwoB4aIY-UaurNOxLU8vTAkrkkd5dsbVvkSc7Uktx1ijipad8Qocp5ox7nel31WyX1aK6Qyht-_UqSxVBKYBlHwQeobUGbsij9CehScw4HcLFU7FLE5KpSYmCtUlHrMNQVhmXsgQzo-D4LOZ4Gf15J9u5XuPD8oKdmhWL4ij_kxZ7fdxF85rqA9TjtFewI5kGQKeVuVyYRrcyLwUXox3nA">
+</div>
+</td>
+<td class="px-space-md py-2.5">
+<div class="flex flex-col gap-0.5">
+<a class="font-headline-md text-body-md font-semibold text-text-primary hover:text-status-info transition-colors line-clamp-1" href="#">
+                Hướng dẫn sử dụng máy toàn đạc điện tử Topcon ES series chuẩn kỹ thuật
+              </a>
+<span class="text-text-muted font-body-sm text-[12px] truncate max-w-sm">
+                /tin-tuc/huong-dan-su-dung-may-toan-dac-topcon-es-series
+              </span>
+</div>
+</td>
+<td class="px-space-md py-2.5">
+<div class="flex items-center gap-1.5">
+<span class="w-5 h-5 rounded-full bg-surface-container-high flex items-center justify-center text-[10px] font-bold text-primary">NT</span>
+<span class="font-medium">Nguyễn Thu Trang</span>
+</div>
+</td>
+<td class="px-space-md py-2.5">
+<div class="flex flex-wrap gap-1">
+<span class="inline-block px-2 py-0.5 rounded bg-surface-container text-text-secondary text-[11px] font-medium">máy toàn đạc</span>
+<span class="inline-block px-2 py-0.5 rounded bg-surface-container text-text-secondary text-[11px] font-medium">Topcon ES</span>
+</div>
+</td>
+<td class="px-space-md py-2.5 text-text-secondary whitespace-nowrap">
+<div class="font-data-mono text-[12px]">14:30 18/10/2023</div>
+</td>
+<td class="px-space-md py-2.5 text-right font-data-mono text-[13px] font-semibold text-text-primary">
+            2,450
+          </td>
+<td class="px-space-md py-2.5 text-center">
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-status-success/10 text-status-success font-label-sm text-[11px] font-semibold">
+<span class="w-1.5 h-1.5 rounded-full bg-status-success"></span>
+              Đã xuất bản
+            </span>
+</td>
+<td class="px-space-md py-2.5 text-right whitespace-nowrap">
+<div class="flex items-center justify-end gap-1">
+<button class="p-1 rounded text-text-secondary hover:text-status-info hover:bg-canvas-bg transition-colors" title="Chỉnh sửa">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+</button>
+<button class="p-1 rounded text-text-secondary hover:text-status-info hover:bg-canvas-bg transition-colors" title="Xem trên web">
+<span class="material-symbols-outlined text-[18px]">visibility</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 2: Selected -->
+<tr class="bg-primary-light/40 hover:bg-primary-light/60 transition-colors">
+<td class="px-space-md text-center">
+<input checked="" class="w-4 h-4 rounded cursor-pointer accent-status-info" type="checkbox">
+</td>
+<td class="px-space-sm py-2.5">
+<div class="w-14 h-10 rounded-lg overflow-hidden bg-surface-container relative shadow-sm">
+<img class="w-full h-full object-cover" data-alt="Direct side-by-side comparison of optical level survey instruments Leica NA720 yellow device and Topcon green level placed cleanly on concrete field bench" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBN7kuGNRRQqUq1tiDGUniReL6du7ORvpJ4LwgcUcmKeGtPvxvfImFHM6WlIWnPmhuSN15HRpR6iv3nqBkmpb0I003xyUsKjfhqGnFa8BmVJTinAetseIwbChxAGlDQp3E5sS2LtYrmfcEwhysOubH_IR6OONQta2qgb05xei3X5mJtB18iEIK1Tupz0IN7yWHJ3IB8saR7rZuwTQYbkEZxcAXnHbP-3m4-SJmOP08">
+</div>
+</td>
+<td class="px-space-md py-2.5">
+<div class="flex flex-col gap-0.5">
+<a class="font-headline-md text-body-md font-semibold text-text-primary hover:text-status-info transition-colors line-clamp-1" href="#">
+                So sánh độ chính xác máy thủy bình Leica NA720 và Topcon AT-B4A
+              </a>
+<span class="text-text-muted font-body-sm text-[12px] truncate max-w-sm">
+                /tin-tuc/so-sanh-may-thuy-binh-leica-na720-topcon-at-b4a
+              </span>
+</div>
+</td>
+<td class="px-space-md py-2.5">
+<div class="flex items-center gap-1.5">
+<span class="w-5 h-5 rounded-full bg-secondary-container flex items-center justify-center text-[10px] font-bold text-secondary">LH</span>
+<span class="font-medium">Kỹ sư Lê Hoàng</span>
+</div>
+</td>
+<td class="px-space-md py-2.5">
+<div class="flex flex-wrap gap-1">
+<span class="inline-block px-2 py-0.5 rounded bg-surface-container text-text-secondary text-[11px] font-medium">máy thủy bình</span>
+<span class="inline-block px-2 py-0.5 rounded bg-surface-container text-text-secondary text-[11px] font-medium">Leica</span>
+</div>
+</td>
+<td class="px-space-md py-2.5 text-text-secondary whitespace-nowrap">
+<div class="font-data-mono text-[12px]">09:15 15/10/2023</div>
+</td>
+<td class="px-space-md py-2.5 text-right font-data-mono text-[13px] font-semibold text-text-primary">
+            1,820
+          </td>
+<td class="px-space-md py-2.5 text-center">
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-status-success/10 text-status-success font-label-sm text-[11px] font-semibold">
+<span class="w-1.5 h-1.5 rounded-full bg-status-success"></span>
+              Đã xuất bản
+            </span>
+</td>
+<td class="px-space-md py-2.5 text-right whitespace-nowrap">
+<div class="flex items-center justify-end gap-1">
+<button class="p-1 rounded text-text-secondary hover:text-status-info hover:bg-canvas-bg transition-colors" title="Chỉnh sửa">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+</button>
+<button class="p-1 rounded text-text-secondary hover:text-status-info hover:bg-canvas-bg transition-colors" title="Xem trên web">
+<span class="material-symbols-outlined text-[18px]">visibility</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 3: Draft -->
+<tr class="hover:bg-canvas-bg/70 transition-colors">
+<td class="px-space-md text-center">
+<input class="w-4 h-4 rounded cursor-pointer accent-status-info" type="checkbox">
+</td>
+<td class="px-space-sm py-2.5">
+<div class="w-14 h-10 rounded-lg overflow-hidden bg-surface-container relative shadow-sm">
+<img class="w-full h-full object-cover" data-alt="Calibration laboratory setup with high precision laser collimator and GNSS RTK survey antenna device mounted for technical verification" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCrC2vbI0QOsGyYJ_E4wFG6yhluRm-N6or2gpX2htEycazvi2ip7mYCPL-YxnA6wuBskFhAbtwfe4vgrKnlEjrnum_G-ZRnzLOWt1jDgRqCl299z3xss44HjFhi4a6XQr_nKp5e_NKU-TLwDGlPTLsis1htUTrYfWR6TROFkoCtCgHaE7nJE_BIIXSx22ZFrug7if3Ar3RZpiLTEb5rdu5cx3haP7fYyfNOGBqhv5U">
+</div>
+</td>
+<td class="px-space-md py-2.5">
+<div class="flex flex-col gap-0.5">
+<a class="font-headline-md text-body-md font-semibold text-text-primary hover:text-status-info transition-colors line-clamp-1" href="#">
+                Quy trình kiểm định và hiệu chuẩn máy GNSS RTK định kỳ
+              </a>
+<span class="text-text-muted font-body-sm text-[12px] truncate max-w-sm">
+                /tin-tuc/quy-trinh-kiem-dinh-hieu-chuan-may-gnss-rtk
+              </span>
+</div>
+</td>
+<td class="px-space-md py-2.5">
+<div class="flex items-center gap-1.5">
+<span class="w-5 h-5 rounded-full bg-surface-container flex items-center justify-center text-[10px] font-bold text-text-secondary">KT</span>
+<span class="font-medium">Ban Kỹ thuật</span>
+</div>
+</td>
+<td class="px-space-md py-2.5">
+<div class="flex flex-wrap gap-1">
+<span class="inline-block px-2 py-0.5 rounded bg-surface-container text-text-secondary text-[11px] font-medium">GNSS RTK</span>
+<span class="inline-block px-2 py-0.5 rounded bg-surface-container text-text-secondary text-[11px] font-medium">kiểm định</span>
+</div>
+</td>
+<td class="px-space-md py-2.5 text-text-secondary whitespace-nowrap">
+<div class="font-data-mono text-[12px]">16:45 10/10/2023</div>
+</td>
+<td class="px-space-md py-2.5 text-right font-data-mono text-[13px] font-semibold text-text-primary">
+            950
+          </td>
+<td class="px-space-md py-2.5 text-center">
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-secondary-container/60 text-text-secondary font-label-sm text-[11px] font-semibold">
+<span class="w-1.5 h-1.5 rounded-full bg-text-muted"></span>
+              Bản nháp
+            </span>
+</td>
+<td class="px-space-md py-2.5 text-right whitespace-nowrap">
+<div class="flex items-center justify-end gap-1">
+<button class="p-1 rounded text-text-secondary hover:text-status-info hover:bg-canvas-bg transition-colors" title="Chỉnh sửa">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+</button>
+<button class="p-1 rounded text-text-secondary hover:text-status-info hover:bg-canvas-bg transition-colors" title="Xem trên web">
+<span class="material-symbols-outlined text-[18px]">visibility</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-canvas-bg/70 transition-colors">
+<td class="px-space-md text-center">
+<input class="w-4 h-4 rounded cursor-pointer accent-status-info" type="checkbox">
+</td>
+<td class="px-space-sm py-2.5">
+<div class="w-14 h-10 rounded-lg overflow-hidden bg-surface-container relative shadow-sm">
+<img class="w-full h-full object-cover" data-alt="Digital theodolite instrument setup on building construction site with workers framing background, crisp sunny afternoon lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAbSRZcHcy-ACnLb3nwJiNEbGwY7PNargi_qPE9a6qBctYWDmioqZFdT7s--8z97Y_QGUjaz76q3Pwq3KqmzBBHGCbYLZ0-SnafB1l9tJ01_mJe5-jGP9dOvu11utlND4hvV7OcXupWJ--ntP2VNfEAsOeudGHpgBonWIDvSiVLseCoxX7xEWH3X-orciRjTYV-7-axPr4DUhLq4Fg_7b91CDHcar3AH2smn2iKWGM">
+</div>
+</td>
+<td class="px-space-md py-2.5">
+<div class="flex flex-col gap-0.5">
+<a class="font-headline-md text-body-md font-semibold text-text-primary hover:text-status-info transition-colors line-clamp-1" href="#">
+                Top 5 máy kinh vĩ điện tử giá tốt dành cho công trình dân dụng 2023
+              </a>
+<span class="text-text-muted font-body-sm text-[12px] truncate max-w-sm">
+                /tin-tuc/top-5-may-kinh-vi-dien-tu-gia-tot-2023
+              </span>
+</div>
+</td>
+<td class="px-space-md py-2.5">
+<div class="flex items-center gap-1.5">
+<span class="w-5 h-5 rounded-full bg-surface-container-high flex items-center justify-center text-[10px] font-bold text-primary">NT</span>
+<span class="font-medium">Nguyễn Thu Trang</span>
+</div>
+</td>
+<td class="px-space-md py-2.5">
+<div class="flex flex-wrap gap-1">
+<span class="inline-block px-2 py-0.5 rounded bg-surface-container text-text-secondary text-[11px] font-medium">máy kinh vĩ</span>
+<span class="inline-block px-2 py-0.5 rounded bg-surface-container text-text-secondary text-[11px] font-medium">tư vấn</span>
+</div>
+</td>
+<td class="px-space-md py-2.5 text-text-secondary whitespace-nowrap">
+<div class="font-data-mono text-[12px]">08:00 05/10/2023</div>
+</td>
+<td class="px-space-md py-2.5 text-right font-data-mono text-[13px] font-semibold text-text-primary">
+            3,110
+          </td>
+<td class="px-space-md py-2.5 text-center">
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-status-success/10 text-status-success font-label-sm text-[11px] font-semibold">
+<span class="w-1.5 h-1.5 rounded-full bg-status-success"></span>
+              Đã xuất bản
+            </span>
+</td>
+<td class="px-space-md py-2.5 text-right whitespace-nowrap">
+<div class="flex items-center justify-end gap-1">
+<button class="p-1 rounded text-text-secondary hover:text-status-info hover:bg-canvas-bg transition-colors" title="Chỉnh sửa">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+</button>
+<button class="p-1 rounded text-text-secondary hover:text-status-info hover:bg-canvas-bg transition-colors" title="Xem trên web">
+<span class="material-symbols-outlined text-[18px]">visibility</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 5 -->
+<tr class="hover:bg-canvas-bg/70 transition-colors">
+<td class="px-space-md text-center">
+<input class="w-4 h-4 rounded cursor-pointer accent-status-info" type="checkbox">
+</td>
+<td class="px-space-sm py-2.5">
+<div class="w-14 h-10 rounded-lg overflow-hidden bg-surface-container relative shadow-sm">
+<img class="w-full h-full object-cover" data-alt="Industrial professional drone quadcopter with RTK surveying sensor hovering above mountainous land topography next to surveyor holding controller" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBmizN5ayJ2jzSsubE09h0Z27vczwx8AiZGWajoLxhRJL_jbKDLGOTC_L8goVHXVaJ3q5y3quwJ1MBVdDDAwtchhG4nYuSt85za-yGD5K-NnbJgcv6PkkgIsfmBuuIvmtwbqgi_VeUgH1OAwx0Zog5uLsWXuK66OUo2IPMyP81b_x2jw8iWOX_PzarvDZPRxIeUmeoaqLRJA03HpMc16JbjOyXeZO_5wIKWGJ4YfHE">
+</div>
+</td>
+<td class="px-space-md py-2.5">
+<div class="flex flex-col gap-0.5">
+<a class="font-headline-md text-body-md font-semibold text-text-primary hover:text-status-info transition-colors line-clamp-1" href="#">
+                Giải pháp đo khảo sát địa hình bằng flycam kết hợp trạm mốc mặt đất
+              </a>
+<span class="text-text-muted font-body-sm text-[12px] truncate max-w-sm">
+                /tin-tuc/giai-phap-do-khao-sat-dia-hinh-flycam-drone-rtk
+              </span>
+</div>
+</td>
+<td class="px-space-md py-2.5">
+<div class="flex items-center gap-1.5">
+<span class="w-5 h-5 rounded-full bg-secondary-container flex items-center justify-center text-[10px] font-bold text-secondary">LH</span>
+<span class="font-medium">Kỹ sư Lê Hoàng</span>
+</div>
+</td>
+<td class="px-space-md py-2.5">
+<div class="flex flex-wrap gap-1">
+<span class="inline-block px-2 py-0.5 rounded bg-surface-container text-text-secondary text-[11px] font-medium">Drone RTK</span>
+<span class="inline-block px-2 py-0.5 rounded bg-surface-container text-text-secondary text-[11px] font-medium">khảo sát</span>
+</div>
+</td>
+<td class="px-space-md py-2.5 text-text-secondary whitespace-nowrap">
+<div class="font-data-mono text-[12px]">11:20 28/09/2023</div>
+</td>
+<td class="px-space-md py-2.5 text-right font-data-mono text-[13px] font-semibold text-text-primary">
+            1,640
+          </td>
+<td class="px-space-md py-2.5 text-center">
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-status-success/10 text-status-success font-label-sm text-[11px] font-semibold">
+<span class="w-1.5 h-1.5 rounded-full bg-status-success"></span>
+              Đã xuất bản
+            </span>
+</td>
+<td class="px-space-md py-2.5 text-right whitespace-nowrap">
+<div class="flex items-center justify-end gap-1">
+<button class="p-1 rounded text-text-secondary hover:text-status-info hover:bg-canvas-bg transition-colors" title="Chỉnh sửa">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+</button>
+<button class="p-1 rounded text-text-secondary hover:text-status-info hover:bg-canvas-bg transition-colors" title="Xem trên web">
+<span class="material-symbols-outlined text-[18px]">visibility</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 6 -->
+<tr class="hover:bg-canvas-bg/70 transition-colors">
+<td class="px-space-md text-center">
+<input class="w-4 h-4 rounded cursor-pointer accent-status-info" type="checkbox">
+</td>
+<td class="px-space-sm py-2.5">
+<div class="w-14 h-10 rounded-lg overflow-hidden bg-surface-container relative shadow-sm">
+<img class="w-full h-full object-cover" data-alt="Close up view of surveyor hands adjusting total station leveling screws and digital display menu on outdoor survey target" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD8aflgFpajTtViWaJjCaJ8QEpRthIKKDhjL4W5VkCOhcjjE_YLgn8Y95qOr9_RFRXK1OOFXCyZEVyTleUZA110CfRMzyCGw0FVaYrluon2qkRJUGN_3PWm9fmN1qQe8vzsyY5cowsa-HFYxWL3hFSJ2NaDB-ULV-wC6UZUT6hQfvfVSwJFDFFAiocYyEftQIzM-lsP3s59nSdEfj2TuvIe3nBK3oMo7UfKP0yDPUI">
+</div>
+</td>
+<td class="px-space-md py-2.5">
+<div class="flex flex-col gap-0.5">
+<a class="font-headline-md text-body-md font-semibold text-text-primary hover:text-status-info transition-colors line-clamp-1" href="#">
+                Lỗi thường gặp khi thiết lập trạm máy toàn đạc và cách khắc phục
+              </a>
+<span class="text-text-muted font-body-sm text-[12px] truncate max-w-sm">
+                /tin-tuc/loi-thuong-gap-thiet-lap-tram-may-toan-dac
+              </span>
+</div>
+</td>
+<td class="px-space-md py-2.5">
+<div class="flex items-center gap-1.5">
+<span class="w-5 h-5 rounded-full bg-surface-container flex items-center justify-center text-[10px] font-bold text-text-secondary">KT</span>
+<span class="font-medium">Ban Kỹ thuật</span>
+</div>
+</td>
+<td class="px-space-md py-2.5">
+<div class="flex flex-wrap gap-1">
+<span class="inline-block px-2 py-0.5 rounded bg-surface-container text-text-secondary text-[11px] font-medium">khắc phục lỗi</span>
+<span class="inline-block px-2 py-0.5 rounded bg-surface-container text-text-secondary text-[11px] font-medium">máy toàn đạc</span>
+</div>
+</td>
+<td class="px-space-md py-2.5 text-text-secondary whitespace-nowrap">
+<div class="font-data-mono text-[12px]">15:10 22/09/2023</div>
+</td>
+<td class="px-space-md py-2.5 text-right font-data-mono text-[13px] font-semibold text-text-primary">
+            4,200
+          </td>
+<td class="px-space-md py-2.5 text-center">
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-status-success/10 text-status-success font-label-sm text-[11px] font-semibold">
+<span class="w-1.5 h-1.5 rounded-full bg-status-success"></span>
+              Đã xuất bản
+            </span>
+</td>
+<td class="px-space-md py-2.5 text-right whitespace-nowrap">
+<div class="flex items-center justify-end gap-1">
+<button class="p-1 rounded text-text-secondary hover:text-status-info hover:bg-canvas-bg transition-colors" title="Chỉnh sửa">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+</button>
+<button class="p-1 rounded text-text-secondary hover:text-status-info hover:bg-canvas-bg transition-colors" title="Xem trên web">
+<span class="material-symbols-outlined text-[18px]">visibility</span>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination Bottom Bar -->
+<div class="bg-surface-card rounded-b-xl px-space-lg py-3 flex flex-col sm:flex-row items-center justify-between gap-space-md shadow-sm border-t border-border-card">
+<div class="flex items-center gap-space-sm text-text-secondary font-label-sm text-label-sm">
+<span class="">Hiển thị</span>
+<select class="bg-canvas-bg border-none rounded px-2 py-1 text-text-primary font-medium outline-none cursor-pointer">
+<option value="10">10</option>
+<option value="20">20</option>
+<option value="50">50</option>
+</select>
+<span class="">/ trang</span>
+<span class="mx-1">•</span>
+<span class="">Từ <strong class="text-text-primary font-data-mono">1</strong> đến <strong class="text-text-primary font-data-mono">10</strong> trên tổng <strong class="text-text-primary font-data-mono">28</strong> bài viết</span>
+</div>
+<!-- Page Number Navigation Buttons -->
+<div class="flex items-center gap-1">
+<button class="w-8 h-8 rounded-lg bg-surface-card text-text-muted hover:text-text-primary hover:bg-canvas-bg flex items-center justify-center transition-colors disabled:opacity-40" disabled="">
+<span class="material-symbols-outlined text-[18px]">chevron_left</span>
+</button>
+<button class="w-8 h-8 rounded-lg bg-status-info text-on-primary font-data-mono text-[13px] font-semibold flex items-center justify-center shadow-sm">
+        1
+      </button>
+<button class="w-8 h-8 rounded-lg bg-surface-card text-text-secondary hover:bg-canvas-bg hover:text-text-primary font-data-mono text-[13px] font-medium flex items-center justify-center transition-colors">
+        2
+      </button>
+<button class="w-8 h-8 rounded-lg bg-surface-card text-text-secondary hover:bg-canvas-bg hover:text-text-primary font-data-mono text-[13px] font-medium flex items-center justify-center transition-colors">
+        3
+      </button>
+<button class="w-8 h-8 rounded-lg bg-surface-card text-text-secondary hover:text-text-primary hover:bg-canvas-bg flex items-center justify-center transition-colors">
+<span class="material-symbols-outlined text-[18px]">chevron_right</span>
+</button>
+</div>
+</div>
+</div></main></div>
+
+</body></html>
