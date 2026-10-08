@@ -582,3 +582,52 @@ input[type='checkbox'] {
     width: 240px;
   }
 }
+
+.dropzone {
+  border: 2px dashed #cbd5e1;
+  background: #f8fafc;
+  border-radius: 6px;
+  padding: 32px 16px;
+  text-align: center;
+  color: var(--text-secondary);
+}
+
+.dropzone.active {
+  border-color: var(--primary);
+  background: var(--primary-light);
+}
+
+.dropzone .dz-preview {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.dropzone .dz-preview img {
+  max-width: 200px;
+  max-height: 160px;
+  object-fit: contain;
+  border-radius: var(--radius);
+  border: 1px solid var(--card-border);
+  background: var(--card);
+}
+
+.dropzone .dz-meta {
+  font-size: 13px;
+  color: var(--text-secondary);
+  word-break: break-all;
+}
+
+.link-btn {
+  background: none;
+  border: none;
+  color: var(--primary);
+  cursor: pointer;
+  font: inherit;
+  padding: 0;
+}
+
+.link-btn:hover {
+  text-decoration: underline;
+}
