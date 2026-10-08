@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { ApiError } from '../../lib/api'
-import { formErrorForApi, toImagePayload, validateProduct } from './productFields'
+import { formErrorForApi, isNotFoundError, toImagePayload, validateProduct } from './productFields'
 
 const valid = {
   name: 'Máy toàn đạc',
@@ -43,6 +43,14 @@ describe('toImagePayload', () => {
       { imageUrl: 'http://a/2.png', name: 'two', sortOrder: 0 },
       { imageUrl: 'http://a/1.png', name: 'one', sortOrder: 1 },
     ])
+  })
+})
+
+describe('isNotFoundError', () => {
+  it('is true only for ApiError 404', () => {
+    expect(isNotFoundError(new ApiError('nope', 404))).toBe(true)
+    expect(isNotFoundError(new ApiError('boom', 500))).toBe(false)
+    expect(isNotFoundError(new TypeError('fetch failed'))).toBe(false)
   })
 })
 

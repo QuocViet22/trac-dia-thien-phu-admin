@@ -6,6 +6,7 @@ import type { Category, Product } from '../../lib/types'
 import { createProduct, getProduct, updateProduct } from './products.api'
 import {
   formErrorForApi,
+  isNotFoundError,
   toProductPayload,
   validateProduct,
 } from './productFields'
@@ -58,7 +59,9 @@ export default function ProductForm() {
   const [formMessage, setFormMessage] = useState('')
   const [loading, setLoading] = useState(!isCreate && !clone)
   const [notFound, setNotFound] = useState(false)
+  const [loadError, setLoadError] = useState('')
   const [saving, setSaving] = useState(false)
+  const [nonce, setNonce] = useState(0)
   const [newImageUrl, setNewImageUrl] = useState('')
 
   useEffect(() => {
@@ -71,9 +74,12 @@ export default function ProductForm() {
     if (isCreate || clone) return
     getProduct(id ?? '')
       .then((p) => setValues(fromProduct(p, false)))
-      .catch(() => setNotFound(true))
+      .catch((e: unknown) => {
+        if (isNotFoundError(e)) setNotFound(true)
+        else setLoadError(e instanceof Error ? e.message : 'Request failed')
+      })
       .finally(() => setLoading(false))
-  }, [isCreate, clone, id])
+  }, [isCreate, clone, id, nonce])
 
   function set<K extends keyof ProductFormValues>(key: K, value: ProductFormValues[K]): void {
     setValues((v) => ({ ...v, [key]: value }))
@@ -127,6 +133,23 @@ export default function ProductForm() {
   }
 
   if (notFound) return <div className="fetch-error">Không tìm thấy sản phẩm</div>
+  if (loadError)
+    return (
+      <div className="fetch-error">
+        <p>{loadError}</p>
+        <button
+          type="button"
+          className="btn btn-default"
+          onClick={() => {
+            setLoading(true)
+            setLoadError('')
+            setNonce((n) => n + 1)
+          }}
+        >
+          Thử lại
+        </button>
+      </div>
+    )
   if (loading) return <div className="loading">Đang tải…</div>
 
   const field = (key: string, label: string, control: React.ReactNode, hint?: string) => (

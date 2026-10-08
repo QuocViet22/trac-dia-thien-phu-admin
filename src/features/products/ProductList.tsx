@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link, useNavigate } from 'react-router'
-import { apiFetch } from '../../lib/api'
+import { apiFetch, deleteMany } from '../../lib/api'
 import type { Category, Product } from '../../lib/types'
 import { deleteProduct, listProducts } from './products.api'
 
@@ -33,6 +33,11 @@ export default function ProductList() {
     listProducts(categoryId || undefined, page, size)
       .then((res) => {
         if (cancelled) return
+        const lastPage = Math.max(0, Math.ceil(res.total / size) - 1)
+        if (page > lastPage) {
+          setPage(lastPage)
+          return
+        }
         setItems(res.items)
         setTotal(res.total)
         setSelected(new Set())
@@ -77,19 +82,23 @@ export default function ProductList() {
 
   async function confirmDelete(): Promise<void> {
     if (!confirmIds) return
+    const ids = confirmIds
     setDeleting(true)
     try {
-      for (const id of confirmIds) {
-        await deleteProduct(id)
-      }
+      const result = await deleteMany(ids, deleteProduct)
       setConfirmIds(null)
       setSelected(new Set())
-      const res = await listProducts(categoryId || undefined, page, size)
-      setItems(res.items)
-      setTotal(res.total)
-    } catch (e: unknown) {
-      setError(e instanceof Error ? e.message : 'Request failed')
-      setConfirmIds(null)
+      try {
+        const res = await listProducts(categoryId || undefined, page, size)
+        setItems(res.items)
+        setTotal(res.total)
+      } catch (e: unknown) {
+        setError(e instanceof Error ? e.message : 'Request failed')
+        return
+      }
+      if (result.failed > 0) {
+        setError(`Đã xóa ${result.deleted}/${ids.length}, ${result.failed} thất bại`)
+      }
     } finally {
       setDeleting(false)
     }

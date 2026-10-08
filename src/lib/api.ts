@@ -44,3 +44,19 @@ export async function apiFetch<T>(path: string, init?: RequestInit): Promise<T> 
 export function unwrapPage<T>(page: SpringPage<T>): PageResult<T> {
   return { items: page.content, total: page.totalElements, page: page.number, size: page.size }
 }
+
+export interface DeleteManyResult {
+  deleted: number
+  failed: number
+}
+
+export async function deleteMany(
+  ids: string[],
+  remove: (id: string) => Promise<void>,
+): Promise<DeleteManyResult> {
+  const settled = await Promise.allSettled(ids.map((id) => remove(id)))
+  return {
+    deleted: settled.filter((r) => r.status === 'fulfilled').length,
+    failed: settled.filter((r) => r.status === 'rejected').length,
+  }
+}

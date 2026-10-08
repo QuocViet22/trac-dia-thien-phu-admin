@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { ApiError, apiFetch, unwrapPage } from './api'
+import { ApiError, apiFetch, deleteMany, unwrapPage } from './api'
 
 function jsonResponse(body: unknown, status = 200): Response {
   return new Response(JSON.stringify(body), {
@@ -41,6 +41,19 @@ describe('apiFetch', () => {
     const err = await apiFetch('/api/products').catch((e: unknown) => e)
     expect(err).toBeInstanceOf(ApiError)
     expect((err as ApiError).status).toBe(500)
+  })
+})
+
+describe('deleteMany', () => {
+  it('attempts every id and reports deleted/failed counts', async () => {
+    const calls: string[] = []
+    const remove = (id: string): Promise<void> => {
+      calls.push(id)
+      return id === 'bad' ? Promise.reject(new Error('gone')) : Promise.resolve()
+    }
+    const result = await deleteMany(['a', 'bad', 'c'], remove)
+    expect(calls).toEqual(['a', 'bad', 'c'])
+    expect(result).toEqual({ deleted: 2, failed: 1 })
   })
 })
 

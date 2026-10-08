@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link, useNavigate } from 'react-router'
+import { deleteMany } from '../../lib/api'
 import type { Category } from '../../lib/types'
 import { deleteCategory, listCategories } from './categories.api'
 
@@ -66,17 +67,21 @@ export default function CategoryList() {
 
   async function confirmDelete(): Promise<void> {
     if (!confirmIds) return
+    const ids = confirmIds
     setDeleting(true)
     try {
-      for (const id of confirmIds) {
-        await deleteCategory(id)
-      }
+      const result = await deleteMany(ids, deleteCategory)
       setConfirmIds(null)
       setSelected(new Set())
-      setAll(await listCategories())
-    } catch (e: unknown) {
-      setError(e instanceof Error ? e.message : 'Request failed')
-      setConfirmIds(null)
+      try {
+        setAll(await listCategories())
+      } catch (e: unknown) {
+        setError(e instanceof Error ? e.message : 'Request failed')
+        return
+      }
+      if (result.failed > 0) {
+        setError(`Đã xóa ${result.deleted}/${ids.length}, ${result.failed} thất bại`)
+      }
     } finally {
       setDeleting(false)
     }

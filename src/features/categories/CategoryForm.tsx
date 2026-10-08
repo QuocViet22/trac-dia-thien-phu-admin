@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router'
 import RichText from '../../components/RichText.tsx'
 import type { Category } from '../../lib/types'
-import { formErrorForApi } from '../products/productFields'
+import { formErrorForApi, isNotFoundError } from '../products/productFields'
 import { createCategory, getCategory, listCategories, updateCategory } from './categories.api'
 import { toCategoryPayload, validateCategory } from './categoryFields'
 import type { CategoryFormValues } from './categoryFields'
@@ -40,7 +40,9 @@ export default function CategoryForm() {
   const [formMessage, setFormMessage] = useState('')
   const [loading, setLoading] = useState(!isCreate)
   const [notFound, setNotFound] = useState(false)
+  const [loadError, setLoadError] = useState('')
   const [saving, setSaving] = useState(false)
+  const [nonce, setNonce] = useState(0)
 
   useEffect(() => {
     listCategories()
@@ -52,9 +54,12 @@ export default function CategoryForm() {
     if (isCreate) return
     getCategory(id ?? '')
       .then((c) => setValues(fromCategory(c)))
-      .catch(() => setNotFound(true))
+      .catch((e: unknown) => {
+        if (isNotFoundError(e)) setNotFound(true)
+        else setLoadError(e instanceof Error ? e.message : 'Request failed')
+      })
       .finally(() => setLoading(false))
-  }, [isCreate, id])
+  }, [isCreate, id, nonce])
 
   function set<K extends keyof CategoryFormValues>(key: K, value: CategoryFormValues[K]): void {
     setValues((v) => ({ ...v, [key]: value }))
@@ -87,6 +92,23 @@ export default function CategoryForm() {
   }
 
   if (notFound) return <div className="fetch-error">Không tìm thấy danh mục</div>
+  if (loadError)
+    return (
+      <div className="fetch-error">
+        <p>{loadError}</p>
+        <button
+          type="button"
+          className="btn btn-default"
+          onClick={() => {
+            setLoading(true)
+            setLoadError('')
+            setNonce((n) => n + 1)
+          }}
+        >
+          Thử lại
+        </button>
+      </div>
+    )
   if (loading) return <div className="loading">Đang tải…</div>
 
   const options = isCreate ? parents : parents.filter((p) => p.id !== id)
