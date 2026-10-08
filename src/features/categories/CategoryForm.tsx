@@ -128,13 +128,18 @@ export default function CategoryForm() {
       if (uploadedKey) {
         try {
           await deleteUpload(uploadedKey)
+          uploadedKey = null
         } catch {
-          // Best effort: orphan key is left for manual cleanup.
+          // Fall through: the orphan key is reported below for manual cleanup.
         }
       }
       const mapped = formErrorForApi(err)
       if (mapped.field) setErrors((prev) => ({ ...prev, [mapped.field as string]: mapped.message }))
       else setFormMessage(mapped.message)
+      if (uploadedKey) {
+        const orphanNote = `(Ảnh đã tải lên chưa được xóa: ${uploadedKey})`
+        setFormMessage((prev) => (prev ? `${prev} ${orphanNote}` : orphanNote))
+      }
     } finally {
       setSaving(false)
     }
