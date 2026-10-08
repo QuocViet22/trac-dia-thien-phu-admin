@@ -6,6 +6,10 @@ import { formErrorForApi, isNotFoundError } from '../products/productFields'
 import { createCategory, getCategory, listCategories, updateCategory } from './categories.api'
 import { toCategoryPayload, validateCategory } from './categoryFields'
 import type { CategoryFormValues } from './categoryFields'
+import ImageDropzone from './ImageDropzone.tsx'
+import { validateImageFile } from './imageUpload'
+import type { CoverValue } from './imageUpload'
+import { deleteUpload, uploadFile } from './uploads.api'
 
 const EMPTY: CategoryFormValues = {
   name: '',
@@ -36,12 +40,15 @@ export default function CategoryForm() {
 
   const [parents, setParents] = useState<Category[]>([])
   const [values, setValues] = useState<CategoryFormValues>(EMPTY)
+  const [cover, setCover] = useState<CoverValue>(null)
+  const [coverError, setCoverError] = useState('')
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [formMessage, setFormMessage] = useState('')
   const [loading, setLoading] = useState(!isCreate)
   const [notFound, setNotFound] = useState(false)
   const [loadError, setLoadError] = useState('')
   const [saving, setSaving] = useState(false)
+  const [uploading, setUploading] = useState(false)
   const [nonce, setNonce] = useState(0)
 
   useEffect(() => {
@@ -53,7 +60,11 @@ export default function CategoryForm() {
   useEffect(() => {
     if (isCreate) return
     getCategory(id ?? '')
-      .then((c) => setValues(fromCategory(c)))
+      .then((c) => {
+        const v = fromCategory(c)
+        setValues(v)
+        setCover(v.imageUrl ? { kind: 'url', url: v.imageUrl } : null)
+      })
       .catch((e: unknown) => {
         if (isNotFoundError(e)) setNotFound(true)
         else setLoadError(e instanceof Error ? e.message : 'Request failed')
@@ -65,6 +76,12 @@ export default function CategoryForm() {
     setValues((v) => ({ ...v, [key]: value }))
   }
 
+  function onCoverChange(next: CoverValue): void {
+    setCover(next)
+    setCoverError('')
+    set('imageUrl', next?.kind === 'url' ? next.url : '')
+  }
+
   async function onSubmit(e: React.FormEvent): Promise<void> {
     e.preventDefault()
     const fieldErrors = validateCategory(values)
@@ -74,15 +91,47 @@ export default function CategoryForm() {
     setErrors(fieldErrors)
     setFormMessage('')
     if (Object.keys(fieldErrors).length > 0) return
+
+    let resolvedUrl = cover?.kind === 'url' ? cover.url : ''
+    let uploadedKey: string | null = null
     setSaving(true)
+    if (cover?.kind === 'file') {
+      const fileError = validateImageFile(cover.file)
+      if (fileError) {
+        setCoverError(fileError)
+        setSaving(false)
+        return
+      }
+      setUploading(true)
+      try {
+        const uploaded = await uploadFile(cover.file)
+        resolvedUrl = uploaded.url
+        uploadedKey = uploaded.key
+      } catch (err: unknown) {
+        setCoverError(err instanceof Error ? err.message : 'Tải ảnh thất bại')
+        setUploading(false)
+        setSaving(false)
+        return
+      }
+      setUploading(false)
+    }
+
     try {
+      const payload = toCategoryPayload({ ...values, imageUrl: resolvedUrl })
       if (isCreate) {
-        await createCategory(toCategoryPayload(values))
+        await createCategory(payload)
       } else {
-        await updateCategory(id ?? '', toCategoryPayload(values))
+        await updateCategory(id ?? '', payload)
       }
       navigate('/categories')
     } catch (err: unknown) {
+      if (uploadedKey) {
+        try {
+          await deleteUpload(uploadedKey)
+        } catch {
+          // Best effort: orphan key is left for manual cleanup.
+        }
+      }
       const mapped = formErrorForApi(err)
       if (mapped.field) setErrors((prev) => ({ ...prev, [mapped.field as string]: mapped.message }))
       else setFormMessage(mapped.message)
@@ -202,17 +251,7 @@ export default function CategoryForm() {
             </div>
             <div className="card">
               <h2>Ảnh danh mục</h2>
-              {values.imageUrl && <img src={values.imageUrl} alt="" className="thumb" />}
-              {field(
-                'imageUrl',
-                'URL ảnh',
-                <input
-                  type="url"
-                  value={values.imageUrl}
-                  onChange={(e) => set('imageUrl', e.target.value)}
-                  placeholder="Dán URL ảnh"
-                />,
-              )}
+              <ImageDropzone value={cover} onChange={onCoverChange} error={coverError} />
             </div>
           </div>
         </div>
@@ -224,7 +263,7 @@ export default function CategoryForm() {
             Hủy
           </Link>
           <button type="submit" className="btn btn-primary" disabled={saving}>
-            {saving ? 'Đang lưu…' : '✓ Lưu'}
+            {saving ? (uploading ? 'Đang tải ảnh…' : 'Đang lưu…') : '✓ Lưu'}
           </button>
         </div>
       </form>
