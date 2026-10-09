@@ -23,10 +23,9 @@ export default function GalleryManager({ items, onChange, onPromoteCover, error 
   const previewsRef = useRef(new Map<File, string>())
 
   useEffect(() => {
-    const cache = previewsRef.current
     return () => {
-      for (const url of cache.values()) URL.revokeObjectURL(url)
-      cache.clear()
+      for (const url of previewsRef.current.values()) URL.revokeObjectURL(url)
+      previewsRef.current.clear()
     }
   }, [])
 

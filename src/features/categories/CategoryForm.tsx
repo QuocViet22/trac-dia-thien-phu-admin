@@ -155,7 +155,17 @@ export default function CategoryForm() {
             uploadedKeys.push(uploaded.key)
           } catch (err: unknown) {
             const message = err instanceof Error ? err.message : 'Tải ảnh thất bại'
-            setGalleryError(`Ảnh ${i + 1}: ${message}`)
+            const orphans: string[] = []
+            for (const key of uploadedKeys) {
+              try {
+                await deleteUpload(key)
+              } catch {
+                orphans.push(key)
+              }
+            }
+            setGalleryError(
+              `Ảnh ${i + 1}: ${message}${orphans.length > 0 ? ` (Ảnh đã tải lên chưa được xóa: ${orphans.join(', ')})` : ''}`,
+            )
             setUploading(false)
             setSaving(false)
             return
