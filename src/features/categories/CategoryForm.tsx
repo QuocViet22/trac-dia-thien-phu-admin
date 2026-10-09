@@ -4,11 +4,12 @@ import RichText from '../../components/RichText.tsx'
 import type { Category } from '../../lib/types'
 import { formErrorForApi, isNotFoundError } from '../products/productFields'
 import { createCategory, getCategory, listCategories, updateCategory } from './categories.api'
-import { toCategoryPayload, validateCategory } from './categoryFields'
+import { toCategoryPayloadFromUrls, validateCategory } from './categoryFields'
 import type { CategoryFormValues } from './categoryFields'
 import ImageDropzone from './ImageDropzone.tsx'
-import { validateImageFile } from './imageUpload'
-import type { CoverValue } from './imageUpload'
+import GalleryManager from './GalleryManager.tsx'
+import { resolveGalleryError, validateImageFile } from './imageUpload'
+import type { CoverValue, GalleryItem } from './imageUpload'
 import { deleteUpload, uploadFile } from './uploads.api'
 
 const EMPTY: CategoryFormValues = {
@@ -42,6 +43,8 @@ export default function CategoryForm() {
   const [values, setValues] = useState<CategoryFormValues>(EMPTY)
   const [cover, setCover] = useState<CoverValue>(null)
   const [coverError, setCoverError] = useState('')
+  const [gallery, setGallery] = useState<GalleryItem[]>([])
+  const [galleryError, setGalleryError] = useState('')
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [formMessage, setFormMessage] = useState('')
   const [loading, setLoading] = useState(!isCreate)
@@ -64,6 +67,7 @@ export default function CategoryForm() {
         const v = fromCategory(c)
         setValues(v)
         setCover(v.imageUrl ? { kind: 'url', url: v.imageUrl } : null)
+        setGallery(c.images.slice(1).map((img): GalleryItem => ({ kind: 'url', url: img.imageUrl })))
       })
       .catch((e: unknown) => {
         if (isNotFoundError(e)) setNotFound(true)
@@ -82,6 +86,27 @@ export default function CategoryForm() {
     set('imageUrl', next?.kind === 'url' ? next.url : '')
   }
 
+  function onGalleryChange(next: GalleryItem[]): void {
+    setGallery(next)
+    setGalleryError('')
+  }
+
+  function onPromoteCover(index: number): void {
+    const item = gallery[index]
+    if (!item) return
+    if (cover) {
+      setCover(item)
+      setGallery((g) => g.map((gItem, i) => (i === index ? cover : gItem)))
+      set('imageUrl', item.kind === 'url' ? item.url : '')
+    } else {
+      setCover(item)
+      setGallery((g) => g.filter((_, i) => i !== index))
+      set('imageUrl', item.kind === 'url' ? item.url : '')
+    }
+    setCoverError('')
+    setGalleryError('')
+  }
+
   async function onSubmit(e: React.FormEvent): Promise<void> {
     e.preventDefault()
     const fieldErrors = validateCategory(values)
@@ -90,34 +115,59 @@ export default function CategoryForm() {
     }
     setErrors(fieldErrors)
     setFormMessage('')
-    if (Object.keys(fieldErrors).length > 0) return
+    const galleryErr = resolveGalleryError(gallery)
+    if (galleryErr) setGalleryError(galleryErr)
+    if (Object.keys(fieldErrors).length > 0 || galleryErr) return
 
-    let resolvedUrl = cover?.kind === 'url' ? cover.url : ''
-    let uploadedKey: string | null = null
+    let coverUrl = cover?.kind === 'url' ? cover.url : ''
+    const galleryUrls: string[] = gallery.map((g) => (g.kind === 'url' ? g.url : ''))
+    const uploadedKeys: string[] = []
     setSaving(true)
-    if (cover?.kind === 'file') {
-      const fileError = validateImageFile(cover.file)
-      if (fileError) {
-        setCoverError(fileError)
-        setSaving(false)
-        return
+    const needsUpload = cover?.kind === 'file' || gallery.some((g) => g.kind === 'file')
+    if (needsUpload) {
+      if (cover?.kind === 'file') {
+        const fileError = validateImageFile(cover.file)
+        if (fileError) {
+          setCoverError(fileError)
+          setSaving(false)
+          return
+        }
       }
       setUploading(true)
-      try {
-        const uploaded = await uploadFile(cover.file)
-        resolvedUrl = uploaded.url
-        uploadedKey = uploaded.key
-      } catch (err: unknown) {
-        setCoverError(err instanceof Error ? err.message : 'Tải ảnh thất bại')
-        setUploading(false)
-        setSaving(false)
-        return
+      if (cover?.kind === 'file') {
+        try {
+          const uploaded = await uploadFile(cover.file)
+          coverUrl = uploaded.url
+          uploadedKeys.push(uploaded.key)
+        } catch (err: unknown) {
+          setCoverError(err instanceof Error ? err.message : 'Tải ảnh thất bại')
+          setUploading(false)
+          setSaving(false)
+          return
+        }
+      }
+      for (let i = 0; i < gallery.length; i++) {
+        const g = gallery[i]
+        if (g?.kind === 'file') {
+          try {
+            const uploaded = await uploadFile(g.file)
+            galleryUrls[i] = uploaded.url
+            uploadedKeys.push(uploaded.key)
+          } catch (err: unknown) {
+            const message = err instanceof Error ? err.message : 'Tải ảnh thất bại'
+            setGalleryError(`Ảnh ${i + 1}: ${message}`)
+            setUploading(false)
+            setSaving(false)
+            return
+          }
+        }
       }
       setUploading(false)
     }
 
     try {
-      const payload = toCategoryPayload({ ...values, imageUrl: resolvedUrl })
+      const urls = [...(coverUrl ? [coverUrl] : []), ...galleryUrls.filter((u) => u)]
+      const payload = toCategoryPayloadFromUrls(values, urls)
       if (isCreate) {
         await createCategory(payload)
       } else {
@@ -125,19 +175,19 @@ export default function CategoryForm() {
       }
       navigate('/categories')
     } catch (err: unknown) {
-      if (uploadedKey) {
+      const orphans: string[] = []
+      for (const key of uploadedKeys) {
         try {
-          await deleteUpload(uploadedKey)
-          uploadedKey = null
+          await deleteUpload(key)
         } catch {
-          // Fall through: the orphan key is reported below for manual cleanup.
+          orphans.push(key)
         }
       }
       const mapped = formErrorForApi(err)
       if (mapped.field) setErrors((prev) => ({ ...prev, [mapped.field as string]: mapped.message }))
       else setFormMessage(mapped.message)
-      if (uploadedKey) {
-        const orphanNote = `(Ảnh đã tải lên chưa được xóa: ${uploadedKey})`
+      if (orphans.length > 0) {
+        const orphanNote = `(Ảnh đã tải lên chưa được xóa: ${orphans.join(', ')})`
         setFormMessage((prev) => (prev ? `${prev} ${orphanNote}` : orphanNote))
       }
     } finally {
@@ -257,6 +307,15 @@ export default function CategoryForm() {
             <div className="card">
               <h2>Ảnh danh mục</h2>
               <ImageDropzone value={cover} onChange={onCoverChange} error={coverError} />
+            </div>
+            <div className="card">
+              <h2>Thư viện ảnh</h2>
+              <GalleryManager
+                items={gallery}
+                onChange={onGalleryChange}
+                onPromoteCover={onPromoteCover}
+                error={galleryError}
+              />
             </div>
           </div>
         </div>
