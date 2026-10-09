@@ -631,3 +631,31 @@ input[type='checkbox'] {
 .link-btn:hover {
   text-decoration: underline;
 }
+
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.gallery-thumb {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.gallery-thumb img {
+  width: 100%;
+  height: 96px;
+  object-fit: cover;
+  border-radius: var(--radius);
+  border: 1px solid var(--card-border);
+  background: var(--card);
+}
+
+.gallery-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
