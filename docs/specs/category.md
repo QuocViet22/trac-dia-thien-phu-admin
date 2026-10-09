@@ -48,14 +48,54 @@ Fields map 1:1 to `CreateCategoryRequest` / `UpdateCategoryRequest`:
 | Mô tả (ngắn + chi tiết) | `description` | single rich-text field, unbounded (API has one description — the design's two boxes merge into it) |
 | Tiêu đề trang (SEO) / Mô tả SEO / slug | `seoPageTitle`, `seoDescription`, `seoAlias` | optional, max 256 each; `seoAlias` unique |
 | Danh mục cha | `parentCategoryId` | optional select: root + all categories; on edit, exclude self (selecting self is rejected client-side) |
-| Ảnh danh mục | `images` | single cover image = one URL row (see `product.md` §2) |
+| Ảnh danh mục | `images` | single cover image via the §4 dropzone (device upload on submit, or URL) |
 
 - Edit loads `GET /api/categories/{id}` and prefills; submit `PUT`.
 - Parent dropdown uses `GET /api/categories?topLevel=true` for root
   options plus the full list for the remaining choices.
 
-## 4. Out of scope (deferred, not faked)
+## 4. Cover image upload (R2 via backend)
+
+The "Ảnh danh mục" card is a dashed dropzone (`2px dashed #CBD5E1`,
+`#F8FAFC` background, 6px radius; drag-active tints border + canvas to
+`#0088FF` / `#E5F3FF`): idle text "Kéo thả hoặc thêm ảnh từ URL / Tải
+ảnh từ thiết bị". Three inputs, one cover slot:
+
+- Drag-drop or device picker: file previews locally via object URL
+  (thumbnail, name, size, remove button). Nothing uploads until submit.
+- "Thêm ảnh từ URL": toggles a URL input (the previous behavior);
+  picking a device file replaces the URL and vice versa.
+
+Submit flow (both add and edit):
+
+1. Client validates the form, then checks the file: image MIME only,
+   max 5MB, else a per-file error blocks submit.
+2. If a device file is present: `POST /api/uploads` (multipart `file`)
+   → `{key, url}`. The Lưu button shows progress and the form locks
+   until it resolves; upload `400`/`413`/network errors show on the
+   file row.
+3. `POST`/`PUT /api/categories` with `images` = `[{imageUrl: <url>,
+   sortOrder: 0}]` (URL entry skips step 2; no image sends `[]`).
+4. If step 3 fails after step 2 succeeded: best-effort `DELETE
+   /api/uploads/{key}` for the just-uploaded keys, then surface the
+   category error. Compensation failure only logs (the orphan key is
+   included in the error for manual cleanup).
+
+Backend contract (`trac-dia-thien-phu-api` implements first; requires
+updating its `docs/specs/image.md`, which currently forbids upload
+endpoints):
+
+- `POST /api/uploads` (multipart `file`, images only, 5MB cap) →
+  `201` + `{key, url}`; key = uuid + original extension; R2 SDK and
+  credentials live server-side from env; public URL via the bucket's
+  public domain.
+- `DELETE /api/uploads/{key}` → `204`, removes the R2 object. No DB
+  rows for uploads — ownership still derives from category
+  create/update as today.
+- Hủy uploads nothing, so cancel needs no delete path.
+
+## 5. Out of scope (deferred, not faked)
 
 - Product-count column; hide/show status or bulk-hide (no backend field).
 - Server-side search or pagination on categories.
-- Binary image upload (URL only, no upload endpoint).
+- Device upload for product images (URL-only until this flow proves out).
