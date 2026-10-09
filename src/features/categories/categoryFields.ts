@@ -43,6 +43,13 @@ function nullIfBlank(s: string): string | null {
 }
 
 export function toCategoryPayload(v: CategoryFormValues): CategoryPayload {
+  return toCategoryPayloadFromUrls(v, blank(v.imageUrl) ? [] : [v.imageUrl.trim()])
+}
+
+export function toCategoryPayloadFromUrls(
+  v: CategoryFormValues,
+  urls: string[],
+): CategoryPayload {
   return {
     name: v.name.trim(),
     description: nullIfBlank(v.description),
@@ -50,6 +57,6 @@ export function toCategoryPayload(v: CategoryFormValues): CategoryPayload {
     seoDescription: nullIfBlank(v.seoDescription),
     seoAlias: nullIfBlank(v.seoAlias),
     parentCategoryId: nullIfBlank(v.parentCategoryId),
-    images: blank(v.imageUrl) ? [] : [{ imageUrl: v.imageUrl.trim(), sortOrder: 0 }],
+    images: urls.map((imageUrl, index) => ({ imageUrl, sortOrder: index })),
   }
 }

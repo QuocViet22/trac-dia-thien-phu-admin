@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { toCategoryPayload, validateCategory } from './categoryFields'
+import { toCategoryPayload, toCategoryPayloadFromUrls, validateCategory } from './categoryFields'
 
 const valid = {
   name: 'Thời trang nam',
@@ -40,5 +40,18 @@ describe('toCategoryPayload', () => {
 
   it('omits images when no url is given', () => {
     expect(toCategoryPayload({ ...valid, imageUrl: '  ' }).images).toEqual([])
+  })
+})
+
+describe('toCategoryPayloadFromUrls', () => {
+  it('maps ordered urls to sortOrder images', () => {
+    expect(toCategoryPayloadFromUrls(valid, ['c', 'g1']).images).toEqual([
+      { imageUrl: 'c', sortOrder: 0 },
+      { imageUrl: 'g1', sortOrder: 1 },
+    ])
+  })
+
+  it('omits images when urls are empty', () => {
+    expect(toCategoryPayloadFromUrls(valid, []).images).toEqual([])
   })
 })
