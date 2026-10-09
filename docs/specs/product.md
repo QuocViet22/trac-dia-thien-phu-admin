@@ -43,9 +43,12 @@ Success criteria:
   with `Hủy` (secondary, back to list) + `Lưu` (primary, submit).
 - **Editor:** one rich-text library (e.g. Tiptap; exact pick in plan
   phase) for `description` fields; plain textareas elsewhere.
-- **Images:** rows of `{imageUrl, name, sortOrder}`; star marks primary
-  (`sortOrder: 0`); drag or up/down reorder; "add from URL" input.
-  No binary upload (no backend endpoint accepts files).
+- **Images:** cover (`images[0]`, `sortOrder: 0`) + gallery
+  (`images[1..]`, max 10), same behavior as categories (`category.md`
+  §4): device upload via `POST /api/uploads` on submit (image MIME,
+  5MB cap each), or URL; reorderable, any item promotable to cover;
+  failed submit compensates with `DELETE /api/uploads/{key}`.
+  No per-image `name` (dropped from the form model).
 - **UI language:** Vietnamese labels as in the screens; this spec is in
   English per repo convention.
 
@@ -79,9 +82,12 @@ Fields map 1:1 to `CreateProductRequest` / `UpdateProductRequest`:
 | Đơn vị tính | `measurementUnit` | optional select: Cái, Chiếc, Bộ, Hộp, Kg, Lít |
 | Mô tả chi tiết | `description` | rich text, unbounded |
 | Tiêu đề trang / Thẻ mô tả / slug | `seoPageTitle`, `seoDescriptionTag`, `seoAlias` | optional, max 256 each; `seoAlias` unique |
-| Ảnh sản phẩm | `images` | URL rows (see §2) |
+| Ảnh chính / Thư viện ảnh | `images` | cover + gallery per §2 (device upload on submit, or URLs; names dropped) |
 
 - Edit loads `GET /api/products/{id}` and prefills; submit `PUT`.
+- Empty categories: the `Danh mục *` card shows a warning badge plus a
+  "Tạo danh mục mới" link (`/categories/new`); submit stays blocked by
+  the required-category validation.
 - Validation mirrors backend (`@NotBlank name`, `@NotNull categoryId`,
   256-char limits) so errors appear before the round trip.
 
@@ -90,4 +96,4 @@ Fields map 1:1 to `CreateProductRequest` / `UpdateProductRequest`:
 - `Loại sản phẩm` (type), `Nhãn hiệu` (brand), `Trạng thái bán` toggle,
   price, stock, short-vs-detail description split — no backend columns.
 - Server-side text search; product-count-per-category (category API has
-  no count); binary image upload; AI SEO button (news design only).
+  no count); AI SEO button (news design only).

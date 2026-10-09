@@ -1,7 +1,5 @@
 export interface ImageRow {
   imageUrl: string
-  name: string
-  primary: boolean
 }
 
 export interface ProductFormValues {
@@ -19,7 +17,6 @@ export interface ProductFormValues {
 
 export interface ImagePayload {
   imageUrl: string
-  name?: string
   sortOrder: number
 }
 
@@ -57,15 +54,9 @@ function nullIfBlank(s: string): string | null {
 }
 
 export function toImagePayload(rows: ImageRow[]): ImagePayload[] {
-  const kept = rows
+  return rows
     .filter((r) => !blank(r.imageUrl))
-    .map((r) => ({ imageUrl: r.imageUrl.trim(), name: r.name.trim(), primary: r.primary }))
-  kept.sort((a, b) => Number(b.primary) - Number(a.primary))
-  return kept.map((r, i) => ({
-    imageUrl: r.imageUrl,
-    ...(r.name ? { name: r.name } : {}),
-    sortOrder: i,
-  }))
+    .map((r, i) => ({ imageUrl: r.imageUrl.trim(), sortOrder: i }))
 }
 
 export interface ProductPayload {

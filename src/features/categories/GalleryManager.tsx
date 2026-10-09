@@ -29,30 +29,27 @@ export default function GalleryManager({ items, onChange, onPromoteCover, error 
     }
   }, [])
 
-  function trackPreviews(files: File[]): void {
-    const next = new Map(previewsRef.current)
-    for (const file of files) {
-      if (!next.has(file)) next.set(file, URL.createObjectURL(file))
+  // Sync previews with file-kind items arriving via props (e.g. the old
+  // cover swapped back into the gallery). Object URLs are external
+  // resources, so syncing them here keeps render pure.
+  useEffect(() => {
+    const next = new Map<File, string>()
+    for (const item of items) {
+      if (item.kind !== 'file') continue
+      const cached = previewsRef.current.get(item.file)
+      next.set(item.file, cached ?? URL.createObjectURL(item.file))
+    }
+    for (const [file, url] of previewsRef.current) {
+      if (!next.has(file)) URL.revokeObjectURL(url)
     }
     previewsRef.current = next
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- preview URLs must follow the items prop; render cannot create them (impure)
     setPreviews(next)
-  }
-
-  function untrackPreview(file: File): void {
-    const next = new Map(previewsRef.current)
-    const url = next.get(file)
-    if (url) {
-      URL.revokeObjectURL(url)
-      next.delete(file)
-    }
-    previewsRef.current = next
-    setPreviews(next)
-  }
+  }, [items])
 
   function addFiles(files: FileList | File[]): void {
     const list = Array.from(files)
     if (list.length === 0) return
-    trackPreviews(list)
     onChange([...items, ...list.map((file): GalleryItem => ({ kind: 'file', file }))])
   }
 
@@ -64,8 +61,6 @@ export default function GalleryManager({ items, onChange, onPromoteCover, error 
   }
 
   function removeAt(index: number): void {
-    const item = items[index]
-    if (item?.kind === 'file') untrackPreview(item.file)
     onChange(items.filter((_, i) => i !== index))
   }
 
@@ -131,13 +126,16 @@ export default function GalleryManager({ items, onChange, onPromoteCover, error 
 
       {items.length > 0 && (
         <div className="gallery-grid">
-          {items.map((item, i) => (
+          {items.map((item, i) => {
+            const meta =
+              item.kind === 'file'
+                ? `${item.file.name} · ${formatSize(item.file.size)}`
+                : item.url
+            return (
             <div key={i} className="gallery-thumb">
               <img src={thumb(item)} alt="" />
-              <div className="dz-meta">
-                {item.kind === 'file'
-                  ? `${item.file.name} · ${formatSize(item.file.size)}`
-                  : item.url}
+              <div className="dz-meta" title={meta}>
+                {meta}
               </div>
               <div className="gallery-actions">
                 <button type="button" className="link-btn" onClick={() => move(i, -1)} disabled={i === 0}>
@@ -159,7 +157,8 @@ export default function GalleryManager({ items, onChange, onPromoteCover, error 
                 </button>
               </div>
             </div>
-          ))}
+            )
+          })}
         </div>
       )}
 

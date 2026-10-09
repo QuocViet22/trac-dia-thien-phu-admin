@@ -48,37 +48,57 @@ Fields map 1:1 to `CreateCategoryRequest` / `UpdateCategoryRequest`:
 | Mô tả (ngắn + chi tiết) | `description` | single rich-text field, unbounded (API has one description — the design's two boxes merge into it) |
 | Tiêu đề trang (SEO) / Mô tả SEO / slug | `seoPageTitle`, `seoDescription`, `seoAlias` | optional, max 256 each; `seoAlias` unique |
 | Danh mục cha | `parentCategoryId` | optional select: root + all categories; on edit, exclude self (selecting self is rejected client-side) |
-| Ảnh danh mục | `images` | single cover image via the §4 dropzone (device upload on submit, or URL) |
+| Ảnh chính | `images[0]` | single cover via the §4 dropzone (device upload on submit, or URL) |
+| Thư viện ảnh | `images[1..]` | gallery, max 10, via the §4 gallery manager (device files and/or URLs, reorderable, any item promotable to cover) |
 
 - Edit loads `GET /api/categories/{id}` and prefills; submit `PUT`.
 - Parent dropdown uses `GET /api/categories?topLevel=true` for root
   options plus the full list for the remaining choices.
 
-## 4. Cover image upload (R2 via backend)
+## 4. Cover + gallery image upload (R2 via backend)
 
-The "Ảnh danh mục" card is a dashed dropzone (`2px dashed #CBD5E1`,
-`#F8FAFC` background, 6px radius; drag-active tints border + canvas to
-`#0088FF` / `#E5F3FF`): idle text "Kéo thả hoặc thêm ảnh từ URL / Tải
-ảnh từ thiết bị". Three inputs, one cover slot:
+Two cards share one backend contract (`images[]` ordered by
+`sortOrder`): "Ảnh chính" (cover = `images[0]`, `sortOrder: 0`)
+and "Thư viện ảnh" (gallery = `images[1..]`). The list page thumb
+still renders the first image, so promoting a gallery item to cover
+means moving it to index 0 — no backend change. The promoted image
+renders in the cover card immediately (device files via object URL),
+on add and edit pages alike.
+
+Cover card: unchanged single-slot dashed dropzone (`2px dashed
+#CBD5E1`, `#F8FAFC` background, 6px radius; drag-active tints border
++ canvas to `#0088FF` / `#E5F3FF`): idle text "Kéo thả hoặc thêm ảnh
+từ URL / Tải ảnh từ thiết bị". Three inputs, one cover slot:
 
 - Drag-drop or device picker: file previews locally via object URL
   (thumbnail, name, size, remove button). Nothing uploads until submit.
 - "Thêm ảnh từ URL": toggles a URL input (the previous behavior);
   picking a device file replaces the URL and vice versa.
 
+Gallery card ("Thư viện ảnh"): thumbnail grid with per-item remove,
+← / → reorder buttons, and "Đặt làm cover" (swap with index 0).
+Add via multi-file drag-drop, multi-file device picker (`multiple`
+attr), or URL input (one URL at a time). Max 10 gallery items
+(cover excluded); exceeding 10 blocks submit client-side with zero
+network calls. Each file previews via object URL, revoked on
+remove/change/unmount.
+
 Submit flow (both add and edit):
 
-1. Client validates the form, then checks the file: image MIME only,
-   max 5MB, else a per-file error blocks submit.
-2. If a device file is present: `POST /api/uploads` (multipart `file`)
-   → `{key, url}`. The Lưu button shows progress and the form locks
-   until it resolves; upload `400`/`413`/network errors show on the
-   file row.
-3. `POST`/`PUT /api/categories` with `images` = `[{imageUrl: <url>,
-   sortOrder: 0}]` (URL entry skips step 2; no image sends `[]`).
+1. Client validates the form, then checks every file: image MIME only,
+   max 5MB each, gallery count ≤ 10, else per-file/per-grid errors
+   block submit.
+2. If device files are present (cover and/or gallery): `POST
+   /api/uploads` (multipart `file`) once per file, sequentially in
+   display order → `{key, url}` each. The Lưu button shows progress
+   and the form locks until all resolve; upload `400`/`413`/network
+   errors show on the failing row and abort the submit.
+3. `POST`/`PUT /api/categories` with `images` = ordered URLs mapped
+   to `[{imageUrl, sortOrder: index}]` (cover first when present;
+   URL entries skip step 2; no images sends `[]`).
 4. If step 3 fails after step 2 succeeded: best-effort `DELETE
-   /api/uploads/{key}` for the just-uploaded keys, then surface the
-   category error. Compensation failure only logs (the orphan key is
+   /api/uploads/{key}` for every just-uploaded key, then surface the
+   category error. Compensation failure only logs (the orphan keys are
    included in the error for manual cleanup).
 
 Backend contract (`trac-dia-thien-phu-api` implements first; requires

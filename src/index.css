@@ -654,6 +654,13 @@ input[type='checkbox'] {
   background: var(--card);
 }
 
+.gallery-thumb .dz-meta {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
 .gallery-actions {
   display: flex;
   flex-wrap: wrap;

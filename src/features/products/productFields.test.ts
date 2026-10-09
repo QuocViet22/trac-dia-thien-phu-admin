@@ -12,7 +12,7 @@ const valid = {
   seoPageTitle: '',
   seoDescriptionTag: '',
   seoAlias: '',
-  images: [] as { imageUrl: string; name: string; primary: boolean }[],
+  images: [] as { imageUrl: string }[],
 }
 
 describe('validateProduct', () => {
@@ -33,15 +33,15 @@ describe('validateProduct', () => {
 })
 
 describe('toImagePayload', () => {
-  it('drops blank urls and puts the primary image first with sortOrder by position', () => {
+  it('drops blank urls and assigns sortOrder by position', () => {
     const payload = toImagePayload([
-      { imageUrl: 'http://a/1.png', name: 'one', primary: false },
-      { imageUrl: '  ', name: 'blank', primary: false },
-      { imageUrl: 'http://a/2.png', name: 'two', primary: true },
+      { imageUrl: 'http://a/1.png' },
+      { imageUrl: '  ' },
+      { imageUrl: 'http://a/2.png' },
     ])
     expect(payload).toEqual([
-      { imageUrl: 'http://a/2.png', name: 'two', sortOrder: 0 },
-      { imageUrl: 'http://a/1.png', name: 'one', sortOrder: 1 },
+      { imageUrl: 'http://a/1.png', sortOrder: 0 },
+      { imageUrl: 'http://a/2.png', sortOrder: 1 },
     ])
   })
 })

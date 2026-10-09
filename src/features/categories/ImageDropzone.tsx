@@ -26,20 +26,23 @@ export default function ImageDropzone({ value, onChange, error }: Props) {
     }
   }, [])
 
-  function setPreviewUrl(url: string | null): void {
+  // Sync the preview with file-kind values arriving via props (e.g. a
+  // gallery image promoted to cover). Object URLs are external resources,
+  // so creating them here keeps render pure.
+  useEffect(() => {
+    const next = value?.kind === 'file' ? URL.createObjectURL(value.file) : null
     if (previewRef.current) URL.revokeObjectURL(previewRef.current)
-    previewRef.current = url
-    setPreview(url)
-  }
+    previewRef.current = next
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- preview URL must follow the value prop; render cannot create it (impure)
+    setPreview(next)
+  }, [value])
 
   function pickFile(file: File): void {
-    setPreviewUrl(URL.createObjectURL(file))
     setShowUrl(false)
     onChange({ kind: 'file', file })
   }
 
   function clear(): void {
-    setPreviewUrl(null)
     setUrlDraft('')
     onChange(null)
   }
@@ -47,7 +50,6 @@ export default function ImageDropzone({ value, onChange, error }: Props) {
   function applyUrl(): void {
     const url = urlDraft.trim()
     if (!url) return
-    setPreviewUrl(null)
     onChange({ kind: 'url', url })
   }
 

@@ -4,13 +4,18 @@ import RichText from '../../components/RichText.tsx'
 import { apiFetch } from '../../lib/api'
 import type { Category, Product } from '../../lib/types'
 import { createProduct, getProduct, updateProduct } from './products.api'
+import ImageDropzone from '../categories/ImageDropzone.tsx'
+import GalleryManager from '../categories/GalleryManager.tsx'
+import { resolveGalleryError, validateImageFile } from '../categories/imageUpload'
+import type { CoverValue, GalleryItem } from '../categories/imageUpload'
+import { deleteUpload, uploadFile } from '../categories/uploads.api'
 import {
   formErrorForApi,
   isNotFoundError,
   toProductPayload,
   validateProduct,
 } from './productFields'
-import type { ImageRow, ProductFormValues } from './productFields'
+import type { ProductFormValues } from './productFields'
 
 const UNITS = ['Cái', 'Chiếc', 'Bộ', 'Hộp', 'Kg', 'Lít']
 
@@ -40,8 +45,18 @@ function fromProduct(p: Product, clearSlug: boolean): ProductFormValues {
     seoAlias: clearSlug ? '' : (p.seoAlias ?? ''),
     images: [...p.images]
       .sort((a, b) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0))
-      .map((img, i) => ({ imageUrl: img.imageUrl, name: img.name ?? '', primary: i === 0 })),
+      .map((img) => ({ imageUrl: img.imageUrl }))
+      .filter((r) => r.imageUrl.trim().length > 0),
   }
+}
+
+function coverOf(rows: { imageUrl: string }[]): CoverValue {
+  const first = rows[0]
+  return first ? { kind: 'url', url: first.imageUrl } : null
+}
+
+function galleryOf(rows: { imageUrl: string }[]): GalleryItem[] {
+  return rows.slice(1).map((r): GalleryItem => ({ kind: 'url', url: r.imageUrl }))
 }
 
 export default function ProductForm() {
@@ -61,8 +76,12 @@ export default function ProductForm() {
   const [notFound, setNotFound] = useState(false)
   const [loadError, setLoadError] = useState('')
   const [saving, setSaving] = useState(false)
+  const [uploading, setUploading] = useState(false)
   const [nonce, setNonce] = useState(0)
-  const [newImageUrl, setNewImageUrl] = useState('')
+  const [cover, setCover] = useState<CoverValue>(() => coverOf(values.images))
+  const [coverError, setCoverError] = useState('')
+  const [gallery, setGallery] = useState<GalleryItem[]>(() => galleryOf(values.images))
+  const [galleryError, setGalleryError] = useState('')
 
   useEffect(() => {
     apiFetch<Category[]>('/api/categories')
@@ -73,7 +92,12 @@ export default function ProductForm() {
   useEffect(() => {
     if (isCreate || clone) return
     getProduct(id ?? '')
-      .then((p) => setValues(fromProduct(p, false)))
+      .then((p) => {
+        const v = fromProduct(p, false)
+        setValues(v)
+        setCover(coverOf(v.images))
+        setGallery(galleryOf(v.images))
+      })
       .catch((e: unknown) => {
         if (isNotFoundError(e)) setNotFound(true)
         else setLoadError(e instanceof Error ? e.message : 'Request failed')
@@ -85,28 +109,28 @@ export default function ProductForm() {
     setValues((v) => ({ ...v, [key]: value }))
   }
 
-  function setImage(index: number, patch: Partial<ImageRow>): void {
-    setValues((v) => ({
-      ...v,
-      images: v.images.map((img, i) => (i === index ? { ...img, ...patch } : img)),
-    }))
+  function onCoverChange(next: CoverValue): void {
+    setCover(next)
+    setCoverError('')
   }
 
-  function starImage(index: number): void {
-    setValues((v) => ({
-      ...v,
-      images: v.images.map((img, i) => ({ ...img, primary: i === index })),
-    }))
+  function onGalleryChange(next: GalleryItem[]): void {
+    setGallery(next)
+    setGalleryError('')
   }
 
-  function moveImage(index: number, dir: -1 | 1): void {
-    setValues((v) => {
-      const images = [...v.images]
-      const j = index + dir
-      if (j < 0 || j >= images.length) return v
-      ;[images[index], images[j]] = [images[j], images[index]]
-      return { ...v, images }
-    })
+  function onPromoteCover(index: number): void {
+    const item = gallery[index]
+    if (!item) return
+    if (cover) {
+      setCover(item)
+      setGallery((g) => g.map((gItem, i) => (i === index ? cover : gItem)))
+    } else {
+      setCover(item)
+      setGallery((g) => g.filter((_, i) => i !== index))
+    }
+    setCoverError('')
+    setGalleryError('')
   }
 
   async function onSubmit(e: React.FormEvent): Promise<void> {
@@ -114,19 +138,90 @@ export default function ProductForm() {
     const fieldErrors = validateProduct(values)
     setErrors(fieldErrors)
     setFormMessage('')
-    if (Object.keys(fieldErrors).length > 0) return
+    const galleryErr = resolveGalleryError(gallery)
+    if (galleryErr) setGalleryError(galleryErr)
+    if (Object.keys(fieldErrors).length > 0 || galleryErr) return
+
+    let coverUrl = cover?.kind === 'url' ? cover.url : ''
+    const galleryUrls: string[] = gallery.map((g) => (g.kind === 'url' ? g.url : ''))
+    const uploadedKeys: string[] = []
     setSaving(true)
+    if (cover?.kind === 'file') {
+      const fileError = validateImageFile(cover.file)
+      if (fileError) {
+        setCoverError(fileError)
+        setSaving(false)
+        return
+      }
+    }
+    if (cover?.kind === 'file' || gallery.some((g) => g.kind === 'file')) {
+      setUploading(true)
+      if (cover?.kind === 'file') {
+        try {
+          const uploaded = await uploadFile(cover.file)
+          coverUrl = uploaded.url
+          uploadedKeys.push(uploaded.key)
+        } catch (err: unknown) {
+          setCoverError(err instanceof Error ? err.message : 'Tải ảnh thất bại')
+          setUploading(false)
+          setSaving(false)
+          return
+        }
+      }
+      for (let i = 0; i < gallery.length; i++) {
+        const g = gallery[i]
+        if (g?.kind === 'file') {
+          try {
+            const uploaded = await uploadFile(g.file)
+            galleryUrls[i] = uploaded.url
+            uploadedKeys.push(uploaded.key)
+          } catch (err: unknown) {
+            const message = err instanceof Error ? err.message : 'Tải ảnh thất bại'
+            const orphans: string[] = []
+            for (const key of uploadedKeys) {
+              try {
+                await deleteUpload(key)
+              } catch {
+                orphans.push(key)
+              }
+            }
+            setGalleryError(
+              `Ảnh ${i + 1}: ${message}${orphans.length > 0 ? ` (Ảnh đã tải lên chưa được xóa: ${orphans.join(', ')})` : ''}`,
+            )
+            setUploading(false)
+            setSaving(false)
+            return
+          }
+        }
+      }
+      setUploading(false)
+    }
+
     try {
+      const urls = [...(coverUrl ? [coverUrl] : []), ...galleryUrls.filter((u) => u)]
+      const payload = toProductPayload({ ...values, images: urls.map((imageUrl) => ({ imageUrl })) })
       if (isCreate) {
-        await createProduct(toProductPayload(values))
+        await createProduct(payload)
       } else {
-        await updateProduct(id ?? '', toProductPayload(values))
+        await updateProduct(id ?? '', payload)
       }
       navigate('/products')
     } catch (err: unknown) {
+      const orphans: string[] = []
+      for (const key of uploadedKeys) {
+        try {
+          await deleteUpload(key)
+        } catch {
+          orphans.push(key)
+        }
+      }
       const mapped = formErrorForApi(err)
       if (mapped.field) setErrors((prev) => ({ ...prev, [mapped.field as string]: mapped.message }))
       else setFormMessage(mapped.message)
+      if (orphans.length > 0) {
+        const orphanNote = `(Ảnh đã tải lên chưa được xóa: ${orphans.join(', ')})`
+        setFormMessage((prev) => (prev ? `${prev} ${orphanNote}` : orphanNote))
+      }
     } finally {
       setSaving(false)
     }
@@ -255,87 +350,19 @@ export default function ProductForm() {
                 />,
               )}
             </div>
-
-            <div className="card">
-              <h2>Ảnh sản phẩm</h2>
-              <div style={{ display: 'flex', gap: 8, margin: '12px 0' }}>
-                <input
-                  type="url"
-                  value={newImageUrl}
-                  onChange={(e) => setNewImageUrl(e.target.value)}
-                  placeholder="Dán URL ảnh rồi bấm Thêm"
-                />
-                <button
-                  type="button"
-                  className="btn btn-default"
-                  onClick={() => {
-                    if (newImageUrl.trim()) {
-                      set('images', [
-                        ...values.images,
-                        { imageUrl: newImageUrl.trim(), name: '', primary: values.images.length === 0 },
-                      ])
-                      setNewImageUrl('')
-                    }
-                  }}
-                >
-                  Thêm
-                </button>
-              </div>
-              {values.images.map((img, i) => (
-                <div key={`${img.imageUrl}-${i}`} className="image-row">
-                  {img.imageUrl && <img src={img.imageUrl} alt="" />}
-                  <div className="grow">
-                    <input
-                      type="url"
-                      value={img.imageUrl}
-                      onChange={(e) => setImage(i, { imageUrl: e.target.value })}
-                      placeholder="URL ảnh"
-                    />
-                  </div>
-                  <button
-                    type="button"
-                    className={`icon-btn${img.primary ? ' starred' : ''}`}
-                    title="Đặt làm ảnh chính"
-                    onClick={() => starImage(i)}
-                  >
-                    ★
-                  </button>
-                  <button
-                    type="button"
-                    className="icon-btn"
-                    title="Lên"
-                    onClick={() => moveImage(i, -1)}
-                  >
-                    ↑
-                  </button>
-                  <button
-                    type="button"
-                    className="icon-btn"
-                    title="Xuống"
-                    onClick={() => moveImage(i, 1)}
-                  >
-                    ↓
-                  </button>
-                  <button
-                    type="button"
-                    className="icon-btn danger"
-                    title="Xóa ảnh"
-                    onClick={() => set('images', values.images.filter((_, j) => j !== i))}
-                  >
-                    🗑
-                  </button>
-                </div>
-              ))}
-            </div>
           </div>
 
           <div className="rail">
             <div className="card">
               <h2>Danh mục *</h2>
               {categories.length === 0 ? (
-                <p className="hint" style={{ marginTop: 8 }}>
-                  Chưa có danh mục nào — hãy tạo danh mục trước.
-                </p>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginTop: 8 }}>
+                  <span className="badge warning">Chưa có danh mục</span>
+                  <span className="hint">Hãy tạo danh mục trước khi thêm sản phẩm.</span>
+                  <Link to="/categories/new" className="btn btn-default">
+                    Tạo danh mục mới
+                  </Link>
+                </div>
               ) : (
                 field(
                   'categoryId',
@@ -354,6 +381,19 @@ export default function ProductForm() {
                 <span className="error">{errors.categoryId}</span>
               )}
             </div>
+            <div className="card">
+              <h2>Ảnh chính</h2>
+              <ImageDropzone value={cover} onChange={onCoverChange} error={coverError} />
+            </div>
+            <div className="card">
+              <h2>Thư viện ảnh</h2>
+              <GalleryManager
+                items={gallery}
+                onChange={onGalleryChange}
+                onPromoteCover={onPromoteCover}
+                error={galleryError}
+              />
+            </div>
           </div>
         </div>
 
@@ -364,7 +404,7 @@ export default function ProductForm() {
             Hủy
           </Link>
           <button type="submit" className="btn btn-primary" disabled={saving}>
-            {saving ? 'Đang lưu…' : '✓ Lưu'}
+            {saving ? (uploading ? 'Đang tải ảnh…' : 'Đang lưu…') : '✓ Lưu'}
           </button>
         </div>
       </form>

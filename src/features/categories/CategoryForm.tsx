@@ -315,7 +315,7 @@ export default function CategoryForm() {
               )}
             </div>
             <div className="card">
-              <h2>Ảnh danh mục</h2>
+              <h2>Ảnh chính</h2>
               <ImageDropzone value={cover} onChange={onCoverChange} error={coverError} />
             </div>
             <div className="card">
