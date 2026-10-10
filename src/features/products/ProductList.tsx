@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { Link, useNavigate } from 'react-router'
 import { apiFetch, deleteMany } from '../../lib/api'
 import type { Category, Product } from '../../lib/types'
+import { BRANDS, matchesBrand } from './brands'
 import { deleteProduct, listProducts } from './products.api'
 
 const SIZES = [20, 50, 100]
@@ -13,6 +14,9 @@ export default function ProductList() {
   const [page, setPage] = useState(0)
   const [size, setSize] = useState(SIZES[0])
   const [query, setQuery] = useState('')
+  const [brand, setBrand] = useState('')
+  const [brandOpen, setBrandOpen] = useState(false)
+  const [brandQuery, setBrandQuery] = useState('')
   const [items, setItems] = useState<Product[]>([])
   const [total, setTotal] = useState(0)
   const [loading, setLoading] = useState(true)
@@ -57,11 +61,12 @@ export default function ProductList() {
   const catNames = useMemo(() => new Map(categories.map((c) => [c.id, c.name])), [categories])
 
   const q = query.trim().toLowerCase()
-  const visible = q
-    ? items.filter((p) =>
-        [p.name, p.skuCode, p.barcode].some((f) => (f ?? '').toLowerCase().includes(q)),
-      )
-    : items
+  const brandOptions = brandQuery.trim() ? BRANDS.filter((b) => matchesBrand(b, brandQuery)) : BRANDS
+  const visible = items.filter((p) => {
+    if (brand && p.brand !== brand) return false
+    if (!q) return true
+    return [p.name, p.skuCode, p.barcode].some((f) => (f ?? '').toLowerCase().includes(q))
+  })
 
   const totalPages = Math.max(1, Math.ceil(total / size))
 
@@ -138,6 +143,86 @@ export default function ProductList() {
               </option>
             ))}
           </select>
+          <div style={{ position: 'relative' }}>
+            <button
+              type="button"
+              className="btn btn-default"
+              onClick={() => {
+                setBrandQuery('')
+                setBrandOpen((o) => !o)
+              }}
+              style={{ maxWidth: 240, overflow: 'hidden', whiteSpace: 'nowrap' }}
+            >
+              Thương hiệu: {brand || 'Tất cả'} ▾
+            </button>
+            {brandOpen && (
+              <>
+                <div
+                  style={{ position: 'fixed', inset: 0, zIndex: 19 }}
+                  onClick={() => setBrandOpen(false)}
+                />
+                <div
+                  className="card"
+                  style={{
+                    position: 'absolute',
+                    top: 'calc(100% + 4px)',
+                    left: 0,
+                    zIndex: 20,
+                    width: 240,
+                    padding: 8,
+                  }}
+                >
+                  <div style={{ padding: '0 4px 6px', fontWeight: 600 }}>Thương hiệu</div>
+                  <input
+                    type="text"
+                    autoFocus
+                    placeholder="Tìm thương hiệu…"
+                    value={brandQuery}
+                    onChange={(e) => setBrandQuery(e.target.value)}
+                  />
+                  <div style={{ maxHeight: 240, overflowY: 'auto', marginTop: 4 }}>
+                    <button
+                      type="button"
+                      className="link-btn"
+                      style={{ display: 'block', padding: '6px 4px', fontWeight: brand ? 400 : 700 }}
+                      onClick={() => {
+                        setBrand('')
+                        setBrandOpen(false)
+                      }}
+                    >
+                      Tất cả
+                    </button>
+                    {brandOptions.map((b) => (
+                      <button
+                        key={b}
+                        type="button"
+                        className="link-btn"
+                        style={{
+                          display: 'block',
+                          padding: '6px 4px',
+                          color: 'var(--text)',
+                          fontWeight: b === brand ? 700 : 400,
+                          textAlign: 'left',
+                          width: '100%',
+                        }}
+                        onClick={() => {
+                          setBrand(b)
+                          setBrandOpen(false)
+                        }}
+                      >
+                        {b}
+                      </button>
+                    ))}
+                    {brandOptions.length === 0 && (
+                      <div style={{ padding: '6px 4px', color: 'var(--text-secondary)' }}>
+                        Không tìm thấy
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </>
+            )}
+          </div>
         </div>
 
         {selected.size > 0 && (

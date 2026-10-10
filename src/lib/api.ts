@@ -66,6 +66,7 @@ export function unwrapPage<T>(page: SpringPage<T>): PageResult<T> {
 export interface DeleteManyResult {
   deleted: number
   failed: number
+  errors: { id: string; error: unknown }[]
 }
 
 export async function deleteMany(
@@ -76,5 +77,8 @@ export async function deleteMany(
   return {
     deleted: settled.filter((r) => r.status === 'fulfilled').length,
     failed: settled.filter((r) => r.status === 'rejected').length,
+    errors: settled.flatMap((r, i) =>
+      r.status === 'rejected' ? [{ id: ids[i] as string, error: r.reason }] : [],
+    ),
   }
 }

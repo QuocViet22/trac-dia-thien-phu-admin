@@ -1,53 +1,35 @@
 import { useEffect, useState } from 'react'
 import { Link, useLocation, useNavigate, useParams } from 'react-router'
-import RichText from '../../components/RichText.tsx'
 import { apiFetch } from '../../lib/api'
 import type { Category, Product } from '../../lib/types'
 import { createProduct, getProduct, updateProduct } from './products.api'
-import ImageDropzone from '../categories/ImageDropzone.tsx'
-import GalleryManager from '../categories/GalleryManager.tsx'
-import { resolveGalleryError, validateImageFile } from '../categories/imageUpload'
-import type { CoverValue, GalleryItem } from '../categories/imageUpload'
-import { deleteUpload, uploadFile } from '../categories/uploads.api'
-import {
-  formErrorForApi,
-  isNotFoundError,
-  toProductPayload,
-  validateProduct,
-} from './productFields'
+import ImageDropzone from '../../components/ImageDropzone.tsx'
+import GalleryManager from '../../components/GalleryManager.tsx'
+import { resolveGalleryError, validateImageFile } from '../../lib/imageUpload'
+import type { CoverValue, GalleryItem } from '../../lib/imageUpload'
+import { deleteUpload, uploadFile } from '../../lib/uploads.api'
+import { formErrorForApi, isNotFoundError } from '../../lib/formErrors'
+import { fromProduct, toProductPayload, validateProduct } from './productFields'
 import type { ProductFormValues } from './productFields'
+import { htmlFileOrNull, type HtmlFileData } from '../../components/HtmlFile.ts'
+import HtmlPreview from '../../components/HtmlPreview.tsx'
+import { BRANDS } from './brands'
 
 const UNITS = ['Cái', 'Chiếc', 'Bộ', 'Hộp', 'Kg', 'Lít']
 
 const EMPTY: ProductFormValues = {
   name: '',
   categoryId: '',
+  brand: '',
   skuCode: '',
   barcode: '',
   measurementUnit: '',
   description: '',
+  shortDescription: '',
   seoPageTitle: '',
   seoDescriptionTag: '',
   seoAlias: '',
   images: [],
-}
-
-function fromProduct(p: Product, clearSlug: boolean): ProductFormValues {
-  return {
-    name: p.name,
-    categoryId: p.categoryId ?? '',
-    skuCode: p.skuCode ?? '',
-    barcode: p.barcode ?? '',
-    measurementUnit: p.measurementUnit ?? '',
-    description: p.description ?? '',
-    seoPageTitle: p.seoPageTitle ?? '',
-    seoDescriptionTag: p.seoDescriptionTag ?? '',
-    seoAlias: clearSlug ? '' : (p.seoAlias ?? ''),
-    images: [...p.images]
-      .sort((a, b) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0))
-      .map((img) => ({ imageUrl: img.imageUrl }))
-      .filter((r) => r.imageUrl.trim().length > 0),
-  }
 }
 
 function coverOf(rows: { imageUrl: string }[]): CoverValue {
@@ -82,6 +64,12 @@ export default function ProductForm() {
   const [coverError, setCoverError] = useState('')
   const [gallery, setGallery] = useState<GalleryItem[]>(() => galleryOf(values.images))
   const [galleryError, setGalleryError] = useState('')
+  const [descriptionRtdData, setDescriptionRtdData] = useState<HtmlFileData | null>(() =>
+    htmlFileOrNull(values.description),
+  );
+  const [shortDescriptionRtdData, setShortDescriptionRtdData] = useState<HtmlFileData | null>(() =>
+    htmlFileOrNull(values.shortDescription),
+  );
 
   useEffect(() => {
     apiFetch<Category[]>('/api/categories')
@@ -95,6 +83,8 @@ export default function ProductForm() {
       .then((p) => {
         const v = fromProduct(p, false)
         setValues(v)
+        setDescriptionRtdData(htmlFileOrNull(v.description))
+        setShortDescriptionRtdData(htmlFileOrNull(v.shortDescription))
         setCover(coverOf(v.images))
         setGallery(galleryOf(v.images))
       })
@@ -199,7 +189,12 @@ export default function ProductForm() {
 
     try {
       const urls = [...(coverUrl ? [coverUrl] : []), ...galleryUrls.filter((u) => u)]
-      const payload = toProductPayload({ ...values, images: urls.map((imageUrl) => ({ imageUrl })) })
+      const payload = toProductPayload({
+        ...values,
+        description: descriptionRtdData?.html ?? values.description,
+        shortDescription: shortDescriptionRtdData?.html ?? values.shortDescription,
+        images: urls.map((imageUrl) => ({ imageUrl })),
+      })
       if (isCreate) {
         await createProduct(payload)
       } else {
@@ -316,8 +311,31 @@ export default function ProductForm() {
               {field(
                 'description',
                 'Mô tả chi tiết',
-                <RichText initialValue={values.description} onChange={(html) => set('description', html)} />,
-              )}
+                <>
+                  <HtmlPreview
+                    key={`${id ?? 'new'}-${nonce}`}
+                    initialValue={descriptionRtdData}
+                    onLoad={setDescriptionRtdData}
+                    onClear={() => {
+                      setDescriptionRtdData(null)
+                      set('description', '')
+                    }}
+                  />
+                </>)}
+              {field(
+                'shortDescription',
+                'Mô tả ngắn',
+                <>
+                  <HtmlPreview
+                    key={`${id ?? 'new'}-${nonce}`}
+                    initialValue={shortDescriptionRtdData}
+                    onLoad={setShortDescriptionRtdData}
+                    onClear={() => {
+                      setShortDescriptionRtdData(null)
+                      set('shortDescription', '')
+                    }}
+                  />
+                </>)}
             </div>
 
             <div className="card">
@@ -379,6 +397,24 @@ export default function ProductForm() {
               )}
               {errors.categoryId && categories.length > 0 && (
                 <span className="error">{errors.categoryId}</span>
+              )}
+            </div>
+            <div className="card">
+              <h2>Nhãn hiệu *</h2>
+              {field(
+                'brand',
+                '',
+                <select value={values.brand} onChange={(e) => set('brand', e.target.value)}>
+                  <option value="">— Chọn nhãn hiệu —</option>
+                  {BRANDS.map((b) => (
+                    <option key={b} value={b}>
+                      {b}
+                    </option>
+                  ))}
+                  {values.brand && !BRANDS.includes(values.brand) && (
+                    <option value={values.brand}>{values.brand}</option>
+                  )}
+                </select>,
               )}
             </div>
             <div className="card">

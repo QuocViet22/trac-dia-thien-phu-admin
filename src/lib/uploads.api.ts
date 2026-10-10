@@ -1,4 +1,4 @@
-import { apiFetch, apiForm } from '../../lib/api'
+import { apiFetch, apiForm } from './api'
 
 export interface UploadResult {
   key: string

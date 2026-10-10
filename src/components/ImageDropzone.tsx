@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import type { CoverValue } from './imageUpload'
+import type { CoverValue } from '../lib/imageUpload'
 
 interface Props {
   value: CoverValue

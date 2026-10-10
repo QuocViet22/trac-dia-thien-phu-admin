@@ -53,7 +53,9 @@ describe('deleteMany', () => {
     }
     const result = await deleteMany(['a', 'bad', 'c'], remove)
     expect(calls).toEqual(['a', 'bad', 'c'])
-    expect(result).toEqual({ deleted: 2, failed: 1 })
+    expect(result.deleted).toBe(2)
+    expect(result.failed).toBe(1)
+    expect(result.errors).toEqual([{ id: 'bad', error: new Error('gone') }])
   })
 })
 

@@ -12,8 +12,8 @@ Success criteria:
 
 - `/products` lists server-paged products with category filter, working
   pagination, and edit/clone/delete actions.
-- `/products/new` creates a product (`201`); blank name or missing
-  category is rejected client-side before the request; duplicate
+- `/products/new` creates a product (`201`); blank name, missing
+  category, or blank brand is rejected client-side before the request; duplicate
   `seoAlias` surfaces the backend `409` as a field error.
 - `/products/:id` loads and updates (`200`); unknown id shows a
   not-found state (backend `404`).
@@ -58,13 +58,16 @@ Success criteria:
   `categoryId` omitted = all products.
 - Filter bar: text search (client-side over the loaded page across
   name/SKU/barcode — no server search exists), category dropdown
-  (options from `GET /api/categories`), column-toggle button may be
+  (options from `GET /api/categories`), searchable single-brand dropdown
+  (`Thương hiệu`, client-side exact-match on `brand` over the loaded page,
+  options from shared `BRANDS` in `src/features/products/brands.ts` with
+  accent-insensitive search), column-toggle button may be
   omitted in v1.
 - Columns: checkbox, image (first image thumb), name, SKU, barcode,
   category name (resolved from the category list), unit, status, actions.
   Status has no backend field: render "—" in v1 (see §5).
 - Row actions: edit (→ `/products/:id`), clone (→ `/products/new`
-  prefilled, `seoAlias` cleared), delete (confirm modal → `DELETE`).
+  prefilled, `seoAlias` and `images` cleared), delete (confirm modal → `DELETE`).
 - Bulk bar: selected count + delete (confirm modal, delete per id,
   refresh page afterwards).
 - Pagination: server-driven (`total` from page response); sizes 20/50/100.
@@ -77,6 +80,7 @@ Fields map 1:1 to `CreateProductRequest` / `UpdateProductRequest`:
 |---|---|---|
 | Tên sản phẩm * | `name` | required, max 256 |
 | Danh mục * | `categoryId` | required, select from category list |
+| Nhãn hiệu * | `brand` | required, max 256; fixed dropdown (`BRANDS` list in `ProductForm.tsx`) |
 | Mã SKU | `skuCode` | optional, max 256; blank sent as null (no auto-generation exists — label must not promise it) |
 | Mã vạch | `barcode` | optional, max 256 |
 | Đơn vị tính | `measurementUnit` | optional select: Cái, Chiếc, Bộ, Hộp, Kg, Lít |
@@ -88,12 +92,13 @@ Fields map 1:1 to `CreateProductRequest` / `UpdateProductRequest`:
 - Empty categories: the `Danh mục *` card shows a warning badge plus a
   "Tạo danh mục mới" link (`/categories/new`); submit stays blocked by
   the required-category validation.
-- Validation mirrors backend (`@NotBlank name`, `@NotNull categoryId`,
+- Validation mirrors backend (`@NotBlank name`, `@NotBlank brand`,
+  `@NotNull categoryId`,
   256-char limits) so errors appear before the round trip.
 
 ## 5. Out of scope (deferred, not faked)
 
-- `Loại sản phẩm` (type), `Nhãn hiệu` (brand), `Trạng thái bán` toggle,
+- `Loại sản phẩm` (type), `Trạng thái bán` toggle,
   price, stock, short-vs-detail description split — no backend columns.
 - Server-side text search; product-count-per-category (category API has
   no count); AI SEO button (news design only).

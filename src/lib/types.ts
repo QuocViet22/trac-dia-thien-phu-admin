@@ -12,9 +12,11 @@ export interface Product {
   barcode: string | null
   measurementUnit: string | null
   description: string | null
+  shortDescription: string | null
   seoPageTitle: string | null
   seoDescriptionTag: string | null
   seoAlias: string | null
+  brand: string
   categoryId: string | null
   createdAt: string
   updatedAt: string

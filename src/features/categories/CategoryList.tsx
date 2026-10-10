@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link, useNavigate } from 'react-router'
+import ErrorPopup from '../../components/ErrorPopup.tsx'
 import { deleteMany } from '../../lib/api'
+import { PRODUCTS_CONFLICT_TEXT, isProductsConflictError, productsBlockedText } from '../../lib/categoryDelete'
 import type { Category } from '../../lib/types'
 import { deleteCategory, listCategories } from './categories.api'
 
@@ -16,6 +18,7 @@ export default function CategoryList() {
   const [error, setError] = useState('')
   const [selected, setSelected] = useState<Set<string>>(new Set())
   const [confirmIds, setConfirmIds] = useState<string[] | null>(null)
+  const [popup, setPopup] = useState<string | null>(null)
   const [deleting, setDeleting] = useState(false)
   const [nonce, setNonce] = useState(0)
 
@@ -80,7 +83,18 @@ export default function CategoryList() {
         return
       }
       if (result.failed > 0) {
-        setError(`Đã xóa ${result.deleted}/${ids.length}, ${result.failed} thất bại`)
+        const blocked = result.errors.filter(({ error }) => isProductsConflictError(error))
+        const other = result.errors.filter(({ error }) => !isProductsConflictError(error))
+        if (blocked.length > 0) {
+          setPopup(
+            ids.length === 1
+              ? PRODUCTS_CONFLICT_TEXT
+              : productsBlockedText(result.deleted, ids.length, blocked.length),
+          )
+        }
+        if (other.length > 0) {
+          setError(`Đã xóa ${result.deleted}/${ids.length}, ${result.failed} thất bại`)
+        }
       }
     } finally {
       setDeleting(false)
@@ -263,6 +277,10 @@ export default function CategoryList() {
             </div>
           </div>
         </div>
+      )}
+
+      {popup && (
+        <ErrorPopup title="Không thể xóa" message={popup} onClose={() => setPopup(null)} />
       )}
     </div>
   )

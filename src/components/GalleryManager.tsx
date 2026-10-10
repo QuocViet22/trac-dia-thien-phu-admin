@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
-import { MAX_GALLERY_IMAGES } from './imageUpload'
-import type { GalleryItem } from './imageUpload'
+import { MAX_GALLERY_IMAGES } from '../lib/imageUpload'
+import type { GalleryItem } from '../lib/imageUpload'
 
 interface Props {
   items: GalleryItem[]

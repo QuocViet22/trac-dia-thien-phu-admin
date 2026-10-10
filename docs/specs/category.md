@@ -18,8 +18,12 @@ Success criteria:
 - `/categories/:id` loads and updates (`200`); unknown id shows a
   not-found state.
 - Delete (single + bulk) uses the design's confirm modal and issues
-  `DELETE` per id; backend rejection (e.g. category in use) surfaces
-  its message.
+  `DELETE` per id; a `409` carrying the `has products` marker
+  (`Category has products and cannot be deleted`) opens an
+  error popup instead of the inline summary — single: `Đang có sản phẩm
+  thuộc danh mục này!`; bulk: `Đã xóa {deleted}/{total}. {blocked} danh
+  mục không xóa được: Đang có sản phẩm thuộc danh mục này!`. Other
+  backend rejections keep the inline summary.
 
 ## 2. List page (`/categories`)
 

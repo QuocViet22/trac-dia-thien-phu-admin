@@ -1,16 +1,18 @@
 import { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router'
-import RichText from '../../components/RichText.tsx'
 import type { Category } from '../../lib/types'
-import { formErrorForApi, isNotFoundError } from '../products/productFields'
+import { formErrorForApi, isNotFoundError } from '../../lib/formErrors'
 import { createCategory, getCategory, listCategories, updateCategory } from './categories.api'
 import { toCategoryPayloadFromUrls, validateCategory } from './categoryFields'
 import type { CategoryFormValues } from './categoryFields'
-import ImageDropzone from './ImageDropzone.tsx'
-import GalleryManager from './GalleryManager.tsx'
-import { resolveGalleryError, validateImageFile } from './imageUpload'
-import type { CoverValue, GalleryItem } from './imageUpload'
-import { deleteUpload, uploadFile } from './uploads.api'
+import ImageDropzone from '../../components/ImageDropzone.tsx'
+import GalleryManager from '../../components/GalleryManager.tsx'
+import { resolveGalleryError, validateImageFile } from '../../lib/imageUpload'
+import type { CoverValue, GalleryItem } from '../../lib/imageUpload'
+import { deleteUpload, uploadFile } from '../../lib/uploads.api'
+import type { HtmlFileData } from '../../components/HtmlFile.ts'
+import { htmlFileOrNull } from '../../components/HtmlFile.ts'
+import HtmlPreview from '../../components/HtmlPreview.tsx'
 
 const EMPTY: CategoryFormValues = {
   name: '',
@@ -53,6 +55,7 @@ export default function CategoryForm() {
   const [saving, setSaving] = useState(false)
   const [uploading, setUploading] = useState(false)
   const [nonce, setNonce] = useState(0)
+  const [richTextData, setRichTextData] = useState<HtmlFileData | null>(null);
 
   useEffect(() => {
     listCategories()
@@ -66,6 +69,7 @@ export default function CategoryForm() {
       .then((c) => {
         const v = fromCategory(c)
         setValues(v)
+        setRichTextData(htmlFileOrNull(v.description))
         setCover(v.imageUrl ? { kind: 'url', url: v.imageUrl } : null)
         setGallery(c.images.slice(1).map((img): GalleryItem => ({ kind: 'url', url: img.imageUrl })))
       })
@@ -177,7 +181,10 @@ export default function CategoryForm() {
 
     try {
       const urls = [...(coverUrl ? [coverUrl] : []), ...galleryUrls.filter((u) => u)]
-      const payload = toCategoryPayloadFromUrls(values, urls)
+      const payload = toCategoryPayloadFromUrls(
+        { ...values, description: richTextData?.html ?? values.description },
+        urls,
+      )
       if (isCreate) {
         await createCategory(payload)
       } else {
@@ -259,7 +266,17 @@ export default function CategoryForm() {
               {field(
                 'description',
                 'Mô tả chi tiết',
-                <RichText initialValue={values.description} onChange={(html) => set('description', html)} />,
+                <>
+                  <HtmlPreview
+                    key={`${id ?? 'new'}-${nonce}`}
+                    initialValue={richTextData}
+                    onLoad={setRichTextData}
+                    onClear={() => {
+                      setRichTextData(null)
+                      set('description', '')
+                    }}
+                  />
+                </>
               )}
             </div>
 
