@@ -24,7 +24,8 @@ Success criteria:
 
 - **Routing:** `react-router` (new dependency). Routes:
   `/products`, `/products/new`, `/products/:id`,
-  `/categories`, `/categories/new`, `/categories/:id`, `/news`.
+  `/categories`, `/categories/new`, `/categories/:id`,
+  `/news`, `/news/new`, `/news/:id`.
   Sidebar links to the three list routes.
 - **API client:** `src/lib/api.ts` — single `fetch` wrapper.
   Base URL from `VITE_API_URL` (default `http://localhost:8080`).

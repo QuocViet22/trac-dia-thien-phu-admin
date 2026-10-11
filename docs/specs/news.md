@@ -2,49 +2,101 @@
 
 ## 1. Outcome
 
-Read-only news list matching the design screens. **There is no news
-backend** — `trac-dia-thien-phu-api` has no news controller, entity, or
-DTOs — so v1 is a static list page with local mock rows. No create
-page (explicitly skipped), no edit, no persistence.
+Full CRUD admin for news, bound to the real backend
+(`GET/POST/PUT/DELETE /api/news` in `trac-dia-thien-phu-api`).
 Design reference: `docs/specs/trac-dia-thien-phu-admin-design/news/`
-(`news-list`; `add-news` is reference only).
-Shell and table conventions are defined in `product.md` §2 and apply
-here unchanged.
+(`news-list`, `add-news` for layout only — fields follow the backend,
+not the mock).
+Shell and table/form conventions are defined in `product.md` §2 and
+apply here unchanged.
 
 Success criteria:
 
-- `/news` renders the designed table (cover, title, author, tags, date,
-  views, status) from a local mock dataset with working tab/filter/
-  search/pagination — all client-side.
-- No network calls; no dead buttons: mutating actions (pin, draft,
-  delete) are **hidden** in v1, row action is view-only.
+- `/news` lists server-paged news with status tabs and working
+  pagination; no title/author search (backend has no search).
+- `/news/new` creates a news item (`201`); blank `title`, blank
+  `author`, blank `seoAlias`, or missing `status` is rejected
+  client-side; duplicate `seoAlias` surfaces the backend `409` as a
+  slug field error.
+- `/news/:id` loads and updates (`200`); unknown id shows a
+  not-found state (backend `404`).
+- Delete (single + bulk) asks for confirmation and issues `DELETE`
+  per id; unknown id surfaces the backend `404` message.
 
 ## 2. List page (`/news`)
 
-- Data: `src/data/mockNews.ts` — ~10 hand-written rows with the design's
-  columns: `id`, `coverUrl`, `title`, `author`, `tags[]`, `publishedAt`,
-  `views`, `status` (`published` | `draft` | `pinned`).
-- Tabs: `Tất cả` + status tabs with counts, client-filtered.
-- Filter bar: text search (title), author dropdown, time dropdown,
-  `Bộ lọc khác` may be omitted in v1.
-- Columns: checkbox (selection state kept for visual parity but no bulk
-  bar appears since actions are hidden), cover, title, author, tags,
-  date, views, status badge, view action (opens a read-only detail
-  drawer or route showing the mock row — plan phase picks the cheaper
-  one).
-- Pagination: client-side; sizes 10/20/50.
+- Data: `GET /api/news?status=PUBLISHED|DRAFT&page&size`. No `status`
+  param = all. Server-driven pagination; sizes 10/20/50.
+- Tabs: `Tất cả` / `Đã đăng` / `Nháp`. Tabs switch the `status`
+  query param and reset to page 0. **No counts on tabs** — counts
+  would cost extra requests per tab switch.
+- No search boxes in v1: backend supports no title/author filter, so
+  the mock's title search, author dropdown, and time dropdown are
+  dropped (server-only, per owner decision).
+- Columns: checkbox, cover (`images[0]` thumb, `—` when empty),
+  title, author, SEO slug (`seoAlias`), status badge (`Đã đăng` /
+  `Nháp`), created date (`createdAt`, `vi-VN`), actions. **No views,
+  no tags, no pinned state** — backend has none of these columns.
+- Row actions: edit (→ `/news/:id`), delete (confirm modal →
+  `DELETE /api/news/{id}`).
+- Bulk bar: selected count + delete (confirm modal, delete per id via
+  shared `deleteMany`, refetch afterwards).
+- States: loading spinner, fetch-error with retry (never a blank
+  page), empty state with intact pager.
+- Deletes `src/features/news/mockNews.ts`, `newsFilters.ts`, and
+  `newsFilters.test.ts` — all mock-only and unusable against the
+  real shape.
 
-## 3. Explicitly excluded
+## 3. Form pages (`/news/new`, `/news/:id`)
 
-- `/news/new` create page, edit, delete, pin, draft transitions —
-  nothing to persist them to.
-- Rich-text editing and cover upload for news (no fields to save to).
+Fields map 1:1 to `CreateNewsRequest` / `UpdateNewsRequest`:
 
-## 4. Backend contract (for later)
+| UI field | API field | Rules |
+|---|---|---|
+| Tiêu đề * | `title` | required, max 256 |
+| Tác giả * | `author` | required, max 256 |
+| Trạng thái * | `status` | required select: `PUBLISHED` (Đã đăng) / `DRAFT` (Nháp) |
+| Mô tả chi tiết | `description` | rich text (Tiptap via `HtmlPreview`, same as categories), unbounded |
+| Tiêu đề trang (SEO) | `seoPageTitle` | optional, max 256 |
+| Thẻ mô tả (SEO) | `seoDescriptionTag` | optional, unbounded textarea |
+| Đường dẫn (slug) * | `seoAlias` | required, max 256, unique |
+| Ảnh bìa | `images` | max 1: single cover row (URL input; device upload via the shared `ImageDropzone` + `POST /api/uploads` flow from `category.md` §4 if already wired, else URL-only in v1) → `[{imageUrl, sortOrder: 0}]` or `[]` |
 
-When a news API is added, it should mirror the product/category shape:
-`GET /api/news` (paged + `author` filter), `GET /{id}`, `POST`, `PUT`,
-`DELETE`, wrapped in `ApiResponse`, with `title*`, `summary`,
-`content`, `author`, `tags[]`, `coverImageUrl`, `seo*` fields. This
-page then swaps `mockNews.ts` for the client in `product.md` §2 with
-no layout changes.
+- Layout: 70/30 grid with sticky `Hủy`/`Lưu` footer (same as
+  `CategoryForm`); left = general info + description + SEO cards,
+  right = status + cover cards.
+- Edit loads `GET /api/news/{id}` (`NewsDetailResponse`) and
+  prefills; submit `PUT`. Unknown id → not-found view.
+- Validation mirrors backend (`@NotBlank title/author/seoAlias`,
+  `@NotNull status`, 256 limits, `@Size(max = 1)` images) so errors
+  appear before the round trip. Backend `400` → field/form message,
+  `409` → `seoAlias` field (via `formErrorForApi`).
+
+## 4. Backend contract (implemented)
+
+`NewsController` at `/api/news` (`trac-dia-thien-phu-api`):
+
+- `GET` → `ApiResponse.ok(Page<NewsResponse>)` (`status?` +
+  Spring `Pageable`). `NewsResponse`: `id`, `title`, `author`,
+  `status`, `seoAlias`, `createdAt`, `updatedAt`,
+  `seoDescriptionTag`, `images[max 1]`. **No `description`, no
+  `seoPageTitle`** in list payloads.
+- `GET /{id}` → `NewsDetailResponse` (all list fields plus
+  `description`, `seoPageTitle`); unknown id → `404`.
+- `POST` (`@Valid`) → `201` + `NewsResponse`; blank title/author/
+  alias or null status → `400`; >1 image → `400`; duplicate
+  `seo_alias` → `409`.
+- `PUT /{id}` → `200` + `NewsDetailResponse`; same `400`/`404`/`409`
+  rules.
+- `DELETE /{id}` → `204`; unknown id → `404`.
+- `GET /by-alias/{seoAlias}` exists but the admin uses `/{id}` only.
+
+## 5. Explicitly excluded
+
+- Pinned/highlight tab, views column, tags column, publish-date
+  picker — no backend columns; dropped per owner decision (not faked
+  client-side).
+- Client- or server-side title/author/time search (no backend
+  support; server-only list in v1).
+- Tab counts, multi-image galleries for news (capped at 1 by owner
+  decision), full-text search.
