@@ -17,6 +17,7 @@ const EMPTY: NewsFormValues = {
   title: '',
   author: '',
   status: '',
+  newsType: 'NEWS',
   seoPageTitle: '',
   seoDescriptionTag: '',
   seoAlias: '',
@@ -29,6 +30,7 @@ function fromDetail(d: NewsDetail): NewsFormValues {
     title: d.title,
     author: d.author,
     status: d.status,
+    newsType: d.newsType,
     seoPageTitle: d.seoPageTitle ?? '',
     seoDescriptionTag: d.seoDescriptionTag ?? '',
     seoAlias: d.seoAlias,
@@ -211,6 +213,15 @@ export default function NewsForm() {
                   <option value="">Chọn trạng thái</option>
                   <option value="PUBLISHED">Đã đăng</option>
                   <option value="DRAFT">Nháp</option>
+                </select>,
+              )}
+              {field(
+                'newsType',
+                'Loại tin *',
+                <select value={values.newsType} onChange={(e) => set('newsType', e.target.value as NewsFormValues['newsType'])}>
+                  <option value="">Chọn loại tin</option>
+                  <option value="NEWS">Tin tức</option>
+                  <option value="HIRING_PRODUCT">Thuê sản phẩm</option>
                 </select>,
               )}
               {field(

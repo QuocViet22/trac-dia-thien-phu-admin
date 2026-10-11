@@ -1,11 +1,12 @@
 import { apiFetch, unwrapPage } from '../../lib/api'
-import type { News, NewsDetail, NewsStatus, PageResult, SpringPage } from '../../lib/types'
+import type { News, NewsDetail, NewsStatus, NewsType, PageResult, SpringPage } from '../../lib/types'
 
 export interface NewsPayload {
   title: string
   description: string | null
   author: string
   status: NewsStatus
+  newsType: NewsType
   seoPageTitle: string | null
   seoDescriptionTag: string | null
   seoAlias: string
@@ -14,11 +15,13 @@ export interface NewsPayload {
 
 export async function listNews(
   status: NewsStatus | undefined,
+  newsType: NewsType | undefined,
   page: number,
   size: number,
 ): Promise<PageResult<News>> {
   const params = new URLSearchParams({ page: String(page), size: String(size) })
   if (status) params.set('status', status)
+  if (newsType) params.set('newsType', newsType)
   const data = await apiFetch<SpringPage<News>>(`/api/news?${params.toString()}`)
   return unwrapPage(data)
 }

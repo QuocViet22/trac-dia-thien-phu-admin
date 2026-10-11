@@ -5,6 +5,7 @@ const valid = {
   title: 'Máy GPS RTK mới',
   author: 'Ban Biên Tập',
   status: 'PUBLISHED' as const,
+  newsType: 'NEWS' as const,
   seoPageTitle: '',
   seoDescriptionTag: '',
   seoAlias: 'may-gps-rtk-moi',
@@ -24,6 +25,10 @@ describe('validateNews', () => {
     expect(validateNews({ ...valid, status: '' }).status).toBeTruthy()
   })
 
+  it('rejects missing newsType', () => {
+    expect(validateNews({ ...valid, newsType: '' }).newsType).toBeTruthy()
+  })
+
   it('rejects fields longer than 256 characters', () => {
     expect(validateNews({ ...valid, title: 'x'.repeat(257) }).title).toBeTruthy()
   })
@@ -36,6 +41,7 @@ describe('toNewsPayload', () => {
       description: '<p>desc</p>',
       author: 'Ban Biên Tập',
       status: 'PUBLISHED',
+      newsType: 'NEWS',
       seoPageTitle: null,
       seoDescriptionTag: null,
       seoAlias: 'may-gps-rtk-moi',

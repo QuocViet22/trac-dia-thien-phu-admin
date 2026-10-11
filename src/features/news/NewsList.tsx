@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router'
 import { deleteMany } from '../../lib/api'
-import type { News, NewsStatus } from '../../lib/types'
+import type { News, NewsStatus, NewsType } from '../../lib/types'
 import { deleteNews, listNews } from './news.api'
 
 const SIZES = [10, 20, 50]
@@ -22,6 +22,11 @@ const STATUS_CLASS: Record<NewsStatus, string> = {
   DRAFT: 'badge',
 }
 
+const NEWS_TYPE_LABEL: Record<NewsType, string> = {
+  NEWS: 'Tin tức',
+  HIRING_PRODUCT: 'Thuê sản phẩm',
+}
+
 function formatDate(iso: string): string {
   const d = new Date(iso)
   return Number.isNaN(d.getTime()) ? iso : d.toLocaleDateString('vi-VN')
@@ -30,6 +35,7 @@ function formatDate(iso: string): string {
 export default function NewsList() {
   const navigate = useNavigate()
   const [status, setStatus] = useState<'' | NewsStatus>('')
+  const [newsType, setNewsType] = useState<'' | NewsType>('')
   const [page, setPage] = useState(0)
   const [size, setSize] = useState(SIZES[0] as number)
   const [items, setItems] = useState<News[]>([])
@@ -43,7 +49,7 @@ export default function NewsList() {
 
   useEffect(() => {
     let cancelled = false
-    listNews(status || undefined, page, size)
+    listNews(status || undefined, newsType || undefined, page, size)
       .then((res) => {
         if (cancelled) return
         const lastPage = Math.max(0, Math.ceil(res.total / size) - 1)
@@ -65,7 +71,7 @@ export default function NewsList() {
     return () => {
       cancelled = true
     }
-  }, [status, page, size, nonce])
+  }, [status, newsType, page, size, nonce])
 
   const totalPages = Math.max(1, Math.ceil(total / size))
 
@@ -93,7 +99,7 @@ export default function NewsList() {
       setConfirmIds(null)
       setSelected(new Set())
       try {
-        const res = await listNews(status || undefined, page, size)
+        const res = await listNews(status || undefined, newsType || undefined, page, size)
         setItems(res.items)
         setTotal(res.total)
       } catch (e: unknown) {
@@ -133,6 +139,19 @@ export default function NewsList() {
               {t.label}
             </button>
           ))}
+          <select
+            value={newsType}
+            onChange={(e) => {
+              setLoading(true)
+              setNewsType(e.target.value as '' | NewsType)
+              setPage(0)
+            }}
+            style={{ maxWidth: 220 }}
+          >
+            <option value="">Loại: Tất cả</option>
+            <option value="NEWS">Tin tức</option>
+            <option value="HIRING_PRODUCT">Thuê sản phẩm</option>
+          </select>
         </div>
 
         {selected.size > 0 && (
@@ -185,6 +204,7 @@ export default function NewsList() {
                 <th>Ảnh</th>
                 <th>Tiêu đề bài viết</th>
                 <th>Tác giả</th>
+                <th>Loại</th>
                 <th>Đường dẫn SEO</th>
                 <th>Trạng thái</th>
                 <th>Ngày tạo</th>
@@ -210,6 +230,9 @@ export default function NewsList() {
                   </td>
                   <td>{n.title}</td>
                   <td>{n.author}</td>
+                  <td>
+                    <span className="badge">{NEWS_TYPE_LABEL[n.newsType]}</span>
+                  </td>
                   <td>{n.seoAlias ?? '—'}</td>
                   <td>
                     <span className={STATUS_CLASS[n.status]}>{STATUS_LABEL[n.status]}</span>

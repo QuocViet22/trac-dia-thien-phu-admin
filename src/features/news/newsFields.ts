@@ -1,10 +1,11 @@
-import type { NewsStatus } from '../../lib/types'
+import type { NewsStatus, NewsType } from '../../lib/types'
 import type { NewsPayload } from './news.api'
 
 export interface NewsFormValues {
   title: string
   author: string
   status: '' | NewsStatus
+  newsType: '' | NewsType
   seoPageTitle: string
   seoDescriptionTag: string
   seoAlias: string
@@ -24,6 +25,7 @@ export function validateNews(v: NewsFormValues): Record<string, string> {
   if (blank(v.author)) errors.author = 'Tác giả là bắt buộc'
   if (blank(v.seoAlias)) errors.seoAlias = 'Đường dẫn (slug) là bắt buộc'
   if (!v.status) errors.status = 'Trạng thái là bắt buộc'
+  if (!v.newsType) errors.newsType = 'Loại tin là bắt buộc'
   for (const [key, value] of [
     ['title', v.title],
     ['author', v.author],
@@ -45,6 +47,7 @@ export function toNewsPayload(v: NewsFormValues): NewsPayload {
     description: nullIfBlank(v.description),
     author: v.author.trim(),
     status: v.status as NewsStatus,
+    newsType: v.newsType as NewsType,
     seoPageTitle: nullIfBlank(v.seoPageTitle),
     seoDescriptionTag: nullIfBlank(v.seoDescriptionTag),
     seoAlias: v.seoAlias.trim(),

@@ -52,11 +52,14 @@ export interface PageResult<T> {
 
 export type NewsStatus = 'PUBLISHED' | 'DRAFT'
 
+export type NewsType = 'NEWS' | 'HIRING_PRODUCT'
+
 export interface News {
   id: string
   title: string
   author: string
   status: NewsStatus
+  newsType: NewsType
   seoAlias: string
   createdAt: string
   updatedAt: string
@@ -70,6 +73,7 @@ export interface NewsDetail {
   description: string | null
   author: string
   status: NewsStatus
+  newsType: NewsType
   seoPageTitle: string | null
   seoDescriptionTag: string | null
   seoAlias: string
