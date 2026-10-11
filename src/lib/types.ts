@@ -49,3 +49,31 @@ export interface PageResult<T> {
   page: number
   size: number
 }
+
+export type NewsStatus = 'PUBLISHED' | 'DRAFT'
+
+export interface News {
+  id: string
+  title: string
+  author: string
+  status: NewsStatus
+  seoAlias: string
+  createdAt: string
+  updatedAt: string
+  seoDescriptionTag: string | null
+  images: ImageDto[]
+}
+
+export interface NewsDetail {
+  id: string
+  title: string
+  description: string | null
+  author: string
+  status: NewsStatus
+  seoPageTitle: string | null
+  seoDescriptionTag: string | null
+  seoAlias: string
+  createdAt: string
+  updatedAt: string
+  images: ImageDto[]
+}
