@@ -12,7 +12,7 @@ const valid = {
   description: '<p>desc</p>',
   seoPageTitle: '',
   seoDescriptionTag: '',
-  seoAlias: '',
+  seoAlias: 'may-toan-dac',
   images: [] as { imageUrl: string }[],
 }
 
@@ -29,6 +29,10 @@ describe('validateProduct', () => {
 
   it('rejects blank brand', () => {
     expect(validateProduct({ ...valid, brand: '  ' }).brand).toBeTruthy()
+  })
+
+  it('rejects blank seoAlias', () => {
+    expect(validateProduct({ ...valid, seoAlias: '  ' }).seoAlias).toBeTruthy()
   })
 
   it('rejects fields longer than 256 characters', () => {

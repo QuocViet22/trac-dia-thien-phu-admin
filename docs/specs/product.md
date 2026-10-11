@@ -13,7 +13,8 @@ Success criteria:
 - `/products` lists server-paged products with category filter, working
   pagination, and edit/clone/delete actions.
 - `/products/new` creates a product (`201`); blank name, missing
-  category, or blank brand is rejected client-side before the request; duplicate
+  category, blank brand, or blank `seoAlias` is rejected client-side
+  before the request; duplicate
   `seoAlias` surfaces the backend `409` as a field error.
 - `/products/:id` loads and updates (`200`); unknown id shows a
   not-found state (backend `404`).
@@ -86,7 +87,7 @@ Fields map 1:1 to `CreateProductRequest` / `UpdateProductRequest`:
 | Mã vạch | `barcode` | optional, max 256 |
 | Đơn vị tính | `measurementUnit` | optional select: Cái, Chiếc, Bộ, Hộp, Kg, Lít |
 | Mô tả chi tiết | `description` | rich text, unbounded |
-| Tiêu đề trang / Thẻ mô tả / slug | `seoPageTitle`, `seoDescriptionTag`, `seoAlias` | optional, max 256 each; `seoAlias` unique |
+| Tiêu đề trang / Thẻ mô tả / slug | `seoPageTitle`, `seoDescriptionTag`, `seoAlias` | `seoPageTitle`/`seoDescriptionTag` optional, max 256 each; `seoAlias` required, max 256, unique |
 | Ảnh chính / Thư viện ảnh | `images` | cover + gallery per §2 (device upload on submit, or URLs; names dropped) |
 
 - Edit loads `GET /api/products/{id}` and prefills; submit `PUT`.

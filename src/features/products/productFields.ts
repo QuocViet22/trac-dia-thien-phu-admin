@@ -62,6 +62,7 @@ export function validateProduct(v: ProductFormValues): Record<string, string> {
   if (blank(v.name)) errors.name = 'Tên sản phẩm là bắt buộc'
   if (blank(v.categoryId)) errors.categoryId = 'Danh mục là bắt buộc'
   if (blank(v.brand)) errors.brand = 'Nhãn hiệu là bắt buộc'
+  if (blank(v.seoAlias)) errors.seoAlias = 'Đường dẫn (slug) là bắt buộc'
   for (const [key, value] of [
     ['name', v.name],
     ['brand', v.brand],

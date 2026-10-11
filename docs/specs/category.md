@@ -13,7 +13,8 @@ Success criteria:
 
 - `/categories` lists all categories with parent names resolved and
   working edit/delete actions.
-- `/categories/new` creates a category (`201`); blank name is rejected
+- `/categories/new` creates a category (`201`); blank name or blank
+  `seoAlias` is rejected
   client-side; duplicate `seoAlias` surfaces the backend `409`.
 - `/categories/:id` loads and updates (`200`); unknown id shows a
   not-found state.
@@ -50,7 +51,7 @@ Fields map 1:1 to `CreateCategoryRequest` / `UpdateCategoryRequest`:
 |---|---|---|
 | Tên danh mục * | `name` | required, max 256 |
 | Mô tả (ngắn + chi tiết) | `description` | single rich-text field, unbounded (API has one description — the design's two boxes merge into it) |
-| Tiêu đề trang (SEO) / Mô tả SEO / slug | `seoPageTitle`, `seoDescription`, `seoAlias` | optional, max 256 each; `seoAlias` unique |
+| Tiêu đề trang (SEO) / Mô tả SEO / slug | `seoPageTitle`, `seoDescription`, `seoAlias` | `seoPageTitle`/`seoDescription` optional, max 256 each; `seoAlias` required, max 256, unique |
 | Danh mục cha | `parentCategoryId` | optional select: root + all categories; on edit, exclude self (selecting self is rejected client-side) |
 | Ảnh chính | `images[0]` | single cover via the §4 dropzone (device upload on submit, or URL) |
 | Thư viện ảnh | `images[1..]` | gallery, max 10, via the §4 gallery manager (device files and/or URLs, reorderable, any item promotable to cover) |

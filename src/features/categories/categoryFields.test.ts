@@ -20,6 +20,10 @@ describe('validateCategory', () => {
     expect(validateCategory({ ...valid, name: '  ' }).name).toBeTruthy()
   })
 
+  it('rejects blank seoAlias', () => {
+    expect(validateCategory({ ...valid, seoAlias: '  ' }).seoAlias).toBeTruthy()
+  })
+
   it('rejects fields longer than 256 characters', () => {
     expect(validateCategory({ ...valid, seoAlias: 'x'.repeat(257) }).seoAlias).toBeTruthy()
   })

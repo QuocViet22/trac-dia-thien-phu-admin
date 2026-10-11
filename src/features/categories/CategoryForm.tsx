@@ -301,7 +301,7 @@ export default function CategoryForm() {
               )}
               {field(
                 'seoAlias',
-                'Đường dẫn (slug)',
+                'Đường dẫn (slug) *',
                 <input
                   type="text"
                   value={values.seoAlias}

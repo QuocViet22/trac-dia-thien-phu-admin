@@ -17,6 +17,7 @@ function blank(s: string): boolean {
 export function validateCategory(v: CategoryFormValues): Record<string, string> {
   const errors: Record<string, string> = {}
   if (blank(v.name)) errors.name = 'Tên danh mục là bắt buộc'
+  if (blank(v.seoAlias)) errors.seoAlias = 'Đường dẫn (slug) là bắt buộc'
   for (const [key, value] of [
     ['name', v.name],
     ['seoPageTitle', v.seoPageTitle],

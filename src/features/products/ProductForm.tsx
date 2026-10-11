@@ -359,7 +359,7 @@ export default function ProductForm() {
               )}
               {field(
                 'seoAlias',
-                'Đường dẫn (slug)',
+                'Đường dẫn (slug) *',
                 <input
                   type="text"
                   value={values.seoAlias}
