@@ -7,6 +7,7 @@ const ProductForm = lazy(() => import('./features/products/ProductForm.tsx'))
 const CategoryList = lazy(() => import('./features/categories/CategoryList.tsx'))
 const CategoryForm = lazy(() => import('./features/categories/CategoryForm.tsx'))
 const NewsList = lazy(() => import('./features/news/NewsList.tsx'))
+const NewsForm = lazy(() => import('./features/news/NewsForm.tsx'))
 
 function Placeholder({ name }: { name: string }) {
   return <div className="empty">{name} — sắp có</div>
@@ -25,6 +26,8 @@ const router = createBrowserRouter([
       { path: 'categories/new', element: <Suspense fallback={<div className="loading">Đang tải…</div>}><CategoryForm /></Suspense> },
       { path: 'categories/:id', element: <Suspense fallback={<div className="loading">Đang tải…</div>}><CategoryForm /></Suspense> },
       { path: 'news', element: <Suspense fallback={<div className="loading">Đang tải…</div>}><NewsList /></Suspense> },
+      { path: 'news/new', element: <Suspense fallback={<div className="loading">Đang tải…</div>}><NewsForm /></Suspense> },
+      { path: 'news/:id', element: <Suspense fallback={<div className="loading">Đang tải…</div>}><NewsForm /></Suspense> },
       { path: '*', element: <Placeholder name="Không tìm thấy trang" /> },
     ],
   },
