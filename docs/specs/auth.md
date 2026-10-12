@@ -89,8 +89,7 @@ Success criteria:
   `/forgot-password`, `/reset-password` stay outside.
 - `AdminShell` topbar gains: current username (from storage) + **Đăng
   xuất** button → `POST /api/auth/logout` (best-effort: clear storage
-  and navigate to `/login` even if it fails) + **Tài khoản** sidebar
-  entry (`Tài khoản`, → `/accounts`).
+  and navigate to `/login` even if it fails).
 - Frontend role gating: none — any signed-in session sees the admin;
   the backend enforces ADMIN on writes (403s surface as inline errors
   via the existing `ApiError` path).

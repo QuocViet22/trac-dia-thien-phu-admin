@@ -9,6 +9,8 @@ admin JWT or the backend answers 401/403.
 
 Success criteria:
 
+- `AdminShell` gains a **Tài khoản** sidebar entry (→ `/accounts`,
+  title `Tài khoản`).
 - `/accounts` lists all accounts (username, email, role, created-at)
   with working edit/delete actions.
 - `/accounts/new` creates an account (`201`); blank/invalid fields
