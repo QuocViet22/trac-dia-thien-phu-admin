@@ -1,4 +1,5 @@
 import type { PageResult, SpringPage } from './types'
+import { clearSession, loadSession, refreshSession } from './authSession'
 
 export class ApiError extends Error {
   status: number
@@ -24,8 +25,31 @@ export function apiBaseUrl(): string {
   return baseUrl()
 }
 
+async function requestWithAuthRefresh(url: string, init?: RequestInit): Promise<Response> {
+  const session = loadSession()
+  const withAuth: RequestInit = {
+    ...init,
+    headers: {
+      ...(session ? { Authorization: `Bearer ${session.accessToken}` } : {}),
+      ...init?.headers,
+    },
+  }
+  const first = await fetch(url, withAuth)
+  if (first.status !== 401) return first
+  const next = await refreshSession()
+  if (!next) {
+    clearSession()
+    if (typeof window !== 'undefined') window.location.assign('/login')
+    return first
+  }
+  return fetch(url, {
+    ...init,
+    headers: { Authorization: `Bearer ${next.accessToken}`, ...init?.headers },
+  })
+}
+
 export async function apiFetch<T>(path: string, init?: RequestInit): Promise<T> {
-  const res = await fetch(`${baseUrl()}${path}`, {
+  const res = await requestWithAuthRefresh(`${apiBaseUrl()}${path}`, {
     ...init,
     headers: { 'Content-Type': 'application/json', ...init?.headers },
   })
@@ -46,7 +70,7 @@ export async function apiFetch<T>(path: string, init?: RequestInit): Promise<T> 
 }
 
 export async function apiForm<T>(path: string, form: FormData): Promise<T> {
-  const res = await fetch(`${baseUrl()}${path}`, { method: 'POST', body: form })
+  const res = await requestWithAuthRefresh(`${apiBaseUrl()}${path}`, { method: 'POST', body: form })
   if (res.status === 204) {
     if (!res.ok) throw new ApiError(res.statusText || 'Request failed', res.status)
     return undefined as T

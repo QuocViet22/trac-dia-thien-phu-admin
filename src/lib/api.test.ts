@@ -65,3 +65,88 @@ describe('unwrapPage', () => {
     expect(result).toEqual({ items: [1, 2], total: 42, page: 1, size: 2 })
   })
 })
+
+function memoryStorage(): Storage {
+  const store = new Map<string, string>()
+  return {
+    getItem: (k: string) => store.get(k) ?? null,
+    setItem: (k: string, v: string) => void store.set(k, v),
+    removeItem: (k: string) => void store.delete(k),
+    clear: () => store.clear(),
+    key: (i: number) => [...store.keys()][i] ?? null,
+    get length() {
+      return store.size
+    },
+  }
+}
+
+function seedSession(): void {
+  vi.stubGlobal('localStorage', memoryStorage())
+  localStorage.setItem(
+    'tp_admin_auth',
+    JSON.stringify({ accessToken: 'a1', refreshToken: 'r1', username: 'alice', role: 'ADMIN' }),
+  )
+}
+
+describe('auth transport', () => {
+  it('attaches the bearer token when a session exists', async () => {
+    seedSession()
+    const seen: string[] = []
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async (_url: unknown, init?: RequestInit) => {
+        seen.push((init?.headers as Record<string, string>)['Authorization'] ?? '')
+        return jsonResponse({ success: true, message: 'OK', data: [] })
+      }),
+    )
+
+    await apiFetch('/api/categories')
+
+    expect(seen).toEqual(['Bearer a1'])
+  })
+
+  it('refreshes once and retries the request after a 401', async () => {
+    seedSession()
+    let calls = 0
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async (url: unknown) => {
+        calls += 1
+        const target = String(url)
+        if (target.endsWith('/api/auth/refresh')) {
+          return jsonResponse({
+            success: true,
+            message: 'OK',
+            data: { accessToken: 'a2', refreshToken: 'r2', tokenType: 'Bearer', expiresIn: 900, username: 'alice', roleType: 'ADMIN' },
+          })
+        }
+        if (calls === 1) return jsonResponse({ success: false, message: 'auth', data: null }, 401)
+        return jsonResponse({ success: true, message: 'OK', data: [] })
+      }),
+    )
+
+    const data = await apiFetch('/api/categories')
+
+    expect(data).toEqual([])
+    expect(calls).toBe(3)
+    expect(JSON.parse(localStorage.getItem('tp_admin_auth') ?? '{}').accessToken).toBe('a2')
+  })
+
+  it('clears storage and redirects to login when refresh is dead', async () => {
+    seedSession()
+    const assign = vi.fn()
+    vi.stubGlobal('window', { location: { assign } })
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async (url: unknown) =>
+        String(url).endsWith('/api/auth/refresh')
+          ? jsonResponse({ success: false, message: 'invalid refresh token', data: null }, 401)
+          : jsonResponse({ success: false, message: 'auth', data: null }, 401),
+      ),
+    )
+
+    await expect(apiFetch('/api/categories')).rejects.toBeInstanceOf(ApiError)
+    expect(localStorage.getItem('tp_admin_auth')).toBeNull()
+    expect(assign).toHaveBeenCalledWith('/login')
+  })
+})
