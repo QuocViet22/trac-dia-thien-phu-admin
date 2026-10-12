@@ -149,4 +149,25 @@ describe('auth transport', () => {
     expect(localStorage.getItem('tp_admin_auth')).toBeNull()
     expect(assign).toHaveBeenCalledWith('/login')
   })
+
+  it('does not refresh or redirect on a 401 when no session exists', async () => {
+    vi.stubGlobal('localStorage', memoryStorage())
+    const assign = vi.fn()
+    vi.stubGlobal('window', { location: { assign } })
+    let calls = 0
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async () => {
+        calls += 1
+        return jsonResponse({ success: false, message: 'invalid username or password', data: null }, 401)
+      }),
+    )
+
+    const err = await apiFetch('/api/auth/login', { method: 'POST' }).catch((e: unknown) => e)
+
+    expect(err).toBeInstanceOf(ApiError)
+    expect((err as ApiError).status).toBe(401)
+    expect(calls).toBe(1)
+    expect(assign).not.toHaveBeenCalled()
+  })
 })

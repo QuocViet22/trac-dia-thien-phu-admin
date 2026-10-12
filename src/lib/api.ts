@@ -35,7 +35,7 @@ async function requestWithAuthRefresh(url: string, init?: RequestInit): Promise<
     },
   }
   const first = await fetch(url, withAuth)
-  if (first.status !== 401) return first
+  if (first.status !== 401 || !session) return first
   const next = await refreshSession()
   if (!next) {
     clearSession()
