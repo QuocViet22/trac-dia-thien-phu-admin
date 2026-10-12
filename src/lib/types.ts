@@ -92,3 +92,12 @@ export interface TokenResponse {
   username: string
   roleType: RoleName
 }
+
+export interface Account {
+  id: string
+  username: string
+  email: string
+  roleType: RoleName
+  createdAt: string
+  updatedAt: string
+}
