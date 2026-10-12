@@ -1,5 +1,7 @@
 import { useState } from 'react'
-import { NavLink, Outlet, useLocation } from 'react-router'
+import { NavLink, Outlet, useLocation, useNavigate } from 'react-router'
+import { clearSession, loadSession } from '../lib/authSession'
+import { logout } from '../features/auth/auth.api'
 
 const TITLES: Record<string, string> = {
   '/products': 'Sản phẩm',
@@ -17,6 +19,21 @@ function titleFor(pathname: string): string {
 export default function AdminShell() {
   const [collapsed, setCollapsed] = useState(false)
   const { pathname } = useLocation()
+  const navigate = useNavigate()
+  const session = loadSession()
+
+  async function onLogout(): Promise<void> {
+    const refreshToken = loadSession()?.refreshToken
+    if (refreshToken) {
+      try {
+        await logout(refreshToken)
+      } catch {
+        // best-effort: still clear the local session below
+      }
+    }
+    clearSession()
+    navigate('/login', { replace: true })
+  }
 
   return (
     <div className="shell">
@@ -34,6 +51,11 @@ export default function AdminShell() {
             ☰
           </button>
           <h2>{titleFor(pathname)}</h2>
+          <span className="topbar-spacer" />
+          {session && <span className="topbar-user">{session.username}</span>}
+          <button type="button" className="btn btn-default" onClick={() => void onLogout()}>
+            Đăng xuất
+          </button>
         </header>
         <main className="canvas">
           <Outlet />

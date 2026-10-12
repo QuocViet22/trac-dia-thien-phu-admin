@@ -666,3 +666,29 @@ input[type='checkbox'] {
   flex-wrap: wrap;
   gap: 8px;
 }
+
+/* Auth pages */
+.auth-wrap {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+.auth-card {
+  width: 100%;
+  max-width: 400px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.auth-card h1 {
+  margin: 0;
+}
+.topbar-spacer {
+  flex: 1;
+}
+.topbar-user {
+  color: #6b7385;
+}
