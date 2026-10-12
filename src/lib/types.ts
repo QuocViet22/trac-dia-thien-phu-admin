@@ -81,3 +81,14 @@ export interface NewsDetail {
   updatedAt: string
   images: ImageDto[]
 }
+
+export type RoleName = 'ADMIN' | 'USER'
+
+export interface TokenResponse {
+  accessToken: string
+  refreshToken: string
+  tokenType: string
+  expiresIn: number
+  username: string
+  roleType: RoleName
+}
