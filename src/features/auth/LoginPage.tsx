@@ -12,6 +12,7 @@ export default function LoginPage() {
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [formMessage, setFormMessage] = useState('')
   const [saving, setSaving] = useState(false)
+  const [showPassword, setShowPassword] = useState(false)
 
   if (loadSession()?.accessToken) return <Navigate to="/products" replace />
 
@@ -37,38 +38,62 @@ export default function LoginPage() {
   return (
     <div className="auth-wrap">
       <div className="card auth-card">
+        <div className="auth-badge" aria-hidden="true">
+          🔒
+        </div>
         <h1>Đăng nhập quản trị</h1>
+        <p className="auth-sub">Vui lòng nhập thông tin tài khoản quản trị để tiếp tục.</p>
         <form onSubmit={(e) => void onSubmit(e)}>
           <div className="field">
             <label>Tên đăng nhập *</label>
-            <input
-              type="text"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              placeholder="Nhập tên đăng nhập"
-              autoComplete="username"
-            />
+            <div className="input-wrap">
+              <span className="input-icon" aria-hidden="true">
+                👤
+              </span>
+              <input
+                type="text"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                placeholder="Nhập tên đăng nhập"
+                autoComplete="username"
+              />
+            </div>
             {errors.username && <span className="error">{errors.username}</span>}
           </div>
           <div className="field">
             <label>Mật khẩu *</label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Nhập mật khẩu"
-              autoComplete="current-password"
-            />
+            <div className="input-wrap">
+              <span className="input-icon" aria-hidden="true">
+                🔒
+              </span>
+              <input
+                type={showPassword ? 'text' : 'password'}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Nhập mật khẩu"
+                autoComplete="current-password"
+              />
+              <button
+                type="button"
+                className="icon-btn eye-btn"
+                aria-label={showPassword ? 'Ẩn mật khẩu' : 'Hiện mật khẩu'}
+                onClick={() => setShowPassword((v) => !v)}
+              >
+                {showPassword ? '🙈' : '👁'}
+              </button>
+            </div>
             {errors.password && <span className="error">{errors.password}</span>}
           </div>
           {formMessage && <div className="fetch-error">{formMessage}</div>}
-          <button type="submit" className="btn btn-primary" disabled={saving}>
+          <div className="auth-link-row">
+            <Link to="/forgot-password" className="auth-link">
+              Quên mật khẩu?
+            </Link>
+          </div>
+          <button type="submit" className="btn btn-primary auth-submit" disabled={saving}>
             {saving ? 'Đang đăng nhập…' : 'Đăng nhập'}
           </button>
         </form>
-        <Link to="/forgot-password" className="btn btn-default">
-          Quên mật khẩu
-        </Link>
       </div>
     </div>
   )
