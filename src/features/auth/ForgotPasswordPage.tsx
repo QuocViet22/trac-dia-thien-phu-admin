@@ -3,6 +3,7 @@ import { Link } from 'react-router'
 import { ApiError } from '../../lib/api'
 import { requestPasswordReset } from './auth.api'
 import { validateForgot } from './authFields'
+import './LoginPage.css'
 
 export default function ForgotPasswordPage() {
   const [username, setUsername] = useState('')
@@ -31,61 +32,103 @@ export default function ForgotPasswordPage() {
   }
 
   return (
-    <div className="auth-wrap">
-      <div className="card auth-card">
-        <div className="auth-badge" aria-hidden="true">
-          🔒
+    <div className="login-wrap">
+      <main className="login-card">
+        <div className="login-badge" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <rect x="4" y="11" width="16" height="10" rx="2" />
+            <path d="M8 11V8a4 4 0 0 1 8 0v3" />
+          </svg>
         </div>
-        <h1>Quên mật khẩu</h1>
-        <p className="auth-sub">Nhập thông tin tài khoản để nhận liên kết đặt lại.</p>
-        {sent ? (
-          <p>Nếu tài khoản tồn tại, liên kết đặt lại đã được gửi</p>
-        ) : (
-          <form onSubmit={(e) => void onSubmit(e)}>
-            <div className="field">
-              <label>Tên đăng nhập *</label>
-              <div className="input-wrap">
-                <span className="input-icon" aria-hidden="true">
-                  👤
-                </span>
+        <h1 className="login-title">Quên mật khẩu</h1>
+        <p className="login-sub">Nhập thông tin tài khoản để nhận liên kết đặt lại mật khẩu.</p>
+
+        {sent && (
+          <div className="login-alert login-alert-ok" role="status">
+            Nếu tài khoản tồn tại, liên kết đặt lại đã được gửi. Vui lòng kiểm tra email của bạn.
+          </div>
+        )}
+        {formMessage && (
+          <div className="login-alert" role="alert">
+            {formMessage}
+          </div>
+        )}
+
+        {!sent && (
+          <form onSubmit={(e) => void onSubmit(e)} noValidate>
+            <div className="login-field">
+              <label htmlFor="forgot-username">
+                Tên đăng nhập <span className="login-req">*</span>
+              </label>
+              <div className="login-input">
+                <svg className="login-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <circle cx="12" cy="8" r="4" />
+                  <path d="M4 21a8 8 0 0 1 16 0" />
+                </svg>
                 <input
+                  id="forgot-username"
                   type="text"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                   placeholder="Nhập tên đăng nhập"
                   autoComplete="username"
+                  autoCapitalize="none"
+                  spellCheck={false}
+                  aria-invalid={errors.username ? true : undefined}
+                  aria-describedby={errors.username ? 'forgot-username-err' : undefined}
                 />
               </div>
-              {errors.username && <span className="error">{errors.username}</span>}
+              <span className="login-error" id="forgot-username-err">
+                {errors.username}
+              </span>
             </div>
-            <div className="field">
-              <label>Email *</label>
-              <div className="input-wrap">
-                <span className="input-icon" aria-hidden="true">
-                  ✉️
-                </span>
+
+            <div className="login-field">
+              <label htmlFor="forgot-email">
+                Email <span className="login-req">*</span>
+              </label>
+              <div className="login-input">
+                <svg className="login-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <rect x="3" y="5" width="18" height="14" rx="2" />
+                  <path d="m3 7 9 6 9-6" />
+                </svg>
                 <input
+                  id="forgot-email"
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="Nhập email"
                   autoComplete="email"
+                  autoCapitalize="none"
+                  spellCheck={false}
+                  aria-invalid={errors.email ? true : undefined}
+                  aria-describedby={errors.email ? 'forgot-email-err' : undefined}
                 />
               </div>
-              {errors.email && <span className="error">{errors.email}</span>}
+              <span className="login-error" id="forgot-email-err">
+                {errors.email}
+              </span>
             </div>
-            {formMessage && <div className="fetch-error">{formMessage}</div>}
-            <button type="submit" className="btn btn-primary auth-submit" disabled={saving}>
-              {saving ? 'Đang gửi…' : 'Gửi liên kết đặt lại'}
+
+            <button type="submit" className="login-btn" disabled={saving}>
+              {saving ? (
+                <>
+                  <span className="login-spin" aria-hidden="true" />
+                  Đang gửi…
+                </>
+              ) : (
+                'Gửi liên kết đặt lại'
+              )}
             </button>
           </form>
         )}
-        <div className="auth-link-row">
-          <Link to="/login" className="auth-link">
+
+        <div className="login-back">
+          <Link to="/login" className="login-link">
             Quay lại đăng nhập
           </Link>
         </div>
-      </div>
+      </main>
     </div>
   )
 }

@@ -7,14 +7,14 @@ const TITLES: Record<string, string> = {
   '/products': 'Sản phẩm',
   '/categories': 'Danh mục',
   '/news': 'Tin tức',
-  '/accounts': 'Tài khoản',
+  // '/accounts': 'Tài khoản',
 }
 
 function titleFor(pathname: string): string {
   if (pathname.startsWith('/products')) return 'Sản phẩm'
   if (pathname.startsWith('/categories')) return 'Danh mục'
   if (pathname.startsWith('/news')) return 'Tin tức'
-  if (pathname.startsWith('/accounts')) return 'Tài khoản'
+  // if (pathname.startsWith('/accounts')) return 'Tài khoản'
   return TITLES[pathname] ?? 'Quản trị'
 }
 
@@ -45,7 +45,7 @@ export default function AdminShell() {
           <NavLink to="/products">Sản phẩm</NavLink>
           <NavLink to="/categories">Danh mục</NavLink>
           <NavLink to="/news">Tin tức</NavLink>
-          <NavLink to="/accounts">Tài khoản</NavLink>
+          {/* <NavLink to="/accounts">Tài khoản</NavLink> */}
         </nav>
       </aside>
       <div className="workspace">

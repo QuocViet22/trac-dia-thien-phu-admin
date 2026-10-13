@@ -55,13 +55,30 @@ Success criteria:
   → `Navigate to /products`.
 - 401 → inline form error `Sai tên đăng nhập hoặc mật khẩu`; network
   failure → `Không kết nối được máy chủ`.
-- **Quên mật khẩu** button (secondary/ghost style) → navigates to
-  `/forgot-password`. No registration link (accounts are
+- Visual (Image 1, 2026-10-13): centered white card (`max-width
+  ~440px`, `radius 16px`, `padding 32px`) on canvas background; top
+  lock badge (48px light-blue rounded square, Unicode `🔒` glyph, no
+  icon lib); `h1 Đăng nhập quản trị` + gray subtitle `Vui lòng nhập
+  thông tin tài khoản quản trị để tiếp tục.`; labels with red `*`;
+  inputs `height 48px`, `radius 12px`, left Unicode glyph
+  (`👤` username, `🔒` password) via CSS-positioned span, no new
+  deps; password eye toggle button (`👁`/`🙈`, `type="button"`,
+  `aria-label`, local `showPassword` state only); `Quên mật khẩu?`
+  as right-aligned blue text link (`<Link className="auth-link">`)
+  → `/forgot-password`. No registration link (accounts are
   admin-managed).
+- Submit button full-width primary (`height 48px`, `radius 10px`):
+  `Đăng nhập` / `Đang đăng nhập…`. All new classes live under
+  `.auth-*` in `src/index.css`, reusing `.card/.field/.error/.btn`
+  tokens.
 - If a valid session already exists, visiting `/login` redirects to
   `/products`.
 
 ## 4. Forgot + reset pages (public, outside `AdminShell`)
+
+- Shared visual language with §3: same centered `.auth-card`
+  (badge + title + gray subtitle), full-width primary button,
+  back-to-login as `auth-link`. No new deps, no layout divergence.
 
 - `/forgot-password`: fields `Tên đăng nhập *` + `Email *` (blank +
   email-format checks client-side). Submit
@@ -99,6 +116,6 @@ Success criteria:
 - Component/DOM tests (no testing-library installed; vitest unit
   tests only — validation, token store, fetch-wrapper behavior).
 - E2E login flow tests.
-- Password-strength meter, show/hide password toggle.
+- Password-strength meter.
 - Session expiry countdown / idle timeout.
 - OAuth2 / social login.
