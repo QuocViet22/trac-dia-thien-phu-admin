@@ -36,40 +36,56 @@ export default function ResetPasswordPage() {
   return (
     <div className="auth-wrap">
       <div className="card auth-card">
+        <div className="auth-badge" aria-hidden="true">
+          🔒
+        </div>
         <h1>Đặt lại mật khẩu</h1>
+        <p className="auth-sub">Nhập mật khẩu mới cho tài khoản của bạn.</p>
         {invalid ? (
           <p>Liên kết đã hết hạn hoặc không hợp lệ</p>
         ) : done ? (
           <p>
             Đặt lại mật khẩu thành công.{' '}
-            <Link to="/login">Quay lại đăng nhập</Link>
+            <Link to="/login" className="auth-link">
+              Quay lại đăng nhập
+            </Link>
           </p>
         ) : (
           <form onSubmit={(e) => void onSubmit(e)}>
             <div className="field">
               <label>Mật khẩu mới *</label>
-              <input
-                type="password"
-                value={newPassword}
-                onChange={(e) => setNewPassword(e.target.value)}
-                placeholder="Nhập mật khẩu mới"
-                autoComplete="new-password"
-              />
+              <div className="input-wrap">
+                <span className="input-icon" aria-hidden="true">
+                  🔒
+                </span>
+                <input
+                  type="password"
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  placeholder="Nhập mật khẩu mới"
+                  autoComplete="new-password"
+                />
+              </div>
               {errors.newPassword && <span className="error">{errors.newPassword}</span>}
             </div>
             <div className="field">
               <label>Nhập lại mật khẩu *</label>
-              <input
-                type="password"
-                value={confirm}
-                onChange={(e) => setConfirm(e.target.value)}
-                placeholder="Nhập lại mật khẩu mới"
-                autoComplete="new-password"
-              />
+              <div className="input-wrap">
+                <span className="input-icon" aria-hidden="true">
+                  🔒
+                </span>
+                <input
+                  type="password"
+                  value={confirm}
+                  onChange={(e) => setConfirm(e.target.value)}
+                  placeholder="Nhập lại mật khẩu mới"
+                  autoComplete="new-password"
+                />
+              </div>
               {errors.confirm && <span className="error">{errors.confirm}</span>}
             </div>
             {formMessage && <div className="fetch-error">{formMessage}</div>}
-            <button type="submit" className="btn btn-primary" disabled={saving}>
+            <button type="submit" className="btn btn-primary auth-submit" disabled={saving}>
               {saving ? 'Đang lưu…' : 'Đặt lại mật khẩu'}
             </button>
           </form>

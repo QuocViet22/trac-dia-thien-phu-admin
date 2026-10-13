@@ -33,42 +33,58 @@ export default function ForgotPasswordPage() {
   return (
     <div className="auth-wrap">
       <div className="card auth-card">
+        <div className="auth-badge" aria-hidden="true">
+          🔒
+        </div>
         <h1>Quên mật khẩu</h1>
+        <p className="auth-sub">Nhập thông tin tài khoản để nhận liên kết đặt lại.</p>
         {sent ? (
           <p>Nếu tài khoản tồn tại, liên kết đặt lại đã được gửi</p>
         ) : (
           <form onSubmit={(e) => void onSubmit(e)}>
             <div className="field">
               <label>Tên đăng nhập *</label>
-              <input
-                type="text"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                placeholder="Nhập tên đăng nhập"
-                autoComplete="username"
-              />
+              <div className="input-wrap">
+                <span className="input-icon" aria-hidden="true">
+                  👤
+                </span>
+                <input
+                  type="text"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  placeholder="Nhập tên đăng nhập"
+                  autoComplete="username"
+                />
+              </div>
               {errors.username && <span className="error">{errors.username}</span>}
             </div>
             <div className="field">
               <label>Email *</label>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Nhập email"
-                autoComplete="email"
-              />
+              <div className="input-wrap">
+                <span className="input-icon" aria-hidden="true">
+                  ✉️
+                </span>
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Nhập email"
+                  autoComplete="email"
+                />
+              </div>
               {errors.email && <span className="error">{errors.email}</span>}
             </div>
             {formMessage && <div className="fetch-error">{formMessage}</div>}
-            <button type="submit" className="btn btn-primary" disabled={saving}>
+            <button type="submit" className="btn btn-primary auth-submit" disabled={saving}>
               {saving ? 'Đang gửi…' : 'Gửi liên kết đặt lại'}
             </button>
           </form>
         )}
-        <Link to="/login" className="btn btn-default">
-          Quay lại đăng nhập
-        </Link>
+        <div className="auth-link-row">
+          <Link to="/login" className="auth-link">
+            Quay lại đăng nhập
+          </Link>
+        </div>
       </div>
     </div>
   )
