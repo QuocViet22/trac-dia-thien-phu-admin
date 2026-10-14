@@ -1,5 +1,8 @@
 import { useEffect, useState } from 'react'
 import { listCollections } from './collections.api'
+import EntitySectionEditor from './EntitySectionEditor'
+import HomepagePreview from './HomepagePreview'
+import type { PreviewSectionData } from './HomepagePreview'
 import ImageSectionEditor from './ImageSectionEditor'
 import { HOMEPAGE_SECTIONS } from './homepageTypes'
 import type { Collection, CollectionType } from './homepageTypes'
@@ -10,13 +13,14 @@ export default function HomepagePage() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [nonce, setNonce] = useState(0)
+  const [previewOpen, setPreviewOpen] = useState(false)
+  const [previewLoading, setPreviewLoading] = useState(false)
+  const [previewData, setPreviewData] = useState<PreviewSectionData[]>([])
 
   const section = HOMEPAGE_SECTIONS.find((s) => s.type === selectedType) ?? HOMEPAGE_SECTIONS[0]
 
   useEffect(() => {
     let cancelled = false
-    setLoading(true)
-    setError('')
     listCollections(selectedType)
       .then((res) => {
         if (cancelled) return
@@ -36,6 +40,29 @@ export default function HomepagePage() {
 
   if (!section) return <div className="empty">Không có chuyên mục nào</div>
 
+  async function openPreview(): Promise<void> {
+    setPreviewOpen(true)
+    setPreviewLoading(true)
+    try {
+      const all = await Promise.all(
+        HOMEPAGE_SECTIONS.map(async (s) => ({
+          section: s,
+          items: s.type === selectedType ? items : await listCollections(s.type),
+        })),
+      )
+      setPreviewData(all)
+    } catch {
+      setPreviewData(
+        HOMEPAGE_SECTIONS.map((s) => ({
+          section: s,
+          items: s.type === selectedType ? items : [],
+        })),
+      )
+    } finally {
+      setPreviewLoading(false)
+    }
+  }
+
   return (
     <div>
       <div className="page-head">
@@ -43,13 +70,20 @@ export default function HomepagePage() {
         <span>
           {items.length}/{section.max}
         </span>
+        <button type="button" className="btn btn-default" onClick={() => void openPreview()}>
+          Xem truoc
+        </button>
       </div>
 
       <div className="card">
         <div className="filterbar">
           <select
             value={selectedType}
-            onChange={(e) => setSelectedType(e.target.value as CollectionType)}
+            onChange={(e) => {
+              setSelectedType(e.target.value as CollectionType)
+              setLoading(true)
+              setError('')
+            }}
           >
             {HOMEPAGE_SECTIONS.map((s) => (
               <option key={s.type} value={s.type}>
@@ -78,15 +112,29 @@ export default function HomepagePage() {
           </div>
         ) : section.mode === 'image' ? (
           <ImageSectionEditor
+            key={section.type}
             collectionType={section.type}
             max={section.max}
             items={items}
             onChanged={() => setNonce((n) => n + 1)}
           />
         ) : (
-          <div className="empty">Trình chọn thực thể — sắp có (Tasks 5)</div>
+          <EntitySectionEditor
+            key={section.type}
+            collectionType={section.type}
+            max={section.max}
+            items={items}
+            onChanged={() => setNonce((n) => n + 1)}
+          />
         )}
       </div>
+      {previewOpen && (
+        <HomepagePreview
+          data={previewData}
+          loading={previewLoading}
+          onClose={() => setPreviewOpen(false)}
+        />
+      )}
     </div>
   )
 }
