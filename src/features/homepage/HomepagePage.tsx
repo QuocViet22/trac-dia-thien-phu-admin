@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { listCollections } from './collections.api'
+import ImageSectionEditor from './ImageSectionEditor'
 import { HOMEPAGE_SECTIONS } from './homepageTypes'
 import type { Collection, CollectionType } from './homepageTypes'
 
@@ -76,7 +77,12 @@ export default function HomepagePage() {
             </button>
           </div>
         ) : section.mode === 'image' ? (
-          <div className="empty">Trình chỉnh sửa ảnh — sắp có (Tasks 4)</div>
+          <ImageSectionEditor
+            collectionType={section.type}
+            max={section.max}
+            items={items}
+            onChanged={() => setNonce((n) => n + 1)}
+          />
         ) : (
           <div className="empty">Trình chọn thực thể — sắp có (Tasks 5)</div>
         )}
