@@ -6,7 +6,7 @@
   `AdminShell` sidebar, `CategoryForm` upload flow).
 - One item = one `Collection` row with a fixed `collectionType`. Seven sections map 1:1 to the
   existing `CollectionType` enum:
-  - `HERO_SLIDER_COLLECTION` — slider, max 3, image-only
+  - `HERO_SLIDER_COLLECTION` — slider, max 5, image-only
   - `PROMO_CARD_COLLECTION` — quang cao, max 3, image-only
   - `FEATURED_CATEGORY_COLLECTION` — danh muc noi bat, max 6, entity picker (category)
   - `BEST_SELLER_COLLECTION` — san pham ban chay, max 10, entity picker (product)

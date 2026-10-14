@@ -15,7 +15,7 @@
 - Java package is `com.trac_dia_thien_phu_api` (underscores); API commands use `.\mvnw.cmd` on Windows.
 - Admin: `verbatimModuleSyntax` (use `import type`), `noUnusedLocals/Parameters`, `erasableSyntaxOnly` (no enums); check with `npm run build`.
 - Reuse `GET /api/collections?collectionType=` + CRUD; no new controllers; UI storefront untouched.
-- Max counts: slider 3, promo 3, featured 6, best-seller 10, category-display 4, service 3, news 3.
+- Max counts: slider 5, promo 3, featured 6, best-seller 10, category-display 4, service 3, news 3.
 
 ## Review Focus
 
