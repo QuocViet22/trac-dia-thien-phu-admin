@@ -61,11 +61,16 @@ function isNotFoundError(err: unknown): boolean {
   return err instanceof Error && 'status' in err && (err as { status: number }).status === 404
 }
 
-const SWAP_TEMP_INDEX = -1
+const SWAP_TEMP_OFFSET = 100_000
 const PAGE_SIZE = 10
 
+function swapTempIndex(a: Collection, b: Collection): number {
+  return Math.max(a.orderIndex, b.orderIndex) + SWAP_TEMP_OFFSET
+}
+
 async function swapOrder(a: Collection, b: Collection): Promise<void> {
-  await updateCollection(a.id, toPayload(a, SWAP_TEMP_INDEX))
+  const temp = swapTempIndex(a, b)
+  await updateCollection(a.id, toPayload(a, temp))
   await updateCollection(b.id, toPayload(b, a.orderIndex))
   await updateCollection(a.id, toPayload(a, b.orderIndex))
 }
