@@ -71,7 +71,7 @@ export default function HomepagePage() {
           {items.length}/{section.max}
         </span>
         <button type="button" className="btn btn-default" onClick={() => void openPreview()}>
-          Xem truoc
+          Xem trước
         </button>
       </div>
 

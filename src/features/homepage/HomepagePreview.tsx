@@ -23,7 +23,7 @@ export default function HomepagePreview({ data, loading, onClose }: Props) {
         style={{ maxWidth: 720, maxHeight: '80vh', overflowY: 'auto' }}
         onClick={(e) => e.stopPropagation()}
       >
-        <h2>Xem truoc</h2>
+        <h2>Xem trước</h2>
         {loading ? (
           <div className="loading">Đang tải…</div>
         ) : (

@@ -97,13 +97,13 @@
 
 **Files:**
 - Create: `trac-dia-thien-phu-admin/src/features/homepage/EntitySectionEditor.tsx`, `trac-dia-thien-phu-admin/src/features/homepage/HomepagePreview.tsx`
-- Modify: `HomepagePage.tsx` (render editor for `mode:'entity'` + "Xem truoc" button)
+- Modify: `HomepagePage.tsx` (render editor for `mode:'entity'` + "Xem trước" button)
 
 **Interfaces:**
 - Consumes: Task 3 client + `listProducts`/`listCategories`/`listNews` pickers; draft section data for preview.
 - Produces: complete `/homepage` page per spec.
 
 - [ ] **Step 1: Build entity editor** — searchable picker per section kind (product/category/news with paged search), selected list with remove + up/down reorder, each row stores `name` snapshot + `referenceId`; strict max block; dangling reference renders "Muc da bi xoa" removable row.
-- [ ] **Step 2: Build preview modal** — "Xem truoc" opens modal with 7 simplified section previews fed by draft state (image grids + labels), closable, no save required.
+- [ ] **Step 2: Build preview modal** — "Xem trước" opens modal with 7 simplified section previews fed by draft state (image grids + labels), closable, no save required.
 - [ ] **Step 3: Verify** — Run: `npm run build`, `npm run lint`. Expected: PASS; manual per section: pick to max (10 best-sellers, 6 featured, 4 categories, 3 news), over-max blocked, preview matches draft, reload persists.
 - [ ] **Step 4: Commit** — `git commit -m "feat: homepage entity pickers and draft preview"`.

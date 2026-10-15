@@ -13,7 +13,7 @@
   - `CATEGORY_COLLECTION` — hien thi danh muc, max 4, entity picker (category, auto-fill)
   - `SERVICE_BANNER_COLLECTION` — dich vu, max 3, image-only
   - `NEWS_COLLECTION` — tin tuc, max 3, entity picker (news)
-- Dropdown selector switches the edited component; default is slider. "Xem truoc" button opens an
+- Dropdown selector switches the edited component; default is slider. "Xem trước" button opens an
   in-admin live preview modal (draft state, simplified copies of UI components).
 - Scope is API + admin only. UI storefront (`trac-dia-thien-phu-ui`, hardcoded `data.ts`) is NOT
   rewired in this task.
@@ -65,3 +65,12 @@
 - All 7 sections editable behind the dropdown with correct max enforcement + reorder.
 - Preview reflects unsaved draft for every section.
 - `npm run build` (admin) and `mvnw.cmd -q test` (API collection tests) pass.
+
+## 6. CSS polish (2026-10-15 addendum, approved design)
+
+- Goal: align `/homepage` spacing with Category/Product list pages. No behavior or API change.
+- Header: counter `n/max` becomes `.badge`, actions grouped right (fixes `space-between` stretch).
+- Selector row: constrain `select` width in `.filterbar` to match `CategoryList`.
+- Add-forms (`ImageSectionEditor`, `EntitySectionEditor`): replace inline `marginTop: 16` with `.homepage-add` class (card padding, `h2` spacing, `.field` max-width).
+- Preview (`HomepagePreview`): replace inline `maxWidth: 720`, `marginTop: 12`, flex image row with `.preview-modal`, `.preview-section`, `.preview-grid` classes in `src/index.css`.
+- Constraint: single global `src/index.css`, `homepage-*` / `preview-*` prefixed names only, no new dependencies.
