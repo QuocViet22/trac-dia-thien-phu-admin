@@ -255,10 +255,10 @@ export default function ImageSectionEditor({ collectionType, max, items, onChang
         </table>
       )}
 
-      <div className="card" style={{ marginTop: 16 }}>
-        <h2>Thêm mục mới</h2>
+      <div className="card" style={{ margin: '10px' }}>
+        <h2 style={{ margin: '10px' }}>Thêm mục mới</h2>
         {full && <p className="error">{maxMessage}</p>}
-        <div className="field">
+        <div className="field" style={{ margin: '10px' }}>
           <label>Tên *</label>
           <input
             type="text"
@@ -272,7 +272,7 @@ export default function ImageSectionEditor({ collectionType, max, items, onChang
           />
           {nameError && <span className="error">{nameError}</span>}
         </div>
-        <div className="field">
+        <div className="field" style={{ margin: '10px' }}>
           <label>Ảnh *</label>
           <ImageDropzone value={cover} onChange={onCoverChange} error={coverError} />
         </div>
@@ -282,6 +282,7 @@ export default function ImageSectionEditor({ collectionType, max, items, onChang
           className="btn btn-primary"
           disabled={full || adding}
           onClick={() => void onAdd()}
+          style={{ margin: '10px' }}
         >
           {adding ? 'Đang thêm…' : '+ Thêm'}
         </button>

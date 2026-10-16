@@ -29,8 +29,8 @@ export interface HomepageSection {
 }
 
 export const HOMEPAGE_SECTIONS: HomepageSection[] = [
-  { type: 'HERO_SLIDER_COLLECTION', label: 'Slider', max: 5, mode: 'image' },
-  { type: 'PROMO_CARD_COLLECTION', label: 'Quảng cáo', max: 3, mode: 'image' },
+  { type: 'HERO_SLIDER_COLLECTION', label: 'Quản lý Slider', max: 5, mode: 'image' },
+  { type: 'PROMO_CARD_COLLECTION', label: 'Quản lý quảng cáo', max: 3, mode: 'image' },
   { type: 'FEATURED_CATEGORY_COLLECTION', label: 'Danh mục nổi bật', max: 6, mode: 'entity' },
   { type: 'BEST_SELLER_COLLECTION', label: 'Sản phẩm bán chạy', max: 10, mode: 'entity' },
   { type: 'CATEGORY_COLLECTION', label: 'Hiển thị danh mục', max: 4, mode: 'entity' },

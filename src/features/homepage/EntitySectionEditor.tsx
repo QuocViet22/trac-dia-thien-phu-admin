@@ -94,7 +94,7 @@ export default function EntitySectionEditor({ collectionType, max, items, onChan
 
   const rows = sorted(items)
   const full = rows.length >= max
-  const maxMessage = `Da dat toi da ${max} muc`
+  const maxMessage = `Đã đạt tối đa ${max} mục`
   const selectedIds = new Set(rows.map((r) => r.referenceId).filter((id) => id !== null))
 
   useEffect(() => {
@@ -298,10 +298,10 @@ export default function EntitySectionEditor({ collectionType, max, items, onChan
         </table>
       )}
 
-      <div className="card" style={{ marginTop: 16 }}>
-        <h2>Thêm mục mới</h2>
+      <div className="card" style={{ margin: '10px' }}>
+        <h2 style={{ margin: '10px' }}>Thêm mục mới</h2>
         {full && <p className="error">{maxMessage}</p>}
-        <div className="field">
+        <div className="field" style={{ margin: '10px' }}>
           <label>Tìm kiếm</label>
           <input
             type="text"
@@ -334,7 +334,7 @@ export default function EntitySectionEditor({ collectionType, max, items, onChan
             <thead>
               <tr>
                 <th>Tên</th>
-                <th>Thao tác</th>
+                <th style={{ textAlign: 'right' }}>Thao tác</th>
               </tr>
             </thead>
             <tbody>
@@ -343,7 +343,7 @@ export default function EntitySectionEditor({ collectionType, max, items, onChan
                 return (
                   <tr key={c.id}>
                     <td>{c.name}</td>
-                    <td>
+                    <td style={{ textAlign: 'right' }}>
                       <button
                         type="button"
                         className="btn btn-default"
