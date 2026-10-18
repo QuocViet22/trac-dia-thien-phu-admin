@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link, useLocation, useNavigate, useParams } from 'react-router'
 import { apiFetch } from '../../lib/api'
 import type { Category, Product } from '../../lib/types'
@@ -11,9 +11,10 @@ import { deleteUpload, uploadFile } from '../../lib/uploads.api'
 import { formErrorForApi, isNotFoundError } from '../../lib/formErrors'
 import { fromProduct, toProductPayload, validateProduct } from './productFields'
 import type { ProductFormValues } from './productFields'
-import { htmlFileOrNull, type HtmlFileData } from '../../components/HtmlFile.ts'
-import HtmlPreview from '../../components/HtmlPreview.tsx'
 import { BRANDS } from './brands'
+import { Editor } from '@tinymce/tinymce-react'
+
+type TinyMCEEditor = Parameters<NonNullable<React.ComponentProps<typeof Editor>['onInit']>>[1]
 
 const UNITS = ['Cái', 'Chiếc', 'Bộ', 'Hộp', 'Kg', 'Lít']
 
@@ -64,12 +65,8 @@ export default function ProductForm() {
   const [coverError, setCoverError] = useState('')
   const [gallery, setGallery] = useState<GalleryItem[]>(() => galleryOf(values.images))
   const [galleryError, setGalleryError] = useState('')
-  const [descriptionRtdData, setDescriptionRtdData] = useState<HtmlFileData | null>(() =>
-    htmlFileOrNull(values.description),
-  );
-  const [shortDescriptionRtdData, setShortDescriptionRtdData] = useState<HtmlFileData | null>(() =>
-    htmlFileOrNull(values.shortDescription),
-  );
+  const descriptionRtdData = useRef<TinyMCEEditor | null>(null)
+  const shortDescriptionRtdData = useRef<TinyMCEEditor | null>(null)
 
   useEffect(() => {
     apiFetch<Category[]>('/api/categories')
@@ -83,8 +80,6 @@ export default function ProductForm() {
       .then((p) => {
         const v = fromProduct(p, false)
         setValues(v)
-        setDescriptionRtdData(htmlFileOrNull(v.description))
-        setShortDescriptionRtdData(htmlFileOrNull(v.shortDescription))
         setCover(coverOf(v.images))
         setGallery(galleryOf(v.images))
       })
@@ -191,8 +186,8 @@ export default function ProductForm() {
       const urls = [...(coverUrl ? [coverUrl] : []), ...galleryUrls.filter((u) => u)]
       const payload = toProductPayload({
         ...values,
-        description: descriptionRtdData?.html ?? values.description,
-        shortDescription: shortDescriptionRtdData?.html ?? values.shortDescription,
+        description: values.description,
+        shortDescription: values.shortDescription,
         images: urls.map((imageUrl) => ({ imageUrl })),
       })
       if (isCreate) {
@@ -311,31 +306,123 @@ export default function ProductForm() {
               {field(
                 'description',
                 'Mô tả chi tiết',
-                <>
-                  <HtmlPreview
-                    key={`${id ?? 'new'}-${nonce}`}
-                    initialValue={descriptionRtdData}
-                    onLoad={setDescriptionRtdData}
-                    onClear={() => {
-                      setDescriptionRtdData(null)
-                      set('description', '')
-                    }}
-                  />
-                </>)}
+                <Editor
+                  tinymceScriptSrc="/tinymce/tinymce.min.js"
+                  licenseKey="gpl"
+                  onInit={(_evt, editor) => {
+                    descriptionRtdData.current = editor
+                  }}
+                  value={values.description}
+                  onEditorChange={(content) => set('description', content)}
+                  init={{
+                    height: 500,
+                    menubar: false,
+                    language: 'vi',
+                    language_url: '/tinymce/langs/vi.js',
+                    entity_encoding: 'raw',
+                    plugins: [
+                      'advlist', 'autolink', 'lists', 'link', 'image', 'charmap',
+                      'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
+                      'insertdatetime', 'media', 'table', 'preview', 'help', 'wordcount',
+                    ],
+                    toolbar: [
+                      'bold italic forecolor',
+                      'alignleft aligncenter alignright alignjustify',
+                      'bullist numlist outdent indent',
+                      'image',
+                      'table tabledelete tableinsertrowbefore tableinsertrowafter tabledeleterow tableinsertcolbefore tableinsertcolafter tabledeletecol',
+                      'code preview media fullscreen',
+                      'removeformat',
+                      'help',
+                    ].join(' | '),
+                    image_title: true,
+                    automatic_uploads: true,
+                    file_picker_types: 'image',
+                    file_picker_callback: (cb) => {
+                      const input = document.createElement('input')
+                      input.type = 'file'
+                      input.accept = 'image/*'
+                      input.addEventListener('change', () => {
+                        const file = input.files?.[0]
+                        const editor = descriptionRtdData.current
+                        if (!file || !editor) return
+                        const reader = new FileReader()
+                        reader.addEventListener('load', () => {
+                          if (typeof reader.result !== 'string') return
+                          const base64 = reader.result.split(',')[1] ?? ''
+                          const blobCache = editor.editorUpload.blobCache
+                          const blobInfo = blobCache.create(`blobid${Date.now()}`, file, base64)
+                          blobCache.add(blobInfo)
+                          cb(blobInfo.blobUri(), { title: file.name })
+                        })
+                        reader.readAsDataURL(file)
+                      })
+                      input.click()
+                    },
+                    content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
+                  }}
+                />,
+              )}
               {field(
                 'shortDescription',
                 'Mô tả ngắn',
-                <>
-                  <HtmlPreview
-                    key={`${id ?? 'new'}-${nonce}`}
-                    initialValue={shortDescriptionRtdData}
-                    onLoad={setShortDescriptionRtdData}
-                    onClear={() => {
-                      setShortDescriptionRtdData(null)
-                      set('shortDescription', '')
-                    }}
-                  />
-                </>)}
+                <Editor
+                  tinymceScriptSrc="/tinymce/tinymce.min.js"
+                  licenseKey="gpl"
+                  onInit={(_evt, editor) => {
+                    shortDescriptionRtdData.current = editor
+                  }}
+                  value={values.shortDescription}
+                  onEditorChange={(content) => set('shortDescription', content)}
+                  init={{
+                    height: 500,
+                    menubar: false,
+                    language: 'vi',
+                    language_url: '/tinymce/langs/vi.js',
+                    entity_encoding: 'raw',
+                    plugins: [
+                      'advlist', 'autolink', 'lists', 'link', 'image', 'charmap',
+                      'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
+                      'insertdatetime', 'media', 'table', 'preview', 'help', 'wordcount',
+                    ],
+                    toolbar: [
+                      'bold italic forecolor',
+                      'alignleft aligncenter alignright alignjustify',
+                      'bullist numlist outdent indent',
+                      'image',
+                      'table tabledelete tableinsertrowbefore tableinsertrowafter tabledeleterow tableinsertcolbefore tableinsertcolafter tabledeletecol',
+                      'code preview media fullscreen',
+                      'removeformat',
+                      'help',
+                    ].join(' | '),
+                    image_title: true,
+                    automatic_uploads: true,
+                    file_picker_types: 'image',
+                    file_picker_callback: (cb) => {
+                      const input = document.createElement('input')
+                      input.type = 'file'
+                      input.accept = 'image/*'
+                      input.addEventListener('change', () => {
+                        const file = input.files?.[0]
+                        const editor = shortDescriptionRtdData.current
+                        if (!file || !editor) return
+                        const reader = new FileReader()
+                        reader.addEventListener('load', () => {
+                          if (typeof reader.result !== 'string') return
+                          const base64 = reader.result.split(',')[1] ?? ''
+                          const blobCache = editor.editorUpload.blobCache
+                          const blobInfo = blobCache.create(`blobid${Date.now()}`, file, base64)
+                          blobCache.add(blobInfo)
+                          cb(blobInfo.blobUri(), { title: file.name })
+                        })
+                        reader.readAsDataURL(file)
+                      })
+                      input.click()
+                    },
+                    content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
+                  }}
+                />,
+              )}
             </div>
 
             <div className="card">

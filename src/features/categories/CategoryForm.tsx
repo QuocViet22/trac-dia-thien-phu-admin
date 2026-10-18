@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router'
 import type { Category } from '../../lib/types'
 import { formErrorForApi, isNotFoundError } from '../../lib/formErrors'
@@ -10,9 +10,9 @@ import GalleryManager from '../../components/GalleryManager.tsx'
 import { resolveGalleryError, validateImageFile } from '../../lib/imageUpload'
 import type { CoverValue, GalleryItem } from '../../lib/imageUpload'
 import { deleteUpload, uploadFile } from '../../lib/uploads.api'
-import type { HtmlFileData } from '../../components/HtmlFile.ts'
-import { htmlFileOrNull } from '../../components/HtmlFile.ts'
-import HtmlPreview from '../../components/HtmlPreview.tsx'
+import { Editor } from '@tinymce/tinymce-react'
+
+type TinyMCEEditor = Parameters<NonNullable<React.ComponentProps<typeof Editor>['onInit']>>[1]
 
 const EMPTY: CategoryFormValues = {
   name: '',
@@ -55,7 +55,7 @@ export default function CategoryForm() {
   const [saving, setSaving] = useState(false)
   const [uploading, setUploading] = useState(false)
   const [nonce, setNonce] = useState(0)
-  const [richTextData, setRichTextData] = useState<HtmlFileData | null>(null);
+  const richTextData = useRef<TinyMCEEditor | null>(null)
 
   useEffect(() => {
     listCategories()
@@ -69,7 +69,6 @@ export default function CategoryForm() {
       .then((c) => {
         const v = fromCategory(c)
         setValues(v)
-        setRichTextData(htmlFileOrNull(v.description))
         setCover(v.imageUrl ? { kind: 'url', url: v.imageUrl } : null)
         setGallery(c.images.slice(1).map((img): GalleryItem => ({ kind: 'url', url: img.imageUrl })))
       })
@@ -182,7 +181,7 @@ export default function CategoryForm() {
     try {
       const urls = [...(coverUrl ? [coverUrl] : []), ...galleryUrls.filter((u) => u)]
       const payload = toCategoryPayloadFromUrls(
-        { ...values, description: richTextData?.html ?? values.description },
+        { ...values },
         urls,
       )
       if (isCreate) {
@@ -266,17 +265,62 @@ export default function CategoryForm() {
               {field(
                 'description',
                 'Mô tả chi tiết',
-                <>
-                  <HtmlPreview
-                    key={`${id ?? 'new'}-${nonce}`}
-                    initialValue={richTextData}
-                    onLoad={setRichTextData}
-                    onClear={() => {
-                      setRichTextData(null)
-                      set('description', '')
-                    }}
-                  />
-                </>
+                <Editor
+                  tinymceScriptSrc="/tinymce/tinymce.min.js"
+                  licenseKey="gpl"
+                  onInit={(_evt, editor) => {
+                    richTextData.current = editor
+                  }}
+                  value={values.description}
+                  onEditorChange={(content) => set('description', content)}
+                  init={{
+                    height: 500,
+                    menubar: false,
+                    language: 'vi',
+                    language_url: '/tinymce/langs/vi.js',
+                    entity_encoding: 'raw',
+                    plugins: [
+                      'advlist', 'autolink', 'lists', 'link', 'image', 'charmap',
+                      'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
+                      'insertdatetime', 'media', 'table', 'preview', 'help', 'wordcount',
+                    ],
+                    toolbar: [
+                      'bold italic forecolor',
+                      'alignleft aligncenter alignright alignjustify',
+                      'bullist numlist outdent indent',
+                      'image',
+                      'table tabledelete tableinsertrowbefore tableinsertrowafter tabledeleterow tableinsertcolbefore tableinsertcolafter tabledeletecol',
+                      'code preview media fullscreen',
+                      'removeformat',
+                      'help',
+                    ].join(' | '),
+                    image_title: true,
+                    automatic_uploads: true,
+                    file_picker_types: 'image',
+                    file_picker_callback: (cb) => {
+                      const input = document.createElement('input')
+                      input.type = 'file'
+                      input.accept = 'image/*'
+                      input.addEventListener('change', () => {
+                        const file = input.files?.[0]
+                        const editor = richTextData.current
+                        if (!file || !editor) return
+                        const reader = new FileReader()
+                        reader.addEventListener('load', () => {
+                          if (typeof reader.result !== 'string') return
+                          const base64 = reader.result.split(',')[1] ?? ''
+                          const blobCache = editor.editorUpload.blobCache
+                          const blobInfo = blobCache.create(`blobid${Date.now()}`, file, base64)
+                          blobCache.add(blobInfo)
+                          cb(blobInfo.blobUri(), { title: file.name })
+                        })
+                        reader.readAsDataURL(file)
+                      })
+                      input.click()
+                    },
+                    content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
+                  }}
+                />,
               )}
             </div>
 
