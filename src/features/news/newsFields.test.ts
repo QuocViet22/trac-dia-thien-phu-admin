@@ -6,6 +6,7 @@ const valid = {
   author: 'Ban Biên Tập',
   status: 'PUBLISHED' as const,
   newsType: 'NEWS' as const,
+  location: '',
   seoPageTitle: '',
   seoDescriptionTag: '',
   seoAlias: 'may-gps-rtk-moi',
@@ -32,6 +33,20 @@ describe('validateNews', () => {
   it('rejects fields longer than 256 characters', () => {
     expect(validateNews({ ...valid, title: 'x'.repeat(257) }).title).toBeTruthy()
   })
+
+  it('requires a location for customer news', () => {
+    expect(validateNews({ ...valid, newsType: 'CUSTOMER_NEWS', location: '  ' }).location).toBeTruthy()
+  })
+
+  it('accepts customer news with a location', () => {
+    expect(validateNews({ ...valid, newsType: 'CUSTOMER_NEWS', location: 'Hà Nội' })).toEqual({})
+  })
+
+  it('rejects a customer location longer than 256 characters', () => {
+    expect(
+      validateNews({ ...valid, newsType: 'CUSTOMER_NEWS', location: 'x'.repeat(257) }).location,
+    ).toBeTruthy()
+  })
 })
 
 describe('toNewsPayload', () => {
@@ -42,6 +57,7 @@ describe('toNewsPayload', () => {
       author: 'Ban Biên Tập',
       status: 'PUBLISHED',
       newsType: 'NEWS',
+      location: null,
       seoPageTitle: null,
       seoDescriptionTag: null,
       seoAlias: 'may-gps-rtk-moi',
@@ -51,5 +67,12 @@ describe('toNewsPayload', () => {
 
   it('omits images when no url is given', () => {
     expect(toNewsPayload({ ...valid, imageUrl: '  ' }).images).toEqual([])
+  })
+
+  it('sends the location only for customer news', () => {
+    expect(
+      toNewsPayload({ ...valid, newsType: 'CUSTOMER_NEWS', location: ' Hà Nội ' }).location,
+    ).toBe('Hà Nội')
+    expect(toNewsPayload({ ...valid, newsType: 'NEWS', location: 'Hà Nội' }).location).toBeNull()
   })
 })

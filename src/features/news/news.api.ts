@@ -7,6 +7,7 @@ export interface NewsPayload {
   author: string
   status: NewsStatus
   newsType: NewsType
+  location: string | null
   seoPageTitle: string | null
   seoDescriptionTag: string | null
   seoAlias: string

@@ -6,6 +6,7 @@ export interface NewsFormValues {
   author: string
   status: '' | NewsStatus
   newsType: '' | NewsType
+  location: string
   seoPageTitle: string
   seoDescriptionTag: string
   seoAlias: string
@@ -26,6 +27,10 @@ export function validateNews(v: NewsFormValues): Record<string, string> {
   if (blank(v.seoAlias)) errors.seoAlias = 'Đường dẫn (slug) là bắt buộc'
   if (!v.status) errors.status = 'Trạng thái là bắt buộc'
   if (!v.newsType) errors.newsType = 'Loại tin là bắt buộc'
+  if (v.newsType === 'CUSTOMER_NEWS') {
+    if (blank(v.location)) errors.location = 'Địa điểm là bắt buộc với tin Khách hàng'
+    else if (v.location.length > MAX) errors.location = 'Tối đa 256 ký tự'
+  }
   for (const [key, value] of [
     ['title', v.title],
     ['author', v.author],
@@ -48,6 +53,7 @@ export function toNewsPayload(v: NewsFormValues): NewsPayload {
     author: v.author.trim(),
     status: v.status as NewsStatus,
     newsType: v.newsType as NewsType,
+    location: v.newsType === 'CUSTOMER_NEWS' ? nullIfBlank(v.location) : null,
     seoPageTitle: nullIfBlank(v.seoPageTitle),
     seoDescriptionTag: nullIfBlank(v.seoDescriptionTag),
     seoAlias: v.seoAlias.trim(),
