@@ -236,7 +236,7 @@ export default function NewsList() {
                   <td>
                     <span className="badge">{NEWS_TYPE_LABEL[n.newsType]}</span>
                   </td>
-                  <td>{n.location ?? '—'}</td>
+                  <td>{n.location?.trim() ? n.location : '—'}</td>
                   <td>{n.seoAlias ?? '—'}</td>
                   <td>
                     <span className={STATUS_CLASS[n.status]}>{STATUS_LABEL[n.status]}</span>
