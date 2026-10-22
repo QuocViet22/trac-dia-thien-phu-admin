@@ -195,3 +195,166 @@ Expected: pass.
 git add src/features/news/NewsForm.tsx src/App.tsx
 git commit -m "feat: news create/edit form with routes"
 ```
+
+---
+
+# Phase 2 — `Khách hàng` news type + `location`
+
+**Goal:** Let admins create/edit news of type `CUSTOMER_NEWS` (`Khách hàng`) with a required free-text `location`, filter the list by that type, and scan locations in the table.
+
+**Architecture:** Extend the existing news module only: `NewsType` union + DTO fields in `src/lib/types.ts`, one payload field in `news.api.ts`, one conditional rule in `newsFields.ts`, one conditional input in `NewsForm.tsx`, and one label/option/column in `NewsList.tsx`. No new route, sidebar item, or component.
+
+**Spec:** `docs/specs/news.md` §1–§5 (Phase 2 additions).
+
+## Phase 2 Global Constraints
+
+- `location` is required **only** when `newsType === 'CUSTOMER_NEWS'`, and only in the client form — the API accepts it as optional.
+- Payload sends `location: null` for every non-customer type, even if the hidden input still holds text.
+- `Địa điểm` maximum length 256, matching `VARCHAR(256)`.
+- Vietnamese labels: type = `Khách hàng`, field = `Địa điểm`, placeholder `Nhập địa điểm khách hàng`, validation `Địa điểm là bắt buộc với tin Khách hàng`.
+- `npm run build`, `npm run lint`, and `npm test` must pass; no new dependencies.
+
+## Phase 2 Review Focus
+
+1. Switching type from `CUSTOMER_NEWS` back to `NEWS` must send `location: null`, not a stale location. → Task 4 `toNewsPayload` test.
+2. A hidden location value longer than 256 must not block submit for non-customer types. → Task 4 `validateNews` test.
+3. Editing a customer news item must prefill `Địa điểm`, and saving without touching it must keep the value. → Task 5 smoke check.
+4. The `Khách hàng` filter must request `?newsType=CUSTOMER_NEWS` and reset to page 0. → Task 5 devtools check.
+5. The table must show `—` (not `null`/blank) for news without a location. → Task 5 smoke check.
+
+---
+
+### Task 4: Types, payload, validation, and tests (red → green)
+
+**Files:**
+- Modify: `src/lib/types.ts`
+- Modify: `src/features/news/news.api.ts`
+- Modify: `src/features/news/newsFields.ts`
+- Test: `src/features/news/newsFields.test.ts`
+
+**Interfaces:**
+- Consumes: existing `NewsStatus`, `newsFields.ts` helpers (`blank`, `nullIfBlank`, `MAX`).
+- Produces: `NewsType = 'NEWS' | 'HIRING_PRODUCT' | 'CUSTOMER_NEWS'`; `location: string | null` on `News` and `NewsDetail`; `NewsPayload.location: string | null`; `NewsFormValues.location: string`; `validateNews` location errors; `toNewsPayload` location mapping — consumed by Task 5.
+
+- [ ] **Step 1: Update the test fixture and add four tests (red).**
+
+In `newsFields.test.ts`, add `location: ''` to `valid`, add `location: null` to the expected payload object, and append:
+
+```ts
+it('requires a location for customer news', () => {
+  expect(validateNews({ ...valid, newsType: 'CUSTOMER_NEWS', location: '  ' }).location).toBeTruthy()
+})
+
+it('accepts customer news with a location', () => {
+  expect(validateNews({ ...valid, newsType: 'CUSTOMER_NEWS', location: 'Hà Nội' })).toEqual({})
+})
+
+it('rejects a customer location longer than 256 characters', () => {
+  expect(
+    validateNews({ ...valid, newsType: 'CUSTOMER_NEWS', location: 'x'.repeat(257) }).location,
+  ).toBeTruthy()
+})
+
+it('sends the location only for customer news', () => {
+  expect(
+    toNewsPayload({ ...valid, newsType: 'CUSTOMER_NEWS', location: ' Hà Nội ' }).location,
+  ).toBe('Hà Nội')
+  expect(toNewsPayload({ ...valid, newsType: 'NEWS', location: 'Hà Nội' }).location).toBeNull()
+})
+```
+
+- [ ] **Step 2: Run the suite to confirm red.**
+
+Run: `npx vitest run src/features/news`
+Expected: FAIL — `location` is not a known property of `NewsFormValues` and the payload has no `location` field.
+
+- [ ] **Step 3: Extend `src/lib/types.ts`.**
+
+`NewsType` becomes `'NEWS' | 'HIRING_PRODUCT' | 'CUSTOMER_NEWS'`. Add `location: string | null` directly after `newsType` in both `News` and `NewsDetail`.
+
+- [ ] **Step 4: Extend `NewsPayload` in `src/features/news/news.api.ts`.**
+
+Add `location: string | null` after `newsType`.
+
+- [ ] **Step 5: Extend `newsFields.ts`.**
+
+Add `location: string` to `NewsFormValues`. In `validateNews`, after the `newsType` check:
+
+```ts
+if (v.newsType === 'CUSTOMER_NEWS') {
+  if (blank(v.location)) errors.location = 'Địa điểm là bắt buộc với tin Khách hàng'
+  else if (v.location.length > MAX) errors.location = 'Tối đa 256 ký tự'
+}
+```
+
+In `toNewsPayload`, after `newsType`:
+
+```ts
+location: v.newsType === 'CUSTOMER_NEWS' ? nullIfBlank(v.location) : null,
+```
+
+- [ ] **Step 6: Run the suite to confirm green, then build.**
+
+Run: `npx vitest run src/features/news; if ($?) { npm run build }`
+Expected: all tests pass; build fails only on `NewsForm.tsx` missing `location` in `EMPTY`/`fromDetail` — this is the expected hand-off to Task 5.
+
+- [ ] **Step 7: Commit**
+
+```bash
+git add src/lib/types.ts src/features/news/news.api.ts src/features/news/newsFields.ts src/features/news/newsFields.test.ts
+git commit -m "feat: add customer news type and location validation"
+```
+
+---
+
+### Task 5: Form input, list filter, and location column
+
+**Files:**
+- Modify: `src/features/news/NewsForm.tsx`
+- Modify: `src/features/news/NewsList.tsx`
+
+**Interfaces:**
+- Consumes: `NewsFormValues.location`, `NewsType.CUSTOMER_NEWS`, `News.location` (Task 4).
+- Produces: working admin UI for customer news. Nothing downstream.
+
+- [ ] **Step 1: Add `location` to the form state.**
+
+`EMPTY`: add `location: ''` after `newsType`. `fromDetail`: add `location: d.location ?? ''` after `newsType`.
+
+- [ ] **Step 2: Add the type option and conditional input.**
+
+In the `newsType` select, add `<option value="CUSTOMER_NEWS">Khách hàng</option>` after `HIRING_PRODUCT`. Directly below that `field(...)` call, add:
+
+```tsx
+{values.newsType === 'CUSTOMER_NEWS' &&
+  field(
+    'location',
+    'Địa điểm *',
+    <input
+      type="text"
+      value={values.location}
+      onChange={(e) => set('location', e.target.value)}
+      placeholder="Nhập địa điểm khách hàng"
+    />,
+  )}
+```
+
+- [ ] **Step 3: Extend the list.**
+
+`NEWS_TYPE_LABEL` gains `CUSTOMER_NEWS: 'Khách hàng'`. The type filter gains `<option value="CUSTOMER_NEWS">Khách hàng</option>`. Add `<th>Địa điểm</th>` between `<th>Loại</th>` and `<th>Đường dẫn SEO</th>`, and the matching `<td>{n.location ?? '—'}</td>` after the type badge cell.
+
+- [ ] **Step 4: Verify build, lint, and tests.**
+
+Run: `npm run build; if ($?) { npm run lint }; if ($?) { npx vitest run src/features/news }`
+Expected: all exit 0.
+
+- [ ] **Step 5: Smoke with the local API.**
+
+Run `npm run dev` with the API up: create a `Khách hàng` news item with a location → saved and listed; the `Địa điểm` column shows the value; news without a location shows `—`; the `Khách hàng` filter sends `?newsType=CUSTOMER_NEWS` and resets to page 0; switching an edited item from `Khách hàng` to `Tin tức` clears the location in the request payload (devtools); leaving `Địa điểm` blank blocks submit with the Vietnamese error.
+
+- [ ] **Step 6: Commit**
+
+```bash
+git add src/features/news/NewsForm.tsx src/features/news/NewsList.tsx docs/specs/news.md docs/plans/news_crud.md
+git commit -m "feat: customer news option, location field, and list column"
+```

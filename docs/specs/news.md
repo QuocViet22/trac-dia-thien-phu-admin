@@ -23,22 +23,27 @@ Success criteria:
   not-found state (backend `404`).
 - Delete (single + bulk) asks for confirmation and issues `DELETE`
   per id; unknown id surfaces the backend `404` message.
+- News of type `CUSTOMER_NEWS` (`Khách hàng`) is managed inside
+  `/news` (no separate sidebar page): the type is available in the
+  list filter and the form, and the form requires a free-text
+  `location` for that type only.
 
 ## 2. List page (`/news`)
 
-- Data: `GET /api/news?status=PUBLISHED|DRAFT&newsType=NEWS|HIRING_PRODUCT&page&size`.
+- Data: `GET /api/news?status=PUBLISHED|DRAFT&newsType=NEWS|HIRING_PRODUCT|CUSTOMER_NEWS&page&size`.
   Either filter omitted = all. Server-driven pagination; sizes 10/20/50.
 - Tabs: `Tất cả` / `Đã đăng` / `Nháp`. Tabs switch the `status`
   query param and reset to page 0. **No counts on tabs** — counts
   would cost extra requests per tab switch.
 - Type filter: `Loại` dropdown (`Tất cả` / `Tin tức` /
-  `Thuê sản phẩm`) beside the tabs; switches the `newsType` query
-  param, combines with `status`, and resets to page 0.
+  `Thuê sản phẩm` / `Khách hàng`) beside the tabs; switches the
+  `newsType` query param, combines with `status`, and resets to page 0.
 - No search boxes in v1: backend supports no title/author filter, so
   the mock's title search, author dropdown, and time dropdown are
   dropped (server-only, per owner decision).
 - Columns: checkbox, cover (`images[0]` thumb, `—` when empty),
-  title, author, type badge (`Tin tức` / `Thuê sản phẩm`), SEO slug
+  title, author, type badge (`Tin tức` / `Thuê sản phẩm` /
+  `Khách hàng`), location (`location`, `—` when null), SEO slug
   (`seoAlias`), status badge (`Đã đăng` / `Nháp`), created date
   (`createdAt`, `vi-VN`), actions. **No views, no tags, no pinned
   state** — backend has none of these columns.
@@ -61,7 +66,8 @@ Fields map 1:1 to `CreateNewsRequest` / `UpdateNewsRequest`:
 | Tiêu đề * | `title` | required, max 256 |
 | Tác giả * | `author` | required, max 256 |
 | Trạng thái * | `status` | required select: `PUBLISHED` (Đã đăng) / `DRAFT` (Nháp) |
-| Loại tin * | `newsType` | required select: `NEWS` (Tin tức) / `HIRING_PRODUCT` (Thuê sản phẩm); create defaults to `NEWS`, edit prefills from server |
+| Loại tin * | `newsType` | required select: `NEWS` (Tin tức) / `HIRING_PRODUCT` (Thuê sản phẩm) / `CUSTOMER_NEWS` (Khách hàng); create defaults to `NEWS`, edit prefills from server |
+| Địa điểm | `location` | free-text input rendered **only** when `newsType = CUSTOMER_NEWS`; required in that case; max 256; edit prefills from server; payload sends the trimmed value for customers and `null` for every other type |
 | Mô tả chi tiết | `description` | rich text (Tiptap via `HtmlPreview`, same as categories), unbounded |
 | Tiêu đề trang (SEO) | `seoPageTitle` | optional, max 256 |
 | Thẻ mô tả (SEO) | `seoDescriptionTag` | optional, unbounded textarea |
@@ -75,7 +81,8 @@ Fields map 1:1 to `CreateNewsRequest` / `UpdateNewsRequest`:
   prefills; submit `PUT`. Unknown id → not-found view.
 - Validation mirrors backend (`@NotBlank title/author/seoAlias`,
   `@NotNull status/newsType`, 256 limits, `@Size(max = 1)` images) so errors
-  appear before the round trip. Backend `400` → field/form message,
+  appear before the round trip, plus one client-only rule: `location`
+  is required when `newsType = CUSTOMER_NEWS`. Backend `400` → field/form message,
   `409` → `seoAlias` field (via `formErrorForApi`).
 
 ## 4. Backend contract (implemented)
@@ -84,14 +91,15 @@ Fields map 1:1 to `CreateNewsRequest` / `UpdateNewsRequest`:
 
 - `GET` → `ApiResponse.ok(Page<NewsResponse>)` (`status?` +
   `newsType?` + Spring `Pageable`). `NewsResponse`: `id`, `title`, `author`,
-  `status`, `newsType`, `seoAlias`, `createdAt`, `updatedAt`,
+  `status`, `newsType`, `location`, `seoAlias`, `createdAt`, `updatedAt`,
   `seoDescriptionTag`, `images[max 1]`. **No `description`, no
   `seoPageTitle`** in list payloads.
 - `GET /{id}` → `NewsDetailResponse` (all list fields plus
   `description`, `seoPageTitle`); unknown id → `404`.
 - `POST` (`@Valid`) → `201` + `NewsResponse`; blank title/author/
   alias or null status/newsType → `400`; >1 image → `400`; duplicate
-  `seo_alias` → `409`.
+  `seo_alias` → `409`. `location` is optional (max 256) for every
+  type — the API does not require it for `CUSTOMER_NEWS`.
 - `PUT /{id}` → `200` + `NewsDetailResponse`; same `400`/`404`/`409`
   rules.
 - `DELETE /{id}` → `204`; unknown id → `404`.
@@ -106,3 +114,7 @@ Fields map 1:1 to `CreateNewsRequest` / `UpdateNewsRequest`:
   support; server-only list in v1).
 - Tab counts, multi-image galleries for news (capped at 1 by owner
   decision), full-text search.
+- A separate admin sidebar page/route for customer news — it is a
+  type option inside `/news` (owner decision).
+- API-side enforcement that `CUSTOMER_NEWS` carries a `location`;
+  only the admin form requires it (owner decision).

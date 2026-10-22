@@ -25,6 +25,7 @@ const STATUS_CLASS: Record<NewsStatus, string> = {
 const NEWS_TYPE_LABEL: Record<NewsType, string> = {
   NEWS: 'Tin tức',
   HIRING_PRODUCT: 'Thuê sản phẩm',
+  CUSTOMER_NEWS: 'Khách hàng',
 }
 
 function formatDate(iso: string): string {
@@ -151,6 +152,7 @@ export default function NewsList() {
             <option value="">Loại: Tất cả</option>
             <option value="NEWS">Tin tức</option>
             <option value="HIRING_PRODUCT">Thuê sản phẩm</option>
+            <option value="CUSTOMER_NEWS">Khách hàng</option>
           </select>
         </div>
 
@@ -205,6 +207,7 @@ export default function NewsList() {
                 <th>Tiêu đề bài viết</th>
                 <th>Tác giả</th>
                 <th>Loại</th>
+                <th>Địa điểm</th>
                 <th>Đường dẫn SEO</th>
                 <th>Trạng thái</th>
                 <th>Ngày tạo</th>
@@ -233,6 +236,7 @@ export default function NewsList() {
                   <td>
                     <span className="badge">{NEWS_TYPE_LABEL[n.newsType]}</span>
                   </td>
+                  <td>{n.location ?? '—'}</td>
                   <td>{n.seoAlias ?? '—'}</td>
                   <td>
                     <span className={STATUS_CLASS[n.status]}>{STATUS_LABEL[n.status]}</span>
