@@ -4,9 +4,10 @@
 
 - New admin page "Quan ly trang chu" styled on Danh muc (`CategoryList` table/filter/bulk-delete,
   `AdminShell` sidebar, `CategoryForm` upload flow).
-- One item = one `Collection` row with a fixed `collectionType`. Seven sections map 1:1 to the
+- One item = one `Collection` row with a fixed `collectionType`. Eight sections map 1:1 to the
   existing `CollectionType` enum:
   - `HERO_SLIDER_COLLECTION` — slider, max 5, image-only
+  - `CATEGORY_SIDEBAR_COLLECTION` — danh muc sidebar, max 100, entity picker (category)
   - `PROMO_CARD_COLLECTION` — quang cao, max 3, image-only
   - `FEATURED_CATEGORY_COLLECTION` — danh muc noi bat, max 6, entity picker (category)
   - `BEST_SELLER_COLLECTION` — san pham ban chay, max 10, entity picker (product)
@@ -38,14 +39,15 @@
 
 - Route `/homepage` (lazy `HomepagePage.tsx`), sidebar + topbar title "Trang chu" in
   `AdminShell.tsx`, following `App.tsx` lazy-route pattern.
-- `HomepagePage.tsx`: `<select>` with 7 options (default hero slider), `n/max` counter, preview
+- `HomepagePage.tsx`: `<select>` with 8 options (default hero slider), `n/max` counter, preview
   button, content area:
   - `ImageSectionEditor` for slider/promo/service: one Collection row per item, single cover image
     via `ImageDropzone` + `uploadFile`/`deleteUpload` (same orphan-cleanup flow as `CategoryForm`),
     up/down reorder via `PUT orderIndex` swap + refetch.
-  - `EntitySectionEditor` for featured/best-seller/category/news: searchable picker calling
-    existing list APIs, selected list with remove + reorder, each selection = one Collection row
-    (`name` snapshot + `referenceId` FK). Add disabled at max with "Da dat toi da N muc".
+  - `EntitySectionEditor` for sidebar/featured/best-seller/category/news: searchable picker
+    calling existing list APIs, selected list with remove + reorder, each selection = one
+    Collection row (`name` snapshot + `referenceId` FK). Add disabled at max with
+    "Da dat toi da N muc".
 - `collections.api.ts` client reusing `apiFetch` envelope + 401-refresh from `lib/api.ts`.
 - Preview modal: lightweight local copies of the 7 UI sections (image grids + labels) fed by draft
   state. No imports from the UI repo.
@@ -62,7 +64,7 @@
 
 ## 5. Success criteria
 
-- All 7 sections editable behind the dropdown with correct max enforcement + reorder.
+- All 8 sections editable behind the dropdown with correct max enforcement + reorder.
 - Preview reflects unsaved draft for every section.
 - `npm run build` (admin) and `mvnw.cmd -q test` (API collection tests) pass.
 
@@ -74,3 +76,27 @@
 - Add-forms (`ImageSectionEditor`, `EntitySectionEditor`): replace inline `marginTop: 16` with `.homepage-add` class (card padding, `h2` spacing, `.field` max-width).
 - Preview (`HomepagePreview`): replace inline `maxWidth: 720`, `marginTop: 12`, flex image row with `.preview-modal`, `.preview-section`, `.preview-grid` classes in `src/index.css`.
 - Constraint: single global `src/index.css`, `homepage-*` / `preview-*` prefixed names only, no new dependencies.
+
+## 7. Category sidebar section (2026-10-23 addendum, approved design)
+
+- Goal: manage the storefront "TAT CA SAN PHAM" sidebar from the existing `/homepage` page
+  instead of adding a standalone route. No new page, no route, no `AdminShell` nav item.
+- Correctness fix: `homepageTypes.ts` spelled the type `CATEGORY_SIDERBAR_COLLECTION`
+  (SIDER-BAR) in both the `CollectionType` union and `HOMEPAGE_SECTIONS`, while the API enum
+  is `CATEGORY_SIDEBAR_COLLECTION`. Requests for the section returned `400`, so nothing
+  could be saved or listed. Replace both occurrences and add
+  `SIDEBAR: 'CATEGORY_SIDEBAR_COLLECTION'` to `COLLECTION_TYPES`.
+- Section config: `{ type: 'CATEGORY_SIDEBAR_COLLECTION', label: 'Danh mục sidebar',
+  max: 100, mode: 'entity' }`. `EntitySectionEditor.kindOf()` already falls through to
+  `'category'`, so the picker, duplicate prevention, reorder swap, delete confirm and
+  dangling-reference placeholder apply without component changes.
+- The API now enforces what the form displays: 100-row cap and a required `referenceId`
+  (see `trac-dia-thien-phu-api/docs/specs/category_sidebar_collection.md`). `HomepagePreview`
+  needs no change; entity sections render generically.
+- Storefront consumption is a separate change
+  (`trac-dia-thien-phu-ui/docs/specs/category-sidebar-collection.md`); section 1's
+  "UI not rewired" note still applies to the seven homepage sections.
+- Verification: `npm run build`, `npm run lint`, then `/homepage` -> `Danh muc sidebar` ->
+  add three categories, reorder with the arrows, reload, delete one; the 101st add is
+  refused with the max message.
+
