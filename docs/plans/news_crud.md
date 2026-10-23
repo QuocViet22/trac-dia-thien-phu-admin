@@ -358,3 +358,194 @@ Run `npm run dev` with the API up: create a `Khách hàng` news item with a loca
 git add src/features/news/NewsForm.tsx src/features/news/NewsList.tsx docs/specs/news.md docs/plans/news_crud.md
 git commit -m "feat: customer news option, location field, and list column"
 ```
+
+---
+
+# Phase 3 — `Sửa chữa & Kiểm định` news type
+
+**Goal:** Let admins create/edit/publish news of type `REPAIR_AND_INSPECTION_NEWS` (`Sửa chữa & Kiểm định`) with a required free-text location, filter the list by it, and see its location in the existing column.
+
+**Architecture:** Extend the existing admin news module only: add the value to the `NewsType` union, reuse the location rule/payload for a second type in `newsFields.ts`, add the select option + conditional input in `NewsForm.tsx`, and add the label + filter option in `NewsList.tsx`. No new route, sidebar item, API client field, or component.
+
+**Spec:** `docs/specs/news.md` §1–§5 (Phase 3 additions).
+
+## Phase 3 Global Constraints
+
+- `location` is required only in the client form for `CUSTOMER_NEWS` and `REPAIR_AND_INSPECTION_NEWS`; the API accepts it as optional.
+- Payload sends the trimmed location for both location-bearing types and `location: null` for every other type.
+- `Địa điểm` max length 256, matching `VARCHAR(256)`.
+- Vietnamese labels: type = `Sửa chữa & Kiểm định`; placeholder `Nhập địa điểm sửa chữa & kiểm định`; validation `Địa điểm là bắt buộc với tin Sửa chữa & Kiểm định`.
+- No change to `src/features/news/news.api.ts`; `NewsPayload.location` already exists.
+- `npm test`, `npm run build`, and `npm run lint` must pass; no new dependencies.
+
+## Phase 3 Review Focus
+
+1. Blank location for the new type must block submit with the repair-specific message. → Task 6 validation test + Task 7 smoke.
+2. A repair location longer than 256 must be rejected, not truncated. → Task 6 validation test.
+3. Payload must keep the trimmed location for the new type and still send `null` for `NEWS`. → Task 6 payload test.
+4. Switching an edited item to `Sửa chữa & Kiểm định` must reveal a blank `Địa điểm` field; switching away must hide it and send `null`. → Task 7 smoke.
+5. The new filter must request `?newsType=REPAIR_AND_INSPECTION_NEWS` and reset to page 0. → Task 7 devtools check.
+6. Existing customer-news validation/payload and the location column must not regress. → existing `newsFields` tests + smoke.
+
+---
+
+### Task 6: Types, validation, payload, and tests (red → green)
+
+**Files:**
+- Modify: `src/lib/types.ts`
+- Modify: `src/features/news/newsFields.ts`
+- Test: `src/features/news/newsFields.test.ts`
+
+**Interfaces:**
+- Consumes: existing `NewsType`, `NewsFormValues`, `validateNews`, `toNewsPayload`.
+- Produces: `NewsType` includes `REPAIR_AND_INSPECTION_NEWS`; both location-bearing types share one `needsLocation` rule; consumed by Task 7.
+
+- [ ] **Step 1: Extend the union.**
+
+`src/lib/types.ts`:
+```ts
+export type NewsType =
+  | 'NEWS'
+  | 'HIRING_PRODUCT'
+  | 'CUSTOMER_NEWS'
+  | 'REPAIR_AND_INSPECTION_NEWS'
+```
+This intentionally makes `NEWS_TYPE_LABEL` in `NewsList.tsx` incomplete until Task 7 — the build is the guard.
+
+- [ ] **Step 2: Add failing tests.**
+
+In `src/features/news/newsFields.test.ts`, add under the customer location cases:
+```ts
+it('requires a location for repair and inspection news', () => {
+  expect(
+    validateNews({ ...valid, newsType: 'REPAIR_AND_INSPECTION_NEWS', location: '  ' }).location,
+  ).toBeTruthy()
+})
+
+it('accepts repair and inspection news with a location', () => {
+  expect(
+    validateNews({ ...valid, newsType: 'REPAIR_AND_INSPECTION_NEWS', location: 'Hà Nội' }),
+  ).toEqual({})
+})
+
+it('rejects a repair location longer than 256 characters', () => {
+  expect(
+    validateNews({ ...valid, newsType: 'REPAIR_AND_INSPECTION_NEWS', location: 'x'.repeat(257) })
+      .location,
+  ).toBeTruthy()
+})
+```
+Replace the payload test `sends the location only for customer news` with:
+```ts
+it('sends the location for location-bearing types', () => {
+  expect(
+    toNewsPayload({ ...valid, newsType: 'CUSTOMER_NEWS', location: ' Hà Nội ' }).location,
+  ).toBe('Hà Nội')
+  expect(
+    toNewsPayload({ ...valid, newsType: 'REPAIR_AND_INSPECTION_NEWS', location: ' Hà Nội ' }).location,
+  ).toBe('Hà Nội')
+  expect(toNewsPayload({ ...valid, newsType: 'NEWS', location: 'Hà Nội' }).location).toBeNull()
+})
+```
+Run: `npx vitest run src/features/news`
+Expected: the three new validation cases and the payload case fail; existing tests pass.
+
+- [ ] **Step 3: Implement the shared location rule.**
+
+In `src/features/news/newsFields.ts`, add below `blank`:
+```ts
+function needsLocation(newsType: '' | NewsType): boolean {
+  return newsType === 'CUSTOMER_NEWS' || newsType === 'REPAIR_AND_INSPECTION_NEWS'
+}
+```
+Replace the customer-only block in `validateNews`:
+```ts
+if (needsLocation(v.newsType)) {
+  if (blank(v.location)) {
+    errors.location =
+      v.newsType === 'CUSTOMER_NEWS'
+        ? 'Địa điểm là bắt buộc với tin Khách hàng'
+        : 'Địa điểm là bắt buộc với tin Sửa chữa & Kiểm định'
+  } else if (v.location.length > MAX) {
+    errors.location = 'Tối đa 256 ký tự'
+  }
+}
+```
+Replace the payload line:
+```ts
+location: needsLocation(v.newsType) ? nullIfBlank(v.location) : null,
+```
+
+- [ ] **Step 4: Run the tests.**
+
+Run: `npx vitest run src/features/news`
+Expected: all pass. `npm run build` still fails on the missing `NEWS_TYPE_LABEL` key — expected until Task 7. Do not commit yet.
+
+### Task 7: Form input, list filter, and verification
+
+**Files:**
+- Modify: `src/features/news/NewsForm.tsx`
+- Modify: `src/features/news/NewsList.tsx`
+
+**Interfaces:**
+- Consumes: `NewsType.REPAIR_AND_INSPECTION_NEWS`, `needsLocation` behavior (Task 6).
+- Produces: working admin UI for repair news. Nothing downstream.
+
+- [ ] **Step 1: Add the select option and conditional input.**
+
+In the `newsType` select, add after `CUSTOMER_NEWS`:
+```tsx
+<option value="REPAIR_AND_INSPECTION_NEWS">Sửa chữa & Kiểm định</option>
+```
+Replace the customer-only location block with:
+```tsx
+{(values.newsType === 'CUSTOMER_NEWS' ||
+  values.newsType === 'REPAIR_AND_INSPECTION_NEWS') &&
+  field(
+    'location',
+    'Địa điểm *',
+    <input
+      type="text"
+      value={values.location}
+      onChange={(e) => set('location', e.target.value)}
+      placeholder={
+        values.newsType === 'CUSTOMER_NEWS'
+          ? 'Nhập địa điểm khách hàng'
+          : 'Nhập địa điểm sửa chữa & kiểm định'
+      }
+    />,
+  )}
+```
+
+- [ ] **Step 2: Extend the list.**
+
+`NEWS_TYPE_LABEL` gains:
+```ts
+REPAIR_AND_INSPECTION_NEWS: 'Sửa chữa & Kiểm định',
+```
+The type filter gains after `CUSTOMER_NEWS`:
+```tsx
+<option value="REPAIR_AND_INSPECTION_NEWS">Sửa chữa & Kiểm định</option>
+```
+The table's `Địa điểm` column already renders `n.location` for every type; no change.
+
+- [ ] **Step 3: Verify.**
+
+Run: `npm test; if ($?) { npm run build }; if ($?) { npm run lint }`
+Expected: all exit 0.
+
+- [ ] **Step 4: Smoke with the local API.**
+
+Run `npm run dev` with the API up:
+- Create a `Sửa chữa & Kiểm định` item with a location → saved and listed; the `Địa điểm` column shows the value.
+- Edit it, confirm the field prefills, and save without changes.
+- Switch an edited item to `Tin tức` → the field disappears; the request payload sends `location: null` (devtools).
+- Leave `Địa điểm` blank on the repair type → submit is blocked with `Địa điểm là bắt buộc với tin Sửa chữa & Kiểm định`.
+- Choose the new filter → request sends `?newsType=REPAIR_AND_INSPECTION_NEWS` and resets to page 0.
+
+- [ ] **Step 5: Commit.**
+
+```bash
+git add src/lib/types.ts src/features/news/newsFields.ts src/features/news/newsFields.test.ts src/features/news/NewsForm.tsx src/features/news/NewsList.tsx docs/specs/news.md docs/plans/news_crud.md
+git commit -m "feat: add repair and inspection news type to admin"
+```

@@ -20,6 +20,10 @@ function blank(s: string): boolean {
   return s.trim().length === 0
 }
 
+function needsLocation(newsType: '' | NewsType): boolean {
+  return newsType === 'CUSTOMER_NEWS' || newsType === 'REPAIR_AND_INSPECTION_NEWS'
+}
+
 export function validateNews(v: NewsFormValues): Record<string, string> {
   const errors: Record<string, string> = {}
   if (blank(v.title)) errors.title = 'Tiêu đề là bắt buộc'
@@ -27,9 +31,15 @@ export function validateNews(v: NewsFormValues): Record<string, string> {
   if (blank(v.seoAlias)) errors.seoAlias = 'Đường dẫn (slug) là bắt buộc'
   if (!v.status) errors.status = 'Trạng thái là bắt buộc'
   if (!v.newsType) errors.newsType = 'Loại tin là bắt buộc'
-  if (v.newsType === 'CUSTOMER_NEWS') {
-    if (blank(v.location)) errors.location = 'Địa điểm là bắt buộc với tin Khách hàng'
-    else if (v.location.length > MAX) errors.location = 'Tối đa 256 ký tự'
+  if (needsLocation(v.newsType)) {
+    if (blank(v.location)) {
+      errors.location =
+        v.newsType === 'CUSTOMER_NEWS'
+          ? 'Địa điểm là bắt buộc với tin Khách hàng'
+          : 'Địa điểm là bắt buộc với tin Sửa chữa & Kiểm định'
+    } else if (v.location.length > MAX) {
+      errors.location = 'Tối đa 256 ký tự'
+    }
   }
   for (const [key, value] of [
     ['title', v.title],
@@ -53,7 +63,7 @@ export function toNewsPayload(v: NewsFormValues): NewsPayload {
     author: v.author.trim(),
     status: v.status as NewsStatus,
     newsType: v.newsType as NewsType,
-    location: v.newsType === 'CUSTOMER_NEWS' ? nullIfBlank(v.location) : null,
+    location: needsLocation(v.newsType) ? nullIfBlank(v.location) : null,
     seoPageTitle: nullIfBlank(v.seoPageTitle),
     seoDescriptionTag: nullIfBlank(v.seoDescriptionTag),
     seoAlias: v.seoAlias.trim(),

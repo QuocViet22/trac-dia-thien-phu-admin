@@ -52,7 +52,11 @@ export interface PageResult<T> {
 
 export type NewsStatus = 'PUBLISHED' | 'DRAFT'
 
-export type NewsType = 'NEWS' | 'HIRING_PRODUCT' | 'CUSTOMER_NEWS'
+export type NewsType =
+  | 'NEWS'
+  | 'HIRING_PRODUCT'
+  | 'CUSTOMER_NEWS'
+  | 'REPAIR_AND_INSPECTION_NEWS'
 
 export interface News {
   id: string

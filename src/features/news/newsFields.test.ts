@@ -47,6 +47,25 @@ describe('validateNews', () => {
       validateNews({ ...valid, newsType: 'CUSTOMER_NEWS', location: 'x'.repeat(257) }).location,
     ).toBeTruthy()
   })
+
+  it('requires a location for repair and inspection news', () => {
+    expect(
+      validateNews({ ...valid, newsType: 'REPAIR_AND_INSPECTION_NEWS', location: '  ' }).location,
+    ).toBeTruthy()
+  })
+
+  it('accepts repair and inspection news with a location', () => {
+    expect(
+      validateNews({ ...valid, newsType: 'REPAIR_AND_INSPECTION_NEWS', location: 'Hà Nội' }),
+    ).toEqual({})
+  })
+
+  it('rejects a repair location longer than 256 characters', () => {
+    expect(
+      validateNews({ ...valid, newsType: 'REPAIR_AND_INSPECTION_NEWS', location: 'x'.repeat(257) })
+        .location,
+    ).toBeTruthy()
+  })
 })
 
 describe('toNewsPayload', () => {
@@ -69,9 +88,13 @@ describe('toNewsPayload', () => {
     expect(toNewsPayload({ ...valid, imageUrl: '  ' }).images).toEqual([])
   })
 
-  it('sends the location only for customer news', () => {
+  it('sends the location for location-bearing types', () => {
     expect(
       toNewsPayload({ ...valid, newsType: 'CUSTOMER_NEWS', location: ' Hà Nội ' }).location,
+    ).toBe('Hà Nội')
+    expect(
+      toNewsPayload({ ...valid, newsType: 'REPAIR_AND_INSPECTION_NEWS', location: ' Hà Nội ' })
+        .location,
     ).toBe('Hà Nội')
     expect(toNewsPayload({ ...valid, newsType: 'NEWS', location: 'Hà Nội' }).location).toBeNull()
   })

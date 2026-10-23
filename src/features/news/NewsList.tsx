@@ -26,6 +26,7 @@ const NEWS_TYPE_LABEL: Record<NewsType, string> = {
   NEWS: 'Tin tức',
   HIRING_PRODUCT: 'Thuê sản phẩm',
   CUSTOMER_NEWS: 'Khách hàng',
+  REPAIR_AND_INSPECTION_NEWS: 'Sửa chữa & Kiểm định',
 }
 
 function formatDate(iso: string): string {
@@ -153,6 +154,7 @@ export default function NewsList() {
             <option value="NEWS">Tin tức</option>
             <option value="HIRING_PRODUCT">Thuê sản phẩm</option>
             <option value="CUSTOMER_NEWS">Khách hàng</option>
+            <option value="REPAIR_AND_INSPECTION_NEWS">Sửa chữa & Kiểm định</option>
           </select>
         </div>
 

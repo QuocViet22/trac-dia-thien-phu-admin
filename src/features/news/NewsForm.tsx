@@ -224,9 +224,11 @@ export default function NewsForm() {
                   <option value="NEWS">Tin tức</option>
                   <option value="HIRING_PRODUCT">Thuê sản phẩm</option>
                   <option value="CUSTOMER_NEWS">Khách hàng</option>
+                  <option value="REPAIR_AND_INSPECTION_NEWS">Sửa chữa & Kiểm định</option>
                 </select>,
               )}
-              {values.newsType === 'CUSTOMER_NEWS' &&
+              {(values.newsType === 'CUSTOMER_NEWS' ||
+                values.newsType === 'REPAIR_AND_INSPECTION_NEWS') &&
                 field(
                   'location',
                   'Địa điểm *',
@@ -234,7 +236,11 @@ export default function NewsForm() {
                     type="text"
                     value={values.location}
                     onChange={(e) => set('location', e.target.value)}
-                    placeholder="Nhập địa điểm khách hàng"
+                    placeholder={
+                      values.newsType === 'CUSTOMER_NEWS'
+                        ? 'Nhập địa điểm khách hàng'
+                        : 'Nhập địa điểm sửa chữa & kiểm định'
+                    }
                   />,
                 )}
               {field(
