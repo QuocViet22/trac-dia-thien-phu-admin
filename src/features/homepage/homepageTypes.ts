@@ -8,6 +8,7 @@ export const COLLECTION_TYPES = {
   CATEGORY_DISPLAY: 'CATEGORY_COLLECTION',
   SERVICE_BANNER: 'SERVICE_BANNER_COLLECTION',
   NEWS: 'NEWS_COLLECTION',
+  CATEGORY_SIDEBAR: 'CATEGORY_SIDEBAR_COLLECTION',
 } as const
 
 export type CollectionType =
@@ -18,6 +19,7 @@ export type CollectionType =
   | 'CATEGORY_COLLECTION'
   | 'SERVICE_BANNER_COLLECTION'
   | 'NEWS_COLLECTION'
+  | 'CATEGORY_SIDEBAR_COLLECTION'
 
 export type HomepageSectionMode = 'image' | 'entity'
 
@@ -30,6 +32,7 @@ export interface HomepageSection {
 
 export const HOMEPAGE_SECTIONS: HomepageSection[] = [
   { type: 'HERO_SLIDER_COLLECTION', label: 'Quản lý Slider', max: 5, mode: 'image' },
+  { type: 'CATEGORY_SIDEBAR_COLLECTION', label: 'Danh mục sidebar', max: 100, mode: 'entity' },
   { type: 'PROMO_CARD_COLLECTION', label: 'Quản lý quảng cáo', max: 3, mode: 'image' },
   { type: 'FEATURED_CATEGORY_COLLECTION', label: 'Danh mục nổi bật', max: 6, mode: 'entity' },
   { type: 'BEST_SELLER_COLLECTION', label: 'Sản phẩm bán chạy', max: 10, mode: 'entity' },
