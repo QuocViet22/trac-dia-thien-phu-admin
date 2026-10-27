@@ -159,7 +159,10 @@ and forgot-password both take `turnstileToken`; the API answers `403`
   value (a sitekey is public, like `VITE_API_URL`). `npm run dev` falls
   back to the public always-pass test sitekey
   (`1x00000000000000000000AA`) when `import.meta.env.DEV` is set and the
-  variable is absent. A production build with no sitekey renders
+  variable is absent. That dummy token only validates against Cloudflare's
+  test secret, so a local API run needs
+  `TURNSTILE_SECRET_KEY=1x0000000000000000000000000000000AA` too (API
+  spec §4). A production build with no sitekey renders
   `Không tải được xác thực bảo mật. Vui lòng tải lại trang.` and never
   emits a token — fail closed rather than silently shipping an
   unprotected form.
