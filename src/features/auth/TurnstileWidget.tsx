@@ -10,7 +10,7 @@ type TurnstileApi = {
       theme: string
       callback: (token: string) => void
       'expired-callback': () => void
-      'error-callback': () => void
+      'error-callback': (errorCode: string) => void
     },
   ) => string
   reset: (widgetId: string) => void
@@ -23,10 +23,8 @@ declare global {
   }
 }
 
-const TEST_SITE_KEY = '1x00000000000000000000AA'
-
 function siteKey(): string {
-  return import.meta.env.VITE_TURNSTILE_SITE_KEY || (import.meta.env.DEV ? TEST_SITE_KEY : '')
+  return import.meta.env.VITE_TURNSTILE_SITE_KEY || import.meta.env.DEV
 }
 
 export default function TurnstileWidget({
@@ -66,7 +64,10 @@ export default function TurnstileWidget({
             theme: 'light',
             callback: (token) => onTokenRef.current(token),
             'expired-callback': () => onTokenRef.current(null),
-            'error-callback': () => {
+            'error-callback': (errorCode) => {
+              // 110200 = hostname not allowed for this sitekey. Dev-only log so
+              // the one visible message is not the only diagnostic.
+              if (import.meta.env.DEV) console.error(`Turnstile error ${errorCode}`)
               setFailed(true)
               onTokenRef.current(null)
             },

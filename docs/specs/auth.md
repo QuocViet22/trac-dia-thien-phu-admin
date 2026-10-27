@@ -154,18 +154,26 @@ and forgot-password both take `turnstileToken`; the API answers `403`
   token, so a blocked script, an "invalid domain" widget (see §8 in the
   API spec) or a Cloudflare fault is visible and blocks submission
   instead of leaving an empty box the user can never satisfy.
-- Sitekey: `VITE_TURNSTILE_SITE_KEY`, inlined at build time.
-  `.env.example` documents it and `.env.production` carries the real
-  value (a sitekey is public, like `VITE_API_URL`). `npm run dev` falls
-  back to the public always-pass test sitekey
-  (`1x00000000000000000000AA`) when `import.meta.env.DEV` is set and the
-  variable is absent. That dummy token only validates against Cloudflare's
-  test secret, so a local API run needs
-  `TURNSTILE_SECRET_KEY=1x0000000000000000000000000000000AA` too (API
-  spec §4). A production build with no sitekey renders
-  `Không tải được xác thực bảo mật. Vui lòng tải lại trang.` and never
-  emits a token — fail closed rather than silently shipping an
-  unprotected form.
+- Sitekey: `VITE_TURNSTILE_SITE_KEY`, inlined at build time. Vite loads
+  only `.env`, `.env.local`, `.env.<mode>` and `.env.<mode>.local`;
+  `.env.example` is a **template and is never read** — it documents the
+  keys and nothing else. `.env.development` carries the real sitekey for
+  `npm run dev`, `.env.production` for `npm run build`. Both are
+  committed because a sitekey is public, like `VITE_API_URL`.
+  `.env.development*` is preferred over `.env.local` because `.env.local`
+  is also loaded by a production build, where it would silently override
+  `.env.production`.
+- `vite.config.ts` refuses a production build with no sitekey
+  (`VITE_TURNSTILE_SITE_KEY is required for a production build`), so a
+  login page that can only ever show the fail-closed message cannot
+  ship. If one slips through anyway (a dev build, a hand-edited env),
+  the widget still renders the message and emits no token.
+- Local dev needs the sitekey's Cloudflare **Hostname Management** to
+  allow `localhost`; otherwise the widget fires `error-callback` with
+  code `110200` and lands on the same message. The widget logs the code
+  in dev (`Turnstile error 110200`) so the two causes — missing key and
+  disallowed hostname — are distinguishable. The API must validate that
+  widget's secret; `application-dev.yaml` carries it (API spec §4).
 - Token lifecycle: single use, valid 5 minutes. Reset after **every**
   failed submit, not only captcha failures: the attempt consumes it.
 - Layout: `.login-turnstile { margin: 4px 0 16px; min-height: 65px }` in
