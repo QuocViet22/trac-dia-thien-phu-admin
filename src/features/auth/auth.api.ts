@@ -1,11 +1,15 @@
 import { apiFetch } from '../../lib/api'
 import type { TokenResponse } from '../../lib/types'
 
-export function login(payload: { username: string; password: string }): Promise<TokenResponse> {
+export function login(payload: { username: string; password: string; turnstileToken: string }): Promise<TokenResponse> {
   return apiFetch<TokenResponse>('/api/auth/login', { method: 'POST', body: JSON.stringify(payload) })
 }
 
-export function requestPasswordReset(payload: { username: string; email: string }): Promise<string> {
+export function requestPasswordReset(payload: {
+  username: string
+  email: string
+  turnstileToken: string
+}): Promise<string> {
   return apiFetch<string>('/api/auth/forgot-password', { method: 'POST', body: JSON.stringify(payload) })
 }
 

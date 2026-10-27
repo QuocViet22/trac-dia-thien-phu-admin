@@ -3,6 +3,8 @@ import { Link } from 'react-router'
 import { ApiError } from '../../lib/api'
 import { requestPasswordReset } from './auth.api'
 import { validateForgot } from './authFields'
+import { captchaMessage } from './turnstileMessages'
+import TurnstileWidget from './TurnstileWidget'
 import './LoginPage.css'
 
 export default function ForgotPasswordPage() {
@@ -12,6 +14,8 @@ export default function ForgotPasswordPage() {
   const [formMessage, setFormMessage] = useState('')
   const [sent, setSent] = useState(false)
   const [saving, setSaving] = useState(false)
+  const [token, setToken] = useState<string | null>(null)
+  const [resetKey, setResetKey] = useState(0)
 
   async function onSubmit(e: React.FormEvent): Promise<void> {
     e.preventDefault()
@@ -19,12 +23,19 @@ export default function ForgotPasswordPage() {
     setErrors(fieldErrors)
     setFormMessage('')
     if (Object.keys(fieldErrors).length > 0) return
+    if (!token) {
+      setFormMessage('Vui lòng hoàn tất xác thực bảo mật.')
+      return
+    }
     setSaving(true)
     try {
-      await requestPasswordReset({ username: username.trim(), email: email.trim() })
+      await requestPasswordReset({ username: username.trim(), email: email.trim(), turnstileToken: token })
       setSent(true)
     } catch (err: unknown) {
-      if (err instanceof ApiError && (err.status === 401 || err.status === 404)) setSent(true)
+      setResetKey((k) => k + 1)
+      const captcha = err instanceof ApiError ? captchaMessage(err.status) : null
+      if (captcha) setFormMessage(captcha)
+      else if (err instanceof ApiError && (err.status === 401 || err.status === 404)) setSent(true)
       else setFormMessage(err instanceof Error ? err.message : 'Không kết nối được máy chủ')
     } finally {
       setSaving(false)
@@ -109,6 +120,8 @@ export default function ForgotPasswordPage() {
                 {errors.email}
               </span>
             </div>
+
+            <TurnstileWidget action="password-reset" onToken={setToken} resetKey={resetKey} />
 
             <button type="submit" className="login-btn" disabled={saving}>
               {saving ? (

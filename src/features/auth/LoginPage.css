@@ -153,6 +153,10 @@
   justify-content: flex-end;
   margin: -2px 0 22px;
 }
+.login-turnstile {
+  min-height: 65px;
+  margin: 4px 0 16px;
+}
 .login-link {
   color: var(--login-accent);
   font-size: 0.9rem;

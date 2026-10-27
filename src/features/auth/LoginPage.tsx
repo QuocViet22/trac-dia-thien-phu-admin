@@ -4,6 +4,8 @@ import { loadSession, saveSession } from '../../lib/authSession'
 import { ApiError } from '../../lib/api'
 import { login } from './auth.api'
 import { validateLogin } from './authFields'
+import { captchaMessage } from './turnstileMessages'
+import TurnstileWidget from './TurnstileWidget'
 import './LoginPage.css'
 
 function UserIcon() {
@@ -51,6 +53,8 @@ export default function LoginPage() {
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [formMessage, setFormMessage] = useState('')
   const [saving, setSaving] = useState(false)
+  const [token, setToken] = useState<string | null>(null)
+  const [resetKey, setResetKey] = useState(0)
 
   if (loadSession()?.accessToken) return <Navigate to="/products" replace />
 
@@ -60,13 +64,20 @@ export default function LoginPage() {
     setErrors(fieldErrors)
     setFormMessage('')
     if (Object.keys(fieldErrors).length > 0) return
+    if (!token) {
+      setFormMessage('Vui lòng hoàn tất xác thực bảo mật.')
+      return
+    }
     setSaving(true)
     try {
-      const pair = await login({ username: username.trim(), password })
+      const pair = await login({ username: username.trim(), password, turnstileToken: token })
       saveSession({ accessToken: pair.accessToken, refreshToken: pair.refreshToken, username: pair.username, role: pair.roleType })
       navigate('/products', { replace: true })
     } catch (err: unknown) {
-      if (err instanceof ApiError && err.status === 401) setFormMessage('Sai tên đăng nhập hoặc mật khẩu')
+      setResetKey((k) => k + 1)
+      const captcha = err instanceof ApiError ? captchaMessage(err.status) : null
+      if (captcha) setFormMessage(captcha)
+      else if (err instanceof ApiError && err.status === 401) setFormMessage('Sai tên đăng nhập hoặc mật khẩu')
       else setFormMessage(err instanceof Error ? err.message : 'Không kết nối được máy chủ')
     } finally {
       setSaving(false)
@@ -142,6 +153,8 @@ export default function LoginPage() {
               {errors.password}
             </span>
           </div>
+
+          <TurnstileWidget action="login" onToken={setToken} resetKey={resetKey} />
 
           <div className="login-row">
             <Link to="/forgot-password" className="login-link">
