@@ -107,3 +107,14 @@ export interface Account {
   createdAt: string
   updatedAt: string
 }
+
+export interface CustomerContact {
+  id: string
+  name: string
+  email: string
+  address: string | null
+  phone: string
+  message: string | null
+  processed: boolean
+  createdAt: string
+}
