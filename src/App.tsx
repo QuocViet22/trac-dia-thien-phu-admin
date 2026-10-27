@@ -10,6 +10,7 @@ const CategoryForm = lazy(() => import('./features/categories/CategoryForm.tsx')
 const NewsList = lazy(() => import('./features/news/NewsList.tsx'))
 const NewsForm = lazy(() => import('./features/news/NewsForm.tsx'))
 const HomepagePage = lazy(() => import('./features/homepage/HomepagePage.tsx'))
+const CustomerList = lazy(() => import('./features/customers/CustomerList.tsx'))
 const LoginPage = lazy(() => import('./features/auth/LoginPage.tsx'))
 const ForgotPasswordPage = lazy(() => import('./features/auth/ForgotPasswordPage.tsx'))
 const ResetPasswordPage = lazy(() => import('./features/auth/ResetPasswordPage.tsx'))
@@ -44,6 +45,7 @@ const router = createBrowserRouter([
       { path: 'news/new', element: <Suspense fallback={<div className="loading">Đang tải…</div>}><NewsForm /></Suspense> },
       { path: 'news/:id', element: <Suspense fallback={<div className="loading">Đang tải…</div>}><NewsForm /></Suspense> },
       { path: 'homepage', element: <Suspense fallback={<div className="loading">Đang tải…</div>}><HomepagePage /></Suspense> },
+      { path: 'khach-hang', element: <Suspense fallback={<div className="loading">Đang tải…</div>}><CustomerList /></Suspense> },
       // { path: 'accounts', element: <Suspense fallback={<div className="loading">Đang tải…</div>}><AccountList /></Suspense> },
       // { path: 'accounts/new', element: <Suspense fallback={<div className="loading">Đang tải…</div>}><AccountForm /></Suspense> },
       // { path: 'accounts/:id', element: <Suspense fallback={<div className="loading">Đang tải…</div>}><AccountForm /></Suspense> },
