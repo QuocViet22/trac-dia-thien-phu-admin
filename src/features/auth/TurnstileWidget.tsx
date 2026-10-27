@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 type TurnstileApi = {
   ready: (cb: () => void) => void
@@ -7,6 +7,7 @@ type TurnstileApi = {
     options: {
       sitekey: string
       action: string
+      theme: string
       callback: (token: string) => void
       'expired-callback': () => void
       'error-callback': () => void
@@ -40,6 +41,7 @@ export default function TurnstileWidget({
   const mountRef = useRef<HTMLDivElement>(null)
   const widgetRef = useRef<string | null>(null)
   const onTokenRef = useRef(onToken)
+  const [failed, setFailed] = useState(false)
   const key = siteKey()
 
   useEffect(() => {
@@ -57,23 +59,40 @@ export default function TurnstileWidget({
       if (!api || !el) return
       api.ready(() => {
         if (cancelled) return
-        widgetRef.current = api.render(el, {
-          sitekey: key,
-          action,
-          callback: (token) => onTokenRef.current(token),
-          'expired-callback': () => onTokenRef.current(null),
-          'error-callback': () => onTokenRef.current(null),
-        })
+        try {
+          widgetRef.current = api.render(el, {
+            sitekey: key,
+            action,
+            theme: 'light',
+            callback: (token) => onTokenRef.current(token),
+            'expired-callback': () => onTokenRef.current(null),
+            'error-callback': () => {
+              setFailed(true)
+              onTokenRef.current(null)
+            },
+          })
+        } catch {
+          setFailed(true)
+        }
       })
     }
 
     if (window.turnstile) {
       mount()
     } else {
+      // The script is async: wait for the global, but never poll forever —
+      // a blocked or broken script must surface as a visible failure.
+      const deadline = Date.now() + 10_000
       poll = window.setInterval(() => {
-        if (!window.turnstile) return
-        window.clearInterval(poll)
-        mount()
+        if (window.turnstile) {
+          window.clearInterval(poll)
+          mount()
+          return
+        }
+        if (Date.now() > deadline) {
+          window.clearInterval(poll)
+          setFailed(true)
+        }
       }, 100)
     }
 
@@ -93,7 +112,7 @@ export default function TurnstileWidget({
     onTokenRef.current(null)
   }, [resetKey])
 
-  if (!key) {
+  if (!key || failed) {
     return (
       <p className="login-alert login-turnstile" role="alert">
         Không tải được xác thực bảo mật. Vui lòng tải lại trang.

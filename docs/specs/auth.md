@@ -142,10 +142,18 @@ and forgot-password both take `turnstileToken`; the API answers `403`
   (`login` | `password-reset`), `onToken(token | null)`, `resetKey`.
   A changed `resetKey` calls `turnstile.reset()`; `expired-callback` and
   `error-callback` both emit `null`, so a dead token can never be
-  submitted. The `window.turnstile` shape is declared in a
+  submitted. The widget renders with `theme: 'light'` to match the white
+  card. The `window.turnstile` shape is declared in a
   `declare global` block in the same file — no `@types` package, and no
   helper exports (the repo lint rule allows only component exports from
   component files).
+- Failure path: the script is `async`, so the widget waits up to 10 s
+  for `window.turnstile` and then gives up; a `render` exception and
+  `error-callback` also fail it. All three cases replace the widget with
+  `Không tải được xác thực bảo mật. Vui lòng tải lại trang.` and emit no
+  token, so a blocked script, an "invalid domain" widget (see §8 in the
+  API spec) or a Cloudflare fault is visible and blocks submission
+  instead of leaving an empty box the user can never satisfy.
 - Sitekey: `VITE_TURNSTILE_SITE_KEY`, inlined at build time.
   `.env.example` documents it and `.env.production` carries the real
   value (a sitekey is public, like `VITE_API_URL`). `npm run dev` falls
