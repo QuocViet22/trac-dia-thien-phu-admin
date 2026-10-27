@@ -137,8 +137,17 @@ and forgot-password both take `turnstileToken`; the API answers `403`
   with `async defer`. There is no CSP meta tag in this app, so no policy
   change is required.
 - `features/auth/TurnstileWidget.tsx` (new, no new npm deps): renders
-  explicitly into a `div`, waits for the script via `turnstile.ready()`,
-  and calls `turnstile.remove()` on unmount. Props: `action`
+  explicitly into a `div`, polls for `window.turnstile.render` (up to
+  10 s) and renders as soon as it exists, then calls `turnstile.remove()`
+  on unmount. It deliberately does **not** call `turnstile.ready()`:
+  Cloudflare's loader throws
+  `Remove async/defer from the Turnstile api.js script tag before using
+  turnstile.ready()` whenever the script is async/defer, and the script
+  must stay `async` so a blocked CDN cannot hold up the app. `render` is
+  exported independently of that guard and needs no `isReady` flag, so
+  polling is the correct substitute in a SPA. The `render` call is wrapped
+  in try/catch: a Turnstile failure must never reach the app's error
+  boundary. Props: `action`
   (`login` | `password-reset`), `onToken(token | null)`, `resetKey`.
   A changed `resetKey` calls `turnstile.reset()`; `expired-callback` and
   `error-callback` both emit `null`, so a dead token can never be
@@ -149,11 +158,15 @@ and forgot-password both take `turnstileToken`; the API answers `403`
   component files).
 - Failure path: the script is `async`, so the widget waits up to 10 s
   for `window.turnstile` and then gives up; a `render` exception and
-  `error-callback` also fail it. All three cases replace the widget with
-  `Không tải được xác thực bảo mật. Vui lòng tải lại trang.` and emit no
-  token, so a blocked script, an "invalid domain" widget (see §8 in the
-  API spec) or a Cloudflare fault is visible and blocks submission
-  instead of leaving an empty box the user can never satisfy.
+  `error-callback` also fail it. All three cases show
+  `Không tải được xác thực bảo mật. Vui lòng tải lại trang.` beside the
+  (hidden) widget box and emit no token, so a blocked script, an "invalid
+  domain" widget (see §8 in the API spec) or a Cloudflare fault is
+  visible and blocks submission instead of leaving an empty box the user
+  can never satisfy. The widget's own container stays mounted in this
+  state: Cloudflare's watchcat logs `Cannot find Widget …` when a widget's
+  wrapper leaves the DOM, and the message is a sibling rather than a
+  replacement.
 - Sitekey: `VITE_TURNSTILE_SITE_KEY`, inlined at build time. Vite loads
   only `.env`, `.env.local`, `.env.<mode>` and `.env.<mode>.local`;
   `.env.example` is a **template and is never read** — it documents the
