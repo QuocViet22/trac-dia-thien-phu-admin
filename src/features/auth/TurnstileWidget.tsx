@@ -24,7 +24,7 @@ declare global {
 }
 
 function siteKey(): string {
-  return import.meta.env.VITE_TURNSTILE_SITE_KEY || import.meta.env.DEV
+  return import.meta.env.VITE_TURNSTILE_SITE_KEY
 }
 
 export default function TurnstileWidget({
