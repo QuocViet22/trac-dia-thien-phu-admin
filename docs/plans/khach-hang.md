@@ -290,12 +290,12 @@ git commit -m "feat: add the contact message detail screen"
 - Consumes: all tasks.
 - Produces: verified feature.
 
-- [ ] **Step 1: Run the gates.**
+- [x] **Step 1: Run the gates.**
 
 Run: `npm test; if ($?) { npm run lint }; if ($?) { npm run build }`
 Expected: all exit 0.
 
-- [ ] **Step 2: Manual check against the API.**
+- [x] **Step 2: Manual check against the API.**
 
 Start the API (dev, port 8080) and the admin (`npm run dev`), log in with the usual admin account. If the list is empty, seed two rows in the dev database:
 
@@ -307,9 +307,9 @@ VALUES (UUID_TO_BIN(UUID()),'Nguyễn Văn A','a@example.com','Thanh Hóa','0901
 
 Check: tab "Khách Hàng" appears and is active on both routes; list shows both rows with Mới/Đã xử lý badges; search `nguyễn` returns one row; tabs filter; detail shows the message with its line break; toggle flips the badge after refetch; delete asks for confirmation, removes the row, and the pager stays valid; `/khach-hang/<random-uuid>` shows the not-found state.
 
-- [ ] **Step 3: Update the spec if behaviour changed** (final step; compare with `docs/specs/khach-hang.md`).
+- [x] **Step 3: Update the spec if behaviour changed** (final step; compare with `docs/specs/khach-hang.md`).
 
-- [ ] **Step 4: Commit.**
+- [x] **Step 4: Commit.**
 
 ```bash
 git add docs/specs/khach-hang.md
