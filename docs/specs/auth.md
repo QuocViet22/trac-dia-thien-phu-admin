@@ -22,6 +22,9 @@ Success criteria:
   expired access tokens refresh silently; an ADMIN-only write with a
   non-admin session surfaces the backend `403`.
 - No new npm dependencies.
+- Login and forgot-password are gated by a Cloudflare Turnstile
+  challenge; a captcha failure shows a captcha-specific message and
+  never reads as a wrong credential (§6).
 
 ## 1. Token storage (`features/auth/tokenStore.ts`)
 
@@ -71,6 +74,13 @@ Success criteria:
   `Đăng nhập` / `Đang đăng nhập…`. All new classes live under
   `.auth-*` in `src/index.css`, reusing `.card/.field/.error/.btn`
   tokens.
+- Bot protection: a Cloudflare Turnstile widget (managed, explicit
+  render) sits between the password field and the `Quên mật khẩu?` row.
+  The button stays enabled: submitting without a token shows
+  `Vui lòng hoàn tất xác thực bảo mật.` and makes no request. `403`
+  shows `Xác thực bảo mật không hợp lệ. Vui lòng thử lại.`, `503` shows
+  `Dịch vụ xác thực bảo mật tạm thời không khả dụng. Vui lòng thử lại
+  sau.`; both reset the widget. See §6.
 - If a valid session already exists, visiting `/login` redirects to
   `/products`.
 
@@ -81,11 +91,16 @@ Success criteria:
   back-to-login as `auth-link`. No new deps, no layout divergence.
 
 - `/forgot-password`: fields `Tên đăng nhập *` + `Email *` (blank +
-  email-format checks client-side). Submit
+  email-format checks client-side). Same Turnstile widget with action
+  `password-reset`, below the email field (see §6). Submit
   `POST /api/auth/forgot-password` → always the uniform notice
   `Nếu tài khoản tồn tại, liên kết đặt lại đã được gửi` — including
   on backend 401/404-shaped answers, which must NOT surface (no
   existence leak). Back-to-login link underneath.
+  **Captcha outcomes are handled before that branch**: a `403`/`503`
+  must show the captcha error and leave the form in its unsent state —
+  reporting "a link was sent" when the request never ran would be a
+  lie. Neither status leaks account existence.
 - `/reset-password`: reads `token` from the query string (missing
   token → `Liên kết đã hết hạn hoặc không hợp lệ` with zero network
   calls). Fields `Mật khẩu mới *` (min 8) + `Nhập lại mật khẩu *`
@@ -111,7 +126,46 @@ Success criteria:
   the backend enforces ADMIN on writes (403s surface as inline errors
   via the existing `ApiError` path).
 
-## 6. Out of scope (deferred, not faked)
+## 6. Bot protection (Cloudflare Turnstile)
+
+Server-side contract: `docs/specs/turnstile.md` in the API repo. Login
+and forgot-password both take `turnstileToken`; the API answers `403`
+(rejected) or `503` (verifier unavailable).
+
+- `index.html` loads
+  `https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit`
+  with `async defer`. There is no CSP meta tag in this app, so no policy
+  change is required.
+- `features/auth/TurnstileWidget.tsx` (new, no new npm deps): renders
+  explicitly into a `div`, waits for the script via `turnstile.ready()`,
+  and calls `turnstile.remove()` on unmount. Props: `action`
+  (`login` | `password-reset`), `onToken(token | null)`, `resetKey`.
+  A changed `resetKey` calls `turnstile.reset()`; `expired-callback` and
+  `error-callback` both emit `null`, so a dead token can never be
+  submitted. The `window.turnstile` shape is declared in a
+  `declare global` block in the same file — no `@types` package, and no
+  helper exports (the repo lint rule allows only component exports from
+  component files).
+- Sitekey: `VITE_TURNSTILE_SITE_KEY`, inlined at build time.
+  `.env.example` documents it and `.env.production` carries the real
+  value (a sitekey is public, like `VITE_API_URL`). `npm run dev` falls
+  back to the public always-pass test sitekey
+  (`1x00000000000000000000AA`) when `import.meta.env.DEV` is set and the
+  variable is absent. A production build with no sitekey renders
+  `Không tải được xác thực bảo mật. Vui lòng tải lại trang.` and never
+  emits a token — fail closed rather than silently shipping an
+  unprotected form.
+- Token lifecycle: single use, valid 5 minutes. Reset after **every**
+  failed submit, not only captcha failures: the attempt consumes it.
+- Layout: `.login-turnstile { margin: 4px 0 16px; min-height: 65px }` in
+  `LoginPage.css`, so the card does not jump while the script loads. The
+  widget is Cloudflare-managed and brings its own accessible iframe; the
+  submit button is never disabled by token state (§3, §4).
+- `src/features/auth/index.html` — a copied Cloudflare
+  `<form action="/api/subscribe">` snippet that nothing imports — is
+  deleted.
+
+## 7. Out of scope (deferred, not faked)
 
 - Component/DOM tests (no testing-library installed; vitest unit
   tests only — validation, token store, fetch-wrapper behavior).
