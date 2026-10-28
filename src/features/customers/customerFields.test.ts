@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import type { CustomerContact } from '../../lib/types'
-import { buildListQuery, statusOf, toProcessed } from './customerFields'
+import { buildListQuery, emptyListMessage, statusOf, toProcessed } from './customerFields'
 
 const contact = (processed: boolean): CustomerContact => ({
   id: 'id-1',
@@ -38,5 +38,16 @@ describe('statusOf', () => {
   it('labels and classes both states', () => {
     expect(statusOf(contact(false))).toEqual({ label: 'Mới', className: 'badge warning' })
     expect(statusOf(contact(true))).toEqual({ label: 'Đã xử lý', className: 'badge success' })
+  })
+})
+
+describe('emptyListMessage', () => {
+  it('uses the generic copy when no search is applied', () => {
+    expect(emptyListMessage('')).toBe('Không có tin nhắn nào')
+    expect(emptyListMessage('   ')).toBe('Không có tin nhắn nào')
+  })
+
+  it('names the searched term when a search matched nothing', () => {
+    expect(emptyListMessage(' 0901 ')).toBe('Không tìm thấy tin nhắn phù hợp với “0901”')
   })
 })

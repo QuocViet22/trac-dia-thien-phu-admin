@@ -79,6 +79,14 @@ no modifier if a third state ever appears.
   Changing a tab resets `page` to 0.
 - Search: text input + "Tìm" submit (no debounce; matches existing screens),
   trims the value, resets `page` to 0. Cleared search returns to the full list.
+  Every submit re-runs the query even when the trimmed term and page are
+  unchanged, so the table never stays on "Đang tải…". `q` is matched by the API
+  against name, email and phone (case-insensitive contains).
+- Empty results: with a non-empty `q` the list shows
+  `Không tìm thấy tin nhắn phù hợp với “{q}”`; with no search it keeps
+  `Không có tin nhắn nào`.
+- Status tabs: re-clicking the active tab also re-runs the query (same
+  stuck-loading guarantee as search).
 - Pager: size `10/20/50`, `‹`/`›`, `{page + 1} / {totalPages}`, same markup as
   `NewsList`; clamp `page` when the last row on a page is deleted.
 - States: `Đang tải…`, `Không có tin nhắn nào`, and the standard `fetch-error`

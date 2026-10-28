@@ -33,3 +33,8 @@ export function buildListQuery(query: ContactQuery): string {
   if (query.processed !== undefined) params.set('processed', String(query.processed))
   return params.toString()
 }
+
+export function emptyListMessage(q: string): string {
+  const term = q.trim()
+  return term ? `Không tìm thấy tin nhắn phù hợp với “${term}”` : 'Không có tin nhắn nào'
+}

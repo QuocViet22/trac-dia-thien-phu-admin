@@ -316,3 +316,105 @@ git add docs/specs/khach-hang.md
 git commit -m "docs: update the Khach Hang spec after implementation"
 ```
 
+---
+
+# Follow-up: Search always shows results
+
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+
+**Goal:** Clicking `Tìm` on `/customer-contact` always re-runs the query and renders a result, and an empty result says whether a search matched nothing.
+
+**Architecture:** Keep the existing `nonce`-driven refetch in `CustomerList`; user-initiated refresh actions bump `nonce` so the effect runs even when `q`, `page` and `status` are unchanged. Move the empty-state copy into a pure helper in `customerFields.ts` so it is covered by the existing vitest setup (no jsdom).
+
+**Tech Stack:** React 19, TypeScript, plain CSS, vitest + `vi.stubGlobal` (no component rendering).
+
+**Spec:** `docs/specs/khach-hang.md` (Screen behaviour → List → Search)
+
+## Global Constraints
+
+- No new dependencies, no jsdom, no CSS changes.
+- Plain CSS classes only; reuse `.empty`, `.loading`, `.fetch-error`.
+- `verbatimModuleSyntax` — `import type` for types; no unused locals.
+- Gates: `npm test`, `npm run lint`, `npm run build`.
+
+## Review Focus
+
+- Submitting the same keyword twice while on page 0 must refetch, not freeze on `Đang tải…`.
+- Re-clicking the already-active status tab must not freeze the table.
+- Clearing the search box and submitting must return the unfiltered list.
+- A search with no matches must say `Không tìm thấy tin nhắn phù hợp với “{q}”`, not `Không có tin nhắn nào`.
+- Whitespace-only input must behave like an empty search (no `q` sent, generic empty copy).
+
+---
+
+### Task 5: Empty-state helper and nonce-driven refetch
+
+**Files:**
+- Modify: `src/features/customers/customerFields.ts`
+- Modify: `src/features/customers/CustomerList.tsx`
+- Test: `src/features/customers/customerFields.test.ts`
+
+**Interfaces:**
+- Consumes: `buildListQuery`, `ContactQuery`, existing `nonce` state and refetch effect in `CustomerList.tsx`.
+- Produces: `emptyListMessage(q: string): string` exported from `customerFields.ts`.
+
+- [x] **Step 1: Write the failing test.**
+
+Add `emptyListMessage` to the existing `./customerFields` import at the top of `src/features/customers/customerFields.test.ts`, then append:
+
+```ts
+describe('emptyListMessage', () => {
+  it('uses the generic copy when no search is applied', () => {
+    expect(emptyListMessage('')).toBe('Không có tin nhắn nào')
+    expect(emptyListMessage('   ')).toBe('Không có tin nhắn nào')
+  })
+
+  it('names the searched term when a search matched nothing', () => {
+    expect(emptyListMessage(' 0901 ')).toBe('Không tìm thấy tin nhắn phù hợp với “0901”')
+  })
+})
+```
+
+- [x] **Step 2: Run it to verify it fails.**
+
+Run: `npm test -- customerFields`
+Expected: FAIL — `emptyListMessage` is not exported.
+
+- [x] **Step 3: Implement `emptyListMessage` in `src/features/customers/customerFields.ts`.**
+
+Signature `export function emptyListMessage(q: string): string`. Trim `q`; when empty return `Không có tin nhắn nào`; otherwise return `Không tìm thấy tin nhắn phù hợp với “{trimmed}”` (curly quotes exactly as in the spec).
+
+- [x] **Step 4: Run it to verify it passes.**
+
+Run: `npm test -- customerFields`
+Expected: PASS.
+
+- [x] **Step 5: Bump `nonce` for every user-initiated refresh in `CustomerList.tsx`.**
+
+- `onSearch`: after `setQ(search.trim())` and `setPage(0)`, add `setNonce((n) => n + 1)`. Keep `setLoading(true)`.
+- Status-tab `onClick`: after `setStatus(t.key)` and `setPage(0)`, add `setNonce((n) => n + 1)`. Keep `setLoading(true)`.
+- Leave the pager and size handlers as they are (their controls already guard against no-op changes).
+
+- [x] **Step 6: Use the helper for the empty state.**
+
+Import `emptyListMessage` from `./customerFields` and replace the hardcoded `<div className="empty">Không có tin nhắn nào</div>` with `<div className="empty">{emptyListMessage(q)}</div>`.
+
+- [x] **Step 7: Run the gates.**
+
+Run: `npm test; if ($?) { npm run lint }; if ($?) { npm run build }`
+Expected: all exit 0.
+
+- [ ] **Step 8: Manual check against the API.**
+
+Start the API and `npm run dev`, open `/customer-contact`:
+type a term, click `Tìm` twice → table reloads both times, never stuck on `Đang tải…`; click the active `Tất cả` tab → table reloads; search a nonsense term → `Không tìm thấy tin nhắn phù hợp với “…”`; clear the box, click `Tìm` → full list returns.
+
+- [x] **Step 9: Update the spec if behaviour changed** (final step; `docs/specs/khach-hang.md` already records this behaviour — adjust only if the implementation differs).
+
+- [x] **Step 10: Commit.**
+
+```bash
+git add src/features/customers/customerFields.ts src/features/customers/customerFields.test.ts \
+        src/features/customers/CustomerList.tsx docs/specs/khach-hang.md docs/plans/khach-hang.md
+git commit -m "fix: always refetch contact list when searching"
+```

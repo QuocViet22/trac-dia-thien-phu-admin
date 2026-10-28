@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router'
 import type { CustomerContact } from '../../lib/types'
 import { deleteContact, listContacts } from './customer.api'
 import type { StatusFilter } from './customerFields'
-import { statusOf, toProcessed } from './customerFields'
+import { emptyListMessage, statusOf, toProcessed } from './customerFields'
 
 const SIZES = [10, 20, 50]
 
@@ -65,6 +65,7 @@ export default function CustomerList() {
     setLoading(true)
     setQ(search.trim())
     setPage(0)
+    setNonce((n) => n + 1)
   }
 
   async function confirmDelete(): Promise<void> {
@@ -100,6 +101,7 @@ export default function CustomerList() {
                 setLoading(true)
                 setStatus(t.key)
                 setPage(0)
+                setNonce((n) => n + 1)
               }}
             >
               {t.label}
@@ -136,7 +138,7 @@ export default function CustomerList() {
             </button>
           </div>
         ) : items.length === 0 ? (
-          <div className="empty">Không có tin nhắn nào</div>
+          <div className="empty">{emptyListMessage(q)}</div>
         ) : (
           <table className="grid">
             <thead>
