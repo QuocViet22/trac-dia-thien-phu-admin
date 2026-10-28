@@ -24,7 +24,7 @@
 - Deleting the last row on the last page must clamp to the previous page, not leave an empty table (Task 2 pager logic).
 - A search containing only spaces must send no `q` parameter (Task 1 `buildListQuery` test).
 - The status toggle must be visible after the refetch, not just locally (Task 3 refetches the row).
-- Opening `/khach-hang/<unknown-id>` must show the 404 state, not a crash or a blank page (Task 3 `isNotFoundError` branch).
+- Opening `/customer-contact/<unknown-id>` must show the 404 state, not a crash or a blank page (Task 3 `isNotFoundError` branch).
 - A long message must keep its line breaks and not widen the page (Task 3 `whiteSpace: 'pre-wrap'` inside `.card`).
 
 ---
@@ -205,7 +205,7 @@ git commit -m "feat: add contact message API client and list helpers"
 
 **Interfaces:**
 - Consumes: `listContacts`, `deleteContact` (Task 1), `CustomerContact`, `StatusFilter`, `toProcessed`, `statusOf`.
-- Produces: `/khach-hang` route rendering `CustomerList`; sidebar tab "Khách Hàng"; topbar title for both routes.
+- Produces: `/customer-contact` route rendering `CustomerList`; sidebar tab "Khách Hàng"; topbar title for both routes.
 
 - [ ] **Step 1: Create `CustomerList.tsx` modelled on `src/features/news/NewsList.tsx`.**
 
@@ -214,7 +214,7 @@ Same structure: `page`/`size` (`SIZES = [10, 20, 50]`), `items`/`total`/`loading
 - Heading: `<h1>Tin nhắn liên hệ</h1>` (no "+ Thêm" button).
 - Filter bar: status tabs `Tất cả` / `Mới` / `Đã xử lý` using `StatusFilter` + `toProcessed`, and a search `<form onSubmit={...}>` whose handler calls `event.preventDefault()`, with `<input placeholder="Tìm theo tên, email, số điện thoại" />` + `Tìm` submit button. Submit trims and resets `page` to 0; clearing the input and submitting sends no `q`.
 - Table columns: Tên, Điện thoại, Email, Ngày gửi (`toLocaleDateString('vi-VN')`), Trạng thái (`statusOf` badge), Thao tác. No checkbox/bulk bar.
-- Row actions: `Xem` (`.icon-btn`, `title="Xem chi tiết"`, navigate to `/khach-hang/${c.id}`) and delete (`.icon-btn danger`, opens confirm for that row).
+- Row actions: `Xem` (`.icon-btn`, `title="Xem chi tiết"`, navigate to `/customer-contact/${c.id}`) and delete (`.icon-btn danger`, opens confirm for that row).
 - Delete confirm copy: `Xóa tin nhắn của {name}? Hành động này không thể hoàn tác.` On success refetch the current page; if `page > 0` and the refetch returns an empty page, step back one page (same clamp rule as the load effect).
 
 - [ ] **Step 2: Wire the routes.**
@@ -225,7 +225,7 @@ In `src/App.tsx`: `const CustomerList = lazy(() => import('./features/customers/
 
 - [ ] **Step 3: Add the sidebar tab and title.**
 
-In `AdminShell.tsx`: `<NavLink to="/khach-hang">Khách Hàng</NavLink>` after Trang chủ; `'/khach-hang': 'Khách Hàng'` in `TITLES`; `if (pathname.startsWith('/khach-hang')) return 'Khách Hàng'` in `titleFor`.
+In `AdminShell.tsx`: `<NavLink to="/customer-contact">Khách Hàng</NavLink>` after Trang chủ; `'/customer-contact': 'Khách Hàng'` in `TITLES`; `if (pathname.startsWith('/customer-contact')) return 'Khách Hàng'` in `titleFor`.
 
 - [ ] **Step 4: Verify build + lint.**
 
@@ -249,17 +249,17 @@ git commit -m "feat: add the Khach Hang contact message list"
 
 **Interfaces:**
 - Consumes: `getContact`, `setProcessed`, `deleteContact` (Task 1), `statusOf`.
-- Produces: `/khach-hang/:id` route.
+- Produces: `/customer-contact/:id` route.
 
 - [ ] **Step 1: Create `CustomerDetail.tsx`.**
 
 Use `useParams()`; load with `getContact(id)` in a `useEffect` (`cancelled` flag); states `Đang tải…`, `fetch-error` + retry, and `isNotFoundError(error)` from `src/lib/formErrors.ts` → `.empty` `Không tìm thấy tin nhắn` with a back link. Content inside `.card`:
 
-- Back link `<Link to="/khach-hang">← Danh sách</Link>`.
+- Back link `<Link to="/customer-contact">← Danh sách</Link>`.
 - Status badge from `statusOf`, plus `Ngày gửi` (`toLocaleString('vi-VN')`).
 - Fields: Tên, Email, Điện thoại, Địa chỉ (`—` when null) using the existing `.field` layout.
 - Message body in a bordered block with `style={{ whiteSpace: 'pre-wrap' }}`, `—` when null.
-- Actions: `.btn btn-primary` toggling `setProcessed(id, !processed)` then replacing state with the returned row; `.btn btn-danger` opening the confirm modal, then `deleteContact(id)` and `navigate('/khach-hang')`.
+- Actions: `.btn btn-primary` toggling `setProcessed(id, !processed)` then replacing state with the returned row; `.btn btn-danger` opening the confirm modal, then `deleteContact(id)` and `navigate('/customer-contact')`.
 - Errors from the toggle/delete render in `.fetch-error` above the actions.
 
 - [ ] **Step 2: Add the route.**
@@ -305,7 +305,7 @@ VALUES (UUID_TO_BIN(UUID()),'Nguyễn Văn A','a@example.com','Thanh Hóa','0901
        (UUID_TO_BIN(UUID()),'Trần Thị B','b@example.com',NULL,'0912345678','Báo giá giúp tôi.',TRUE,NOW(6),NOW(6));
 ```
 
-Check: tab "Khách Hàng" appears and is active on both routes; list shows both rows with Mới/Đã xử lý badges; search `nguyễn` returns one row; tabs filter; detail shows the message with its line break; toggle flips the badge after refetch; delete asks for confirmation, removes the row, and the pager stays valid; `/khach-hang/<random-uuid>` shows the not-found state.
+Check: tab "Khách Hàng" appears and is active on both routes; list shows both rows with Mới/Đã xử lý badges; search `nguyễn` returns one row; tabs filter; detail shows the message with its line break; toggle flips the badge after refetch; delete asks for confirmation, removes the row, and the pager stays valid; `/customer-contact/<random-uuid>` shows the not-found state.
 
 - [x] **Step 3: Update the spec if behaviour changed** (final step; compare with `docs/specs/khach-hang.md`).
 
@@ -315,3 +315,4 @@ Check: tab "Khách Hàng" appears and is active on both routes; list shows both 
 git add docs/specs/khach-hang.md
 git commit -m "docs: update the Khach Hang spec after implementation"
 ```
+

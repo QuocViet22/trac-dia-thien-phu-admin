@@ -9,9 +9,9 @@ no editing of submitted fields, no bulk delete.
 
 ## Goals
 
-- New sidebar tab **Khách Hàng** at `/khach-hang`, listing submitted contact
+- New sidebar tab **Khách Hàng** at `/customer-contact`, listing submitted contact
   messages newest first, with server pagination and a search box.
-- Detail page at `/khach-hang/:id` showing the full message and contact data,
+- Detail page at `/customer-contact/:id` showing the full message and contact data,
   with a **Mới / Đã xử lý** toggle and delete.
 - Match existing admin patterns: `apiFetch` + `ApiError`, per-feature
   `*.api.ts`, `table.grid`, `.filterbar`, `.pager`, `.modal`, `.badge`, plain
@@ -48,8 +48,8 @@ createdAt`. All admin calls need the JWT that `apiFetch` already attaches.
 
 ## Architecture
 
-- `src/components/AdminShell.tsx`: add `<NavLink to="/khach-hang">Khách Hàng</NavLink>`,
-  a `TITLES['/khach-hang']` entry and a `pathname.startsWith('/khach-hang')`
+- `src/components/AdminShell.tsx`: add `<NavLink to="/customer-contact">Khách Hàng</NavLink>`,
+  a `TITLES['/customer-contact']` entry and a `pathname.startsWith('/customer-contact')`
   branch in `titleFor` (otherwise the detail route titles "Quản trị").
 - `src/App.tsx`: lazy imports + routes
   `khach-hang` → `CustomerList`, `khach-hang/:id` → `CustomerDetail`, wrapped in
@@ -71,7 +71,7 @@ no modifier if a third state ever appears.
 
 ## Screen behaviour
 
-**List** (`/khach-hang`)
+**List** (`/customer-contact`)
 
 - Columns: Tên, Điện thoại, Email, Ngày gửi, Trạng thái, and a row action
   "Xem" linking to the detail.
@@ -86,14 +86,14 @@ no modifier if a third state ever appears.
 - Delete: inline `.modal-backdrop` confirmation with the sender's name; on
   success refetch the current page; on failure show the message inline.
 
-**Detail** (`/khach-hang/:id`)
+**Detail** (`/customer-contact/:id`)
 
 - Shows name, email, phone, address (`—` when null), sent date/time, status
   badge, and the message body with preserved line breaks
   (`style={{ whiteSpace: 'pre-wrap' }}` — admin has no Tailwind).
 - Primary action toggles `processed` (label "Đánh dấu đã xử lý" / "Đánh dấu
   chưa xử lý"); optimistic UI is not used — update then refetch.
-- Delete with confirmation, then navigate to `/khach-hang`.
+- Delete with confirmation, then navigate to `/customer-contact`.
 - Back link to the list; loading, error/retry and 404 states.
 
 ## Tests

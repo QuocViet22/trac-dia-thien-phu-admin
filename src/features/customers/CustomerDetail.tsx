@@ -61,7 +61,7 @@ export default function CustomerDetail() {
     setActionError('')
     try {
       await deleteContact(contact.id)
-      navigate('/khach-hang')
+      navigate('/customer-contact')
     } catch (e: unknown) {
       setConfirming(false)
       setActionError(e instanceof Error ? e.message : 'Request failed')
@@ -77,7 +77,7 @@ export default function CustomerDetail() {
       <div className="empty">
         Không tìm thấy tin nhắn
         <div style={{ marginTop: 12 }}>
-          <Link to="/khach-hang">← Danh sách</Link>
+          <Link to="/customer-contact">← Danh sách</Link>
         </div>
       </div>
     )
@@ -113,7 +113,7 @@ export default function CustomerDetail() {
       </div>
 
       <p style={{ marginBottom: 12 }}>
-        <Link to="/khach-hang">← Danh sách</Link>
+        <Link to="/customer-contact">← Danh sách</Link>
       </p>
 
       <div className="card" style={{ padding: 16 }}>

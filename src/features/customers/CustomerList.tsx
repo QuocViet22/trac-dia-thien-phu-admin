@@ -166,7 +166,7 @@ export default function CustomerList() {
                         type="button"
                         className="icon-btn"
                         title="Xem chi tiết"
-                        onClick={() => navigate(`/khach-hang/${c.id}`)}
+                        onClick={() => navigate(`/customer-contact/${c.id}`)}
                       >
                         👁
                       </button>
