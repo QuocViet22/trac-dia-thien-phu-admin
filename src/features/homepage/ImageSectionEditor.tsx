@@ -69,7 +69,7 @@ export default function ImageSectionEditor({ collectionType, max, items, onChang
 
   const rows = sorted(items)
   const full = rows.length >= max
-  const maxMessage = `Da dat toi da ${max} muc`
+  const maxMessage = `Đã đạt tối đa ${max} mục`
 
   function onCoverChange(next: CoverValue): void {
     setCover(next)

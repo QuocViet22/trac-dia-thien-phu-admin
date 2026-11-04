@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import ErrorPopup from '../../components/ErrorPopup.tsx'
 import { listCategories } from '../categories/categories.api'
 import { listNews } from '../news/news.api'
@@ -86,6 +86,9 @@ export default function EntitySectionEditor({ collectionType, max, items, onChan
   const [addingId, setAddingId] = useState<string | null>(null)
   const [movingId, setMovingId] = useState<string | null>(null)
   const [deleting, setDeleting] = useState(false)
+  // One existence probe per selected reference: a server-side search replaces
+  // `candidates` on every query, so `candidates` alone would re-probe them all.
+  const verifiedIds = useRef<Set<string>>(new Set())
 
   const rows = sorted(items)
   const full = rows.length >= max
@@ -99,7 +102,6 @@ export default function EntitySectionEditor({ collectionType, max, items, onChan
       .then((res) => {
         if (cancelled) return
         setCandidates(res.map((c) => ({ id: c.id, name: c.name })))
-        setTotal(res.length)
       })
       .catch((e: unknown) => {
         if (!cancelled) setPickerError(e instanceof Error ? e.message : 'Request failed')
@@ -146,8 +148,10 @@ export default function EntitySectionEditor({ collectionType, max, items, onChan
   // Verify selected references still exist; dangling ones render a removable placeholder row.
   useEffect(() => {
     let cancelled = false
-    const known = new Set(candidates.map((c) => c.id))
-    const unverified = rows.filter((r) => r.referenceId && !known.has(r.referenceId))
+    candidates.forEach((c) => verifiedIds.current.add(c.id))
+    const unverified = rows.filter(
+      (r) => r.referenceId && !verifiedIds.current.has(r.referenceId),
+    )
     if (unverified.length === 0) return
     const check = async (): Promise<void> => {
       const gone: string[] = []
@@ -158,6 +162,7 @@ export default function EntitySectionEditor({ collectionType, max, items, onChan
             if (kind === 'product') await getProduct(refId)
             else if (kind === 'news') await getNews(refId)
             else await getCategory(refId)
+            verifiedIds.current.add(refId)
           } catch (e: unknown) {
             if (isNotFoundError(e)) gone.push(refId)
           }
@@ -312,10 +317,14 @@ export default function EntitySectionEditor({ collectionType, max, items, onChan
         <h2 style={{ margin: '10px' }}>Thêm mục mới</h2>
         {full && <p className="error">{maxMessage}</p>}
         <div className="field" style={{ margin: '10px' }}>
-          <label>Tìm kiếm</label>
+          <label htmlFor={`picker-search-${collectionType}`}>Tìm kiếm</label>
           <input
+            id={`picker-search-${collectionType}`}
             type="text"
             value={query}
+            aria-describedby={`picker-hint-${collectionType}`}
+            // Loading/error resets live here, not in the effect: ESLint
+            // react-hooks/set-state-in-effect rejects setState in an effect body.
             onChange={(e) => {
               if (kind !== 'category') {
                 setPickerLoading(true)
@@ -326,7 +335,7 @@ export default function EntitySectionEditor({ collectionType, max, items, onChan
             placeholder="Nhập tên để tìm"
           />
           {moreThanLimit && (
-            <span className="hint">
+            <span className="hint" id={`picker-hint-${collectionType}`} role="status">
               Chỉ hiển thị tối đa {PICKER_LIMIT} mục — nhập tên để tìm các mục khác.
             </span>
           )}
