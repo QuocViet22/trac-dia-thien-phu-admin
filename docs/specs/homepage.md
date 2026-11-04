@@ -47,7 +47,7 @@
   - `EntitySectionEditor` for sidebar/featured/best-seller/category/news: searchable picker
     calling existing list APIs, selected list with remove + reorder, each selection = one
     Collection row (`name` snapshot + `referenceId` FK). Add disabled at max with
-    "Da dat toi da N muc".
+    "Đã đạt tối đa N muc".
 - `collections.api.ts` client reusing `apiFetch` envelope + 401-refresh from `lib/api.ts`.
 - Preview modal: lightweight local copies of the 7 UI sections (image grids + labels) fed by draft
   state. No imports from the UI repo.
@@ -99,4 +99,33 @@
 - Verification: `npm run build`, `npm run lint`, then `/homepage` -> `Danh muc sidebar` ->
   add three categories, reorder with the arrows, reload, delete one; the 101st add is
   refused with the max message.
+
+## 8. Picker record cap (2026-11-04 addendum, proposed)
+
+- Goal: in "Thêm mục mới" of the five entity sections (`Danh mục sidebar`,
+  `Danh mục nổi bật`, `Sản phẩm bán chạy`, `Hiển thị danh mục`, `Tin tức`), show at most
+  20 candidate rows. Search must still reach every record, not just the visible 20.
+- `EntitySectionEditor`:
+  - Replace `PAGE_SIZE = 10` paging with `PICKER_LIMIT = 20`; remove `page`, `total`,
+    `pageCount` and the previous/next controls.
+  - Category sections keep loading the full `GET /api/categories` list. Search filters it
+    client-side, then `slice(0, 20)` for display. The full list stays in state for duplicate
+    prevention and the dangling-reference check.
+  - Product/news sections request page 0 with size 20 and send the search term to the
+    server. Debounce the request by 300 ms; keep a local filter so stale rows disappear
+    while a request is in flight.
+  - When more than 20 rows match, show a one-line hint that only the first 20 are shown and
+    that search narrows the list.
+- `products.api.ts`: add an optional `name` parameter forwarded as `?name=`. The API already
+  supports it (API product spec §7), so no API change.
+- `news.api.ts`: add an optional `title` parameter forwarded as `?title=`.
+- API (sibling repo `trac-dia-thien-phu-api`): add an optional `title` filter to
+  `GET /api/news`, mirroring `GET /api/products?name=` (`NewsRepository.searchByTitle`,
+  `NewsService.search`, controller branch on non-blank `title`). No schema change.
+- Testing: API service/controller/repository tests for title search (trim, blank falls back
+  to `list`, case-insensitive substring, combined `status`/`newsType`). Admin: `npm run test`,
+  `npm run lint`, `npm run build`; manual check of all five sections: 20 rows max, and search
+  finds a record outside the first 20.
+- Out of scope: image sections (`Quản lý Slider`, `Quản lý quảng cáo`, `Dịch vụ`), the
+  selected-items table, and sorting changes.
 

@@ -88,7 +88,7 @@
 - Consumes: Task 3 client + `ImageDropzone`, `uploadFile`/`deleteUpload`, `ErrorPopup` patterns from `CategoryForm`.
 - Produces: image-section CRUD with reorder used as reference for Task 5 entity list behavior.
 
-- [ ] **Step 1: Build editor UI** — list rows (thumb, name, up/down, delete with Danh-muc-style confirm modal), add form (dropzone + upload with orphan cleanup on failure), add disabled at `n/max` with "Da dat toi da N muc".
+- [ ] **Step 1: Build editor UI** — list rows (thumb, name, up/down, delete with Danh-muc-style confirm modal), add form (dropzone + upload with orphan cleanup on failure), add disabled at `n/max` with "Đã đạt tối đa N muc".
 - [ ] **Step 2: Wire reorder** — up/down issues `PUT` orderIndex swaps then refetches; conflict triggers single refetch + retry.
 - [ ] **Step 3: Verify** — Run: `npm run build`. Expected: PASS; manual: fill slider to 3/3 (4th blocked), reorder persists after reload, 409 shows max message.
 - [ ] **Step 4: Commit** — `git commit -m "feat: homepage image section editor with reorder"`.
@@ -107,3 +107,299 @@
 - [ ] **Step 2: Build preview modal** — "Xem trước" opens modal with 7 simplified section previews fed by draft state (image grids + labels), closable, no save required.
 - [ ] **Step 3: Verify** — Run: `npm run build`, `npm run lint`. Expected: PASS; manual per section: pick to max (10 best-sellers, 6 featured, 4 categories, 3 news), over-max blocked, preview matches draft, reload persists.
 - [ ] **Step 4: Commit** — `git commit -m "feat: homepage entity pickers and draft preview"`.
+
+---
+
+# Phase 2 — Picker 20-record cap with full search (2026-11-04)
+
+**Goal:** In "Thêm mục mới" of the five entity homepage sections, show at most 20 candidate rows while keeping every record reachable through search.
+
+**Architecture:** Add a pure `pickCandidates` helper (filter, then slice to 20) with a Vitest test. Add optional `name`/`title` params to the product/news API clients. Rewrite `EntitySectionEditor` candidate loading: category sections filter the already-loaded full list, product/news sections call server-side search with a 300 ms debounce, and the table renders `pickCandidates(...).visible`.
+
+**Spec:** `docs/specs/homepage.md` §8.
+
+## Phase 2 Global Constraints
+
+- The cap is display-only for categories — keep the full category list in state for duplicate prevention and dangling-reference checks.
+- Product/news must use server search (`?name=`, `?title=`); never fetch the full catalogue client-side.
+- `PICKER_LIMIT = 20` is the single source of truth.
+- Admin commands run from `trac-dia-thien-phu-admin`: `npm run test`, `npm run lint`, `npm run build`.
+- TS: `import type`, no unused locals/params, no enums.
+
+## Phase 2 Review Focus
+
+1. A category outside the first 20 must still be found by search. → `picker.test.ts` + manual.
+2. A product/news outside the first 20 must still be found; the server, not the loaded page, does the filtering. → manual (API title/name tests cover the backend).
+3. Selected items must not be mistaken for deleted when the picker only loads 20 rows — categories keep the full list; product/news keep the existing per-reference `get` check. → code review + manual.
+4. Product/news must not send one request per keystroke. → 300 ms debounce + manual network check.
+5. Removing pagination must not leave dead state, unused imports, or a stale `page` reference. → `npm run lint` + `npm run build`.
+
+### Task 6: Pure picker helper + test
+
+**Files:**
+- Create: `src/features/homepage/picker.ts`
+- Test: `src/features/homepage/picker.test.ts`
+
+**Interfaces:**
+- Consumes: nothing.
+- Produces: `PICKER_LIMIT: number` (20), `Candidate { id: string; name: string }`, `pickCandidates(candidates: Candidate[], query: string): { visible: Candidate[]; matchedCount: number }` — consumed by Task 8.
+
+- [x] **Step 1: Write the failing test.**
+
+Create `picker.test.ts`:
+
+```ts
+import { describe, expect, it } from 'vitest'
+import { PICKER_LIMIT, pickCandidates } from './picker'
+
+function makeCandidates(count: number) {
+  return Array.from({ length: count }, (_, i) => ({ id: String(i), name: `Mục ${i}` }))
+}
+
+describe('pickCandidates', () => {
+  it('caps the visible list at 20 rows', () => {
+    const result = pickCandidates(makeCandidates(25), '')
+
+    expect(result.visible).toHaveLength(PICKER_LIMIT)
+    expect(result.matchedCount).toBe(25)
+  })
+
+  it('searches the full list before capping', () => {
+    const result = pickCandidates(makeCandidates(25), 'mục 24')
+
+    expect(result.visible.map((c) => c.id)).toEqual(['24'])
+    expect(result.matchedCount).toBe(1)
+  })
+
+  it('trims the query and ignores case', () => {
+    const candidates = [{ id: '1', name: 'Danh Mục Nổi Bật' }]
+
+    expect(pickCandidates(candidates, '  mục nổi  ').visible).toEqual(candidates)
+  })
+
+  it('returns exactly 20 matches without truncating them', () => {
+    const result = pickCandidates(makeCandidates(20), '')
+
+    expect(result.visible).toHaveLength(20)
+    expect(result.matchedCount).toBe(20)
+  })
+})
+```
+
+- [x] **Step 2: Run test to verify it fails.**
+
+Run: `npm run test -- picker.test.ts`
+Expected: FAIL — `Cannot find module './picker'`.
+
+- [x] **Step 3: Implement `picker.ts`.**
+
+```ts
+export const PICKER_LIMIT = 20
+
+export interface Candidate {
+  id: string
+  name: string
+}
+
+export function pickCandidates(
+  candidates: Candidate[],
+  query: string,
+): { visible: Candidate[]; matchedCount: number } {
+  const keyword = query.trim().toLowerCase()
+  const matched =
+    keyword === '' ? candidates : candidates.filter((c) => c.name.toLowerCase().includes(keyword))
+  return { visible: matched.slice(0, PICKER_LIMIT), matchedCount: matched.length }
+}
+```
+
+- [x] **Step 4: Run test to verify it passes.**
+
+Run: `npm run test -- picker.test.ts`
+Expected: PASS (4 tests).
+
+- [x] **Step 5: Commit.**
+
+```bash
+git add src/features/homepage/picker.ts src/features/homepage/picker.test.ts
+git commit -m "feat: add 20-row homepage picker helper"
+```
+
+### Task 7: Optional search params in API clients
+
+**Files:**
+- Modify: `src/features/products/products.api.ts`
+- Modify: `src/features/news/news.api.ts`
+
+**Interfaces:**
+- Consumes: existing `PageResult`, `SpringPage`, `unwrapPage`, `apiFetch`.
+- Produces: `listProducts(categoryId, page, size, name?)`; `listNews(status, newsType, page, size, title?)` — consumed by Task 8. Existing callers keep working because the new params are optional.
+
+- [ ] **Step 1: Add the optional `name` param to `listProducts`.**
+
+```ts
+export async function listProducts(
+  categoryId: string | undefined,
+  page: number,
+  size: number,
+  name?: string,
+): Promise<PageResult<Product>> {
+  const params = new URLSearchParams({ page: String(page), size: String(size) })
+  if (categoryId) params.set('categoryId', categoryId)
+  if (name) params.set('name', name)
+  const data = await apiFetch<SpringPage<Product>>(`/api/products?${params.toString()}`)
+  return unwrapPage(data)
+}
+```
+
+- [ ] **Step 2: Add the optional `title` param to `listNews`.**
+
+```ts
+export async function listNews(
+  status: NewsStatus | undefined,
+  newsType: NewsType | undefined,
+  page: number,
+  size: number,
+  title?: string,
+): Promise<PageResult<News>> {
+  const params = new URLSearchParams({ page: String(page), size: String(size) })
+  if (status) params.set('status', status)
+  if (newsType) params.set('newsType', newsType)
+  if (title) params.set('title', title)
+  const data = await apiFetch<SpringPage<News>>(`/api/news?${params.toString()}`)
+  return unwrapPage(data)
+}
+```
+
+- [ ] **Step 3: Verify existing callers still compile.**
+
+Run: `npm run build`
+Expected: PASS — `ProductList`, `NewsList`, and `EntitySectionEditor` compile without changes.
+
+- [ ] **Step 4: Commit.**
+
+```bash
+git add src/features/products/products.api.ts src/features/news/news.api.ts
+git commit -m "feat: expose name and title search params in admin clients"
+```
+
+### Task 8: Cap and search the "Thêm mục mới" picker
+
+**Files:**
+- Modify: `src/features/homepage/EntitySectionEditor.tsx`
+
+**Interfaces:**
+- Consumes: `PICKER_LIMIT`, `pickCandidates`, `Candidate` from Task 6; `listProducts(..., name?)`, `listNews(..., title?)` from Task 7; existing `listCategories`, `getProduct`, `getNews`, `getCategory`.
+- Produces: the five entity sections render at most 20 candidate rows with server-backed search.
+
+- [ ] **Step 1: Replace the picker state and loading effects.**
+
+Remove `PAGE_SIZE`, `page`, `pageCount`, and the previous/next pager JSX. Remove the local `Candidate` interface and import it from `./picker` together with `PICKER_LIMIT` and `pickCandidates`. Keep `total` for the cap hint.
+
+Use two effects (the component remounts per section, so no cross-kind reset is needed):
+
+```tsx
+useEffect(() => {
+  if (kind !== 'category') return
+  let cancelled = false
+  setPickerLoading(true)
+  setPickerError('')
+  listCategories()
+    .then((res) => {
+      if (cancelled) return
+      setCandidates(res.map((c) => ({ id: c.id, name: c.name })))
+      setTotal(res.length)
+    })
+    .catch((e: unknown) => {
+      if (!cancelled) setPickerError(e instanceof Error ? e.message : 'Request failed')
+    })
+    .finally(() => {
+      if (!cancelled) setPickerLoading(false)
+    })
+  return () => {
+    cancelled = true
+  }
+}, [kind, reloadNonce])
+
+useEffect(() => {
+  if (kind === 'category') return
+  let cancelled = false
+  setPickerLoading(true)
+  setPickerError('')
+  const timer = setTimeout(() => {
+    const keyword = query.trim()
+    const load =
+      kind === 'product'
+        ? listProducts(undefined, 0, PICKER_LIMIT, keyword || undefined).then((res) => {
+            if (cancelled) return
+            setCandidates(res.items.map((p) => ({ id: p.id, name: p.name })))
+            setTotal(res.total)
+          })
+        : listNews(undefined, undefined, 0, PICKER_LIMIT, keyword || undefined).then((res) => {
+            if (cancelled) return
+            setCandidates(res.items.map((n) => ({ id: n.id, name: n.title })))
+            setTotal(res.total)
+          })
+    load
+      .catch((e: unknown) => {
+        if (!cancelled) setPickerError(e instanceof Error ? e.message : 'Request failed')
+      })
+      .finally(() => {
+        if (!cancelled) setPickerLoading(false)
+      })
+  }, 300)
+  return () => {
+    cancelled = true
+    clearTimeout(timer)
+  }
+}, [kind, query, reloadNonce])
+```
+
+- [ ] **Step 2: Render the capped list and hint.**
+
+Replace the local `normalizedQuery`/`filtered` block with:
+
+```tsx
+const { visible, matchedCount } = pickCandidates(candidates, query)
+const moreThanLimit = kind === 'category' ? matchedCount > PICKER_LIMIT : total > PICKER_LIMIT
+```
+
+Use `visible` in the empty check and the candidate `map`. Inside the search `.field`, after the `<input>`:
+
+```tsx
+{moreThanLimit && (
+  <span className="hint">
+    Chỉ hiển thị tối đa {PICKER_LIMIT} mục — nhập tên để tìm các mục khác.
+  </span>
+)}
+```
+
+- [ ] **Step 3: Verify tests, lint, and build.**
+
+Run: `npm run test`
+Expected: PASS (picker tests + existing suite).
+
+Run: `npm run lint`
+Expected: PASS, no unused `page`/`filtered`/imports.
+
+Run: `npm run build`
+Expected: PASS.
+
+- [ ] **Step 4: Manual check each entity section.**
+
+On `/homepage`, for `Danh mục sidebar`, `Danh mục nổi bật`, `Sản phẩm bán chạy`, `Hiển thị danh mục`, `Tin tức`:
+- The candidate table shows at most 20 rows.
+- A record outside the first 20 is found by typing its name.
+- Clearing the search returns to the first 20.
+- The selected-items table above still shows every saved row, and deleted references still show the placeholder.
+- Product/news requests appear only after a short typing pause (300 ms).
+
+- [x] **Step 5: Commit.**
+
+```bash
+git add src/features/homepage/EntitySectionEditor.tsx
+git commit -m "feat: cap homepage pickers at 20 rows with full search"
+```
+
+- [ ] **Step 6: Update the spec if behavior changed.**
+
+Re-read `docs/specs/homepage.md` §8. If the shipped behavior differs (hint copy, debounce, or which sections are capped), update that section before finishing.
