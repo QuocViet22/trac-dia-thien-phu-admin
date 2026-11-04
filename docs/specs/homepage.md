@@ -100,20 +100,22 @@
   add three categories, reorder with the arrows, reload, delete one; the 101st add is
   refused with the max message.
 
-## 8. Picker record cap (2026-11-04 addendum, proposed)
+## 8. Picker record cap (2026-11-04 addendum, shipped)
 
 - Goal: in "Thêm mục mới" of the five entity sections (`Danh mục sidebar`,
   `Danh mục nổi bật`, `Sản phẩm bán chạy`, `Hiển thị danh mục`, `Tin tức`), show at most
   20 candidate rows. Search must still reach every record, not just the visible 20.
 - `EntitySectionEditor`:
-  - Replace `PAGE_SIZE = 10` paging with `PICKER_LIMIT = 20`; remove `page`, `total`,
-    `pageCount` and the previous/next controls.
+  - Replace `PAGE_SIZE = 10` paging with `PICKER_LIMIT = 20`; remove `page`, `pageCount`
+    and the previous/next controls. Keep `total` for the cap hint in product/news sections.
+  - Because product/news only fetch 20 rows, the cap hint compares the server `total`
+    against 20; category sections use the matching count from the full list.
   - Category sections keep loading the full `GET /api/categories` list. Search filters it
     client-side, then `slice(0, 20)` for display. The full list stays in state for duplicate
     prevention and the dangling-reference check.
   - Product/news sections request page 0 with size 20 and send the search term to the
-    server. Debounce the request by 300 ms; keep a local filter so stale rows disappear
-    while a request is in flight.
+    server. Debounce the request by 300 ms; the loading state replaces the rows while a
+    request is in flight, so stale matches are never shown.
   - When more than 20 rows match, show a one-line hint that only the first 20 are shown and
     that search narrows the list.
 - `products.api.ts`: add an optional `name` parameter forwarded as `?name=`. The API already

@@ -384,7 +384,7 @@ Expected: PASS, no unused `page`/`filtered`/imports.
 Run: `npm run build`
 Expected: PASS.
 
-- [ ] **Step 4: Manual check each entity section.**
+- [ ] **Step 4: Manual check each entity section.** — NOT RUN: no browser and the local admin/API/DB stack was not started in this session. The 20-row cap and filtering are covered by `picker.test.ts`; the API title/name search by the API tests. Remaining to check by hand: cap hint copy, 300 ms debounce, and deleted-reference placeholders in the five sections.
 
 On `/homepage`, for `Danh mục sidebar`, `Danh mục nổi bật`, `Sản phẩm bán chạy`, `Hiển thị danh mục`, `Tin tức`:
 - The candidate table shows at most 20 rows.
@@ -400,6 +400,6 @@ git add src/features/homepage/EntitySectionEditor.tsx
 git commit -m "feat: cap homepage pickers at 20 rows with full search"
 ```
 
-- [ ] **Step 6: Update the spec if behavior changed.**
+- [x] **Step 6: Update the spec if behavior changed.**
 
 Re-read `docs/specs/homepage.md` §8. If the shipped behavior differs (hint copy, debounce, or which sections are capped), update that section before finishing.
