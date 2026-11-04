@@ -14,17 +14,14 @@ import {
 } from './collections.api'
 import type { CollectionPayload } from './collections.api'
 import type { Collection, CollectionType } from './homepageTypes'
+import { PICKER_LIMIT, pickCandidates } from './picker'
+import type { Candidate } from './picker'
 
 interface Props {
   collectionType: CollectionType
   max: number
   items: Collection[]
   onChanged: () => void
-}
-
-interface Candidate {
-  id: string
-  name: string
 }
 
 type EntityKind = 'product' | 'category' | 'news'
@@ -62,7 +59,6 @@ function isNotFoundError(err: unknown): boolean {
 }
 
 const SWAP_TEMP_OFFSET = 100_000
-const PAGE_SIZE = 10
 
 function swapTempIndex(a: Collection, b: Collection): number {
   return Math.max(a.orderIndex, b.orderIndex) + SWAP_TEMP_OFFSET
@@ -78,7 +74,6 @@ async function swapOrder(a: Collection, b: Collection): Promise<void> {
 export default function EntitySectionEditor({ collectionType, max, items, onChanged }: Props) {
   const kind = kindOf(collectionType)
   const [query, setQuery] = useState('')
-  const [page, setPage] = useState(0)
   const [reloadNonce, setReloadNonce] = useState(0)
   const [candidates, setCandidates] = useState<Candidate[]>([])
   const [total, setTotal] = useState(0)
@@ -98,26 +93,14 @@ export default function EntitySectionEditor({ collectionType, max, items, onChan
   const selectedIds = new Set(rows.map((r) => r.referenceId).filter((id) => id !== null))
 
   useEffect(() => {
+    if (kind !== 'category') return
     let cancelled = false
-    const load = async (): Promise<void> => {
-      if (kind === 'category') {
-        const res = await listCategories()
+    listCategories()
+      .then((res) => {
         if (cancelled) return
         setCandidates(res.map((c) => ({ id: c.id, name: c.name })))
         setTotal(res.length)
-      } else if (kind === 'product') {
-        const res = await listProducts(undefined, page, PAGE_SIZE)
-        if (cancelled) return
-        setCandidates(res.items.map((p) => ({ id: p.id, name: p.name })))
-        setTotal(res.total)
-      } else {
-        const res = await listNews(undefined, undefined, page, PAGE_SIZE)
-        if (cancelled) return
-        setCandidates(res.items.map((n) => ({ id: n.id, name: n.title })))
-        setTotal(res.total)
-      }
-    }
-    load()
+      })
       .catch((e: unknown) => {
         if (!cancelled) setPickerError(e instanceof Error ? e.message : 'Request failed')
       })
@@ -127,7 +110,38 @@ export default function EntitySectionEditor({ collectionType, max, items, onChan
     return () => {
       cancelled = true
     }
-  }, [kind, page, reloadNonce])
+  }, [kind, reloadNonce])
+
+  useEffect(() => {
+    if (kind === 'category') return
+    let cancelled = false
+    const timer = setTimeout(() => {
+      const keyword = query.trim()
+      const load =
+        kind === 'product'
+          ? listProducts(undefined, 0, PICKER_LIMIT, keyword || undefined).then((res) => {
+              if (cancelled) return
+              setCandidates(res.items.map((p) => ({ id: p.id, name: p.name })))
+              setTotal(res.total)
+            })
+          : listNews(undefined, undefined, 0, PICKER_LIMIT, keyword || undefined).then((res) => {
+              if (cancelled) return
+              setCandidates(res.items.map((n) => ({ id: n.id, name: n.title })))
+              setTotal(res.total)
+            })
+      load
+        .catch((e: unknown) => {
+          if (!cancelled) setPickerError(e instanceof Error ? e.message : 'Request failed')
+        })
+        .finally(() => {
+          if (!cancelled) setPickerLoading(false)
+        })
+    }, 300)
+    return () => {
+      cancelled = true
+      clearTimeout(timer)
+    }
+  }, [kind, query, reloadNonce])
 
   // Verify selected references still exist; dangling ones render a removable placeholder row.
   useEffect(() => {
@@ -160,12 +174,8 @@ export default function EntitySectionEditor({ collectionType, max, items, onChan
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [kind, candidates, items])
 
-  const normalizedQuery = query.trim().toLowerCase()
-  const filtered =
-    normalizedQuery === ''
-      ? candidates
-      : candidates.filter((c) => c.name.toLowerCase().includes(normalizedQuery))
-  const pageCount = kind === 'category' ? 1 : Math.max(1, Math.ceil(total / PAGE_SIZE))
+  const { visible, matchedCount } = pickCandidates(candidates, query)
+  const moreThanLimit = kind === 'category' ? matchedCount > PICKER_LIMIT : total > PICKER_LIMIT
 
   async function onAdd(candidate: Candidate): Promise<void> {
     if (full) {
@@ -306,9 +316,20 @@ export default function EntitySectionEditor({ collectionType, max, items, onChan
           <input
             type="text"
             value={query}
-            onChange={(e) => setQuery(e.target.value)}
+            onChange={(e) => {
+              if (kind !== 'category') {
+                setPickerLoading(true)
+                setPickerError('')
+              }
+              setQuery(e.target.value)
+            }}
             placeholder="Nhập tên để tìm"
           />
+          {moreThanLimit && (
+            <span className="hint">
+              Chỉ hiển thị tối đa {PICKER_LIMIT} mục — nhập tên để tìm các mục khác.
+            </span>
+          )}
         </div>
         {pickerLoading ? (
           <div className="loading">Đang tải…</div>
@@ -327,7 +348,7 @@ export default function EntitySectionEditor({ collectionType, max, items, onChan
               Thử lại
             </button>
           </div>
-        ) : filtered.length === 0 ? (
+        ) : visible.length === 0 ? (
           <div className="empty">Không tìm thấy mục nào</div>
         ) : (
           <table className="grid">
@@ -338,7 +359,7 @@ export default function EntitySectionEditor({ collectionType, max, items, onChan
               </tr>
             </thead>
             <tbody>
-              {filtered.map((c) => {
+              {visible.map((c) => {
                 const already = selectedIds.has(c.id)
                 return (
                   <tr key={c.id}>
@@ -359,37 +380,6 @@ export default function EntitySectionEditor({ collectionType, max, items, onChan
               })}
             </tbody>
           </table>
-        )}
-        {kind !== 'category' && pageCount > 1 && (
-          <div className="actions" style={{ marginTop: 8 }}>
-            <button
-              type="button"
-              className="btn btn-default"
-              disabled={page === 0 || pickerLoading}
-              onClick={() => {
-                setPickerLoading(true)
-                setPickerError('')
-                setPage((p) => p - 1)
-              }}
-            >
-              ← Trước
-            </button>
-            <span>
-              {page + 1}/{pageCount}
-            </span>
-            <button
-              type="button"
-              className="btn btn-default"
-              disabled={page + 1 >= pageCount || pickerLoading}
-              onClick={() => {
-                setPickerLoading(true)
-                setPickerError('')
-                setPage((p) => p + 1)
-              }}
-            >
-              Sau →
-            </button>
-          </div>
         )}
         {formMessage && <div className="fetch-error">{formMessage}</div>}
       </div>

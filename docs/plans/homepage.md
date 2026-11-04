@@ -291,7 +291,7 @@ git commit -m "feat: expose name and title search params in admin clients"
 - Consumes: `PICKER_LIMIT`, `pickCandidates`, `Candidate` from Task 6; `listProducts(..., name?)`, `listNews(..., title?)` from Task 7; existing `listCategories`, `getProduct`, `getNews`, `getCategory`.
 - Produces: the five entity sections render at most 20 candidate rows with server-backed search.
 
-- [ ] **Step 1: Replace the picker state and loading effects.**
+- [x] **Step 1: Replace the picker state and loading effects.**
 
 Remove `PAGE_SIZE`, `page`, `pageCount`, and the previous/next pager JSX. Remove the local `Candidate` interface and import it from `./picker` together with `PICKER_LIMIT` and `pickCandidates`. Keep `total` for the cap hint.
 
@@ -354,7 +354,7 @@ useEffect(() => {
 }, [kind, query, reloadNonce])
 ```
 
-- [ ] **Step 2: Render the capped list and hint.**
+- [x] **Step 2: Render the capped list and hint.**
 
 Replace the local `normalizedQuery`/`filtered` block with:
 
@@ -373,7 +373,7 @@ Use `visible` in the empty check and the candidate `map`. Inside the search `.fi
 )}
 ```
 
-- [ ] **Step 3: Verify tests, lint, and build.**
+- [x] **Step 3: Verify tests, lint, and build.**
 
 Run: `npm run test`
 Expected: PASS (picker tests + existing suite).
