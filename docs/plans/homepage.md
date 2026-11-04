@@ -234,7 +234,7 @@ git commit -m "feat: add 20-row homepage picker helper"
 - Consumes: existing `PageResult`, `SpringPage`, `unwrapPage`, `apiFetch`.
 - Produces: `listProducts(categoryId, page, size, name?)`; `listNews(status, newsType, page, size, title?)` — consumed by Task 8. Existing callers keep working because the new params are optional.
 
-- [ ] **Step 1: Add the optional `name` param to `listProducts`.**
+- [x] **Step 1: Add the optional `name` param to `listProducts`.**
 
 ```ts
 export async function listProducts(
@@ -251,7 +251,7 @@ export async function listProducts(
 }
 ```
 
-- [ ] **Step 2: Add the optional `title` param to `listNews`.**
+- [x] **Step 2: Add the optional `title` param to `listNews`.**
 
 ```ts
 export async function listNews(
@@ -270,12 +270,12 @@ export async function listNews(
 }
 ```
 
-- [ ] **Step 3: Verify existing callers still compile.**
+- [x] **Step 3: Verify existing callers still compile.**
 
 Run: `npm run build`
 Expected: PASS — `ProductList`, `NewsList`, and `EntitySectionEditor` compile without changes.
 
-- [ ] **Step 4: Commit.**
+- [x] **Step 4: Commit.**
 
 ```bash
 git add src/features/products/products.api.ts src/features/news/news.api.ts

@@ -6,9 +6,11 @@ export async function listProducts(
   categoryId: string | undefined,
   page: number,
   size: number,
+  name?: string,
 ): Promise<PageResult<Product>> {
   const params = new URLSearchParams({ page: String(page), size: String(size) })
   if (categoryId) params.set('categoryId', categoryId)
+  if (name) params.set('name', name)
   const data = await apiFetch<SpringPage<Product>>(`/api/products?${params.toString()}`)
   return unwrapPage(data)
 }

@@ -19,10 +19,12 @@ export async function listNews(
   newsType: NewsType | undefined,
   page: number,
   size: number,
+  title?: string,
 ): Promise<PageResult<News>> {
   const params = new URLSearchParams({ page: String(page), size: String(size) })
   if (status) params.set('status', status)
   if (newsType) params.set('newsType', newsType)
+  if (title) params.set('title', title)
   const data = await apiFetch<SpringPage<News>>(`/api/news?${params.toString()}`)
   return unwrapPage(data)
 }
