@@ -114,8 +114,11 @@
     client-side, then `slice(0, 20)` for display. The full list stays in state for duplicate
     prevention and the dangling-reference check.
   - Product/news sections request page 0 with size 20 and send the search term to the
-    server. Debounce the request by 300 ms; the loading state replaces the rows while a
-    request is in flight, so stale matches are never shown.
+    server. Debounce the request by 300 ms; the loading state starts as soon as the query
+    changes and replaces the rows, so stale matches are never shown.
+
+  - Selected-reference existence checks are remembered in a `verifiedIds` ref, so a new
+    search result set never re-probes the rows already verified in this session.
   - When more than 20 rows match, show a one-line hint that only the first 20 are shown and
     that search narrows the list.
 - `products.api.ts`: add an optional `name` parameter forwarded as `?name=`. The API already

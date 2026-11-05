@@ -354,6 +354,8 @@ useEffect(() => {
 }, [kind, query, reloadNonce])
 ```
 
+**Shipped deviation:** the `setPickerLoading(true)`/`setPickerError('')` calls were moved out of the effect bodies into the search input's `onChange` (and the retry button), because ESLint `react-hooks/set-state-in-effect` rejects them inside an effect. The component remounts per section (`key={section.type}` in `HomepagePage`), so the initial `pickerLoading = true` covers each first load. The category effect no longer calls `setTotal` — the hint uses `matchedCount` there. Selected-reference existence probes are tracked in a `verifiedIds` ref: a server-side search replaces `candidates` on every query, so testing against `candidates` would re-probe every selected row on every keystroke pause.
+
 - [x] **Step 2: Render the capped list and hint.**
 
 Replace the local `normalizedQuery`/`filtered` block with:
@@ -367,11 +369,13 @@ Use `visible` in the empty check and the candidate `map`. Inside the search `.fi
 
 ```tsx
 {moreThanLimit && (
-  <span className="hint">
+  <span className="hint" id={`picker-hint-${collectionType}`} role="status">
     Chỉ hiển thị tối đa {PICKER_LIMIT} mục — nhập tên để tìm các mục khác.
   </span>
 )}
 ```
+
+The input gets `id={`picker-search-${collectionType}`}`, a matching `<label htmlFor>`, and `aria-describedby` pointing at the hint, so the cap is announced to screen readers.
 
 - [x] **Step 3: Verify tests, lint, and build.**
 
